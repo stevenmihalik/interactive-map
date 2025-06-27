@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <title></title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+  <style>
+.main-container {
+  max-width: 960px;
+  margin: 0 auto;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.ui-container {
+  padding: 10px;
+  z-index: 1000;
+}
+
+.top-row {
+  margin-bottom: 10px;
+  position: relative;
+}
+
+.middle-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+  gap: 10px;
+}
+
+.middle-row select,
+.middle-row button {
+  padding: 8px;
+  font-size: 14px;
+}
+
+.bottom-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.info-box {
+  flex: 1;
+  background: #f0f0f0;
+  padding: 10px;
+  text-align: center;
+  border-radius: 5px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+}
+
+.map-container {
+  flex-grow: 1;
+  height: 100%;
+  position: relative;
+}
+
+#map {
+  height: 100%;
+  width: 100%;
+}
+</style>
+</head>
+<body style="margin: 0;">
+  <div class="main-container">
+  <div class="ui-container">
+    <div class="top-row" style="display: flex; gap: 10px;">
+      <input type="text" id="address-input" placeholder="Enter address..." style="flex: 1;">
+      <select id="destination-select">
+        <option value="exit">Exit</option>
+        <option value="cellini_citrus">Cellini Citrus</option>
+      </select>
+      <div id="suggestions" style="position: absolute; top: 100%; left: 0; right: 0; background: white; z-index: 1001;"></div>
+    </div>
+    <div class="middle-row">
+      <select id="speed-select">
+        <option value="5">5 mph</option><option value="10">10 mph</option><option value="15">15 mph</option><option value="20">20 mph</option><option value="25">25 mph</option><option value="30">30 mph</option><option value="35">35 mph</option><option value="40">40 mph</option><option value="45">45 mph</option><option value="50">50 mph</option><option value="55">55 mph</option><option value="60">60 mph</option>
+      </select>
+      <button id="route-button">Get Directions</button>
+    </div>
+    <div class="bottom-row">
+      <div class="info-box" id="distance-box">Distance: --</div>
+      <div class="info-box" id="time-box">Time: --</div>
+      <div class="info-box" id="clearance-box">Min Clearance: --</div>
+    </div>
+  </div>
+  <div class="map-container">
+    <div id="map"></div>
+  </div>
+</div>
+
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script src="https://unpkg.com/leaflet-geometryutil"></script>
+
+  <script>
+    const map = L.map('map').setView([26.6, -82.0], 13);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: '&copy; OpenStreetMap contributors'
+    }).addTo(map);
+
+    const segments = [];
+    const graph = {};
+    let addressData = [];
+let currentRoutePolyline = null;
+
+    const segmentGeojsonUrl = 'https://res.cloudinary.com/da0bnopjg/raw/upload/v1750969622/Route_Strings_Singlepart_with_lake4_r8fz9t.geojson';
+    const addressGeojsonUrl = 'https://res.cloudinary.com/da0bnopjg/raw/upload/v1751043675/Gulf_Access_Points_Master_vdfpde.geojson';
+
+    // --- Load segment data for routing ---
+    fetch(segmentGeojsonUrl)
+      .then(res => res.json())
+      .then(canalSegments => {
+        canalSegments.features.forEach(feature => {
+          const coords = feature.geometry.coordinates.map(c => [c[1], c[0]]);
+          const from = feature.properties.from_point;
+          const to = feature.properties.to_point;
+          segments.push({ coords, from, to });
+
+          if (!graph[from]) graph[from] = [];
+          graph[from].push({ to, coords });
+        });
+
+        function bfs(start, goal) {
+          const visited = new Set();
+          const queue = [[start, []]];
+          while (queue.length) {
+            const [node, path] = queue.shift();
+            if (node === goal) return path;
+            if (visited.has(node)) continue;
+            visited.add(node);
+            (graph[node] || []).forEach(({ to, coords }) => {
+              queue.push([to, [...path, coords]]);
+            });
+          }
+          return null;
+        }
+
+        function findNearestSegment(clickLatLng) {
+          let closestSegment = null;
+          let minDist = 50;
+          canalSegments.features.forEach(feature => {
+            const coords = feature.geometry.coordinates;
+            for (let i = 0; i < coords.length - 1; i++) {
+              const p1 = L.latLng(coords[i][1], coords[i][0]);
+              const p2 = L.latLng(coords[i + 1][1], coords[i + 1][0]);
+              const dist = L.GeometryUtil.distanceSegment(map, clickLatLng, p1, p2);
+              const distFeet = dist * 3.28084;
+              if (distFeet < minDist) {
+                minDist = distFeet;
+                closestSegment = feature;
+              }
+            }
+          });
+          return closestSegment;
+        }
+
+        
+
+        function simulateClickAndRoute(lat, lng) {
+  const clickLatLng = L.latLng(lat, lng);
+  const nearest = findNearestSegment(clickLatLng);
+  if (!nearest) {
+    alert("Not close enough to a canal.");
+    return;
+  }
+  const startPoint = nearest.properties.from_point;
+  const destination = document.getElementById("destination-select").value;
+  const route = bfs(startPoint, destination);
+  if (!route) {
+    alert("No route found.");
+    return;
+  }
+
+  const fullRoute = route.flat();
+  const latLngRoute = fullRoute.map(p => L.latLng(p));
+
+  // Remove previous route if it exists
+  if (currentRoutePolyline) {
+    map.removeLayer(currentRoutePolyline);
+  }
+
+  // Draw new route
+  currentRoutePolyline = L.polyline(latLngRoute, { color: 'blue', weight: 5 }).addTo(map);
+  map.fitBounds(currentRoutePolyline.getBounds());
+
+  // Distance calculation
+  let totalDistance = 0;
+  for (let i = 0; i < latLngRoute.length - 1; i++) {
+    totalDistance += latLngRoute[i].distanceTo(latLngRoute[i + 1]);
+  }
+  const distanceMiles = totalDistance / 1609.34;
+  document.getElementById('distance-box').textContent = 'Distance: ' + distanceMiles.toFixed(2) + ' mi';
+
+  // Time calculation
+  const selectedSpeedValue = parseFloat(document.getElementById('speed-select').value);
+  const timeHours = distanceMiles / selectedSpeedValue;
+  const timeMinutes = timeHours * 60;
+  document.getElementById('time-box').textContent = 'Time: ' + timeMinutes.toFixed(1) + ' min';
+
+  // Placeholder for min clearance
+  document.getElementById('clearance-box').textContent = 'Min Clearance: TBD';
+}
+
+// Attach button click to simulateClickAndRoute
+        document.getElementById("route-button").addEventListener("click", () => {
+          const matched = addressData.find(a => a.label === input.value);
+          if (matched) {
+            simulateClickAndRoute(matched.lat, matched.lng);
+          } else {
+            alert("Please select a valid address.");
+          }
+        });
+
+        // Allow map click fallback
+        map.on("click", function(e) {
+          simulateClickAndRoute(e.latlng.lat, e.latlng.lng);
+        });
+
+        // --- Load address data for autocomplete ---
+        fetch(addressGeojsonUrl)
+          .then(res => res.json())
+          .then(addressGeojson => {
+            addressData = addressGeojson.features.map(f => ({
+              label: f.properties.SITEADDR,
+              lat: f.geometry.coordinates[1],
+              lng: f.geometry.coordinates[0]
+            }));
+          });
+
+        // --- Autocomplete logic ---
+        const input = document.getElementById("address-input");
+        const suggestionsBox = document.getElementById("suggestions");
+
+        input.addEventListener("input", () => {
+          const val = input.value.toLowerCase();
+          suggestionsBox.innerHTML = "";
+          if (val.length === 0) return;
+          const matches = addressData.filter(a => a.label.toLowerCase().includes(val));
+          matches.slice(0, 3).forEach(match => {
+            const div = document.createElement("div");
+            div.textContent = match.label;
+            div.addEventListener("click", () => {
+      input.value = match.label;
+      suggestionsBox.innerHTML = "";
+            });
+            suggestionsBox.appendChild(div);
+          });
+        });
+      });
+  </script>
+</body>
+</html>
