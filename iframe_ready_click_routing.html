@@ -113,7 +113,7 @@ html, body {
 
 
 .map-container {
-  height: 600px;
+  height: 450px;
   position: relative;
 }
 
@@ -212,13 +212,13 @@ html, body {
   <button id="route-button">Get Directions</button>
 </div>
 
-  <div class="bottom-row">
+  <div class="bottom-row"id="scroll-target">
       <div class="info-box" id="distance-box">Distance: --</div>
       <div class="info-box" id="time-box">Time: --</div>
       <div class="info-box" id="clearance-box">Min Clearance: --</div>
     </div>
   </div>
-  <div class="map-container">
+  <div class="map-container" >
     <div id="map"></div>
   </div>
 </div>
@@ -812,6 +812,9 @@ if (typeof result.minClear === "string") {
   document.getElementById('distance-box').innerHTML = `Distance: ${totalDistanceText}`;
   document.getElementById('time-box').innerHTML = `Time: ${timeDisplay}`;
   document.getElementById('clearance-box').innerHTML = `Min Clearance: ${minClearText}`;
+  // Smooth scroll to map
+  document.getElementById('scroll-target').scrollIntoView({ behavior: 'smooth' });
+
 });
 
 
