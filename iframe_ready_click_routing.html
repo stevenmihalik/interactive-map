@@ -5,6 +5,33 @@
   <title></title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js">
+const fromIconUrl = 'https://res.cloudinary.com/da0bnopjg/image/upload/v1751928138/Green_Flag_hy05my.png';
+const toIconUrl = 'https://res.cloudinary.com/da0bnopjg/image/upload/v1751928160/Checkered_Flag_jyxdos.png';
+
+function createScaledIcon(url, zoom, anchor = [0.5, 1]) {
+  const size = Math.max(18, Math.min(zoom * 3, 48));
+  return L.icon({
+    iconUrl: url,
+    iconSize: [size, size],
+    iconAnchor: [size * anchor[0], size * anchor[1]]
+  });
+}
+
+map.on('zoomend', () => {
+  const zoom = map.getZoom();
+  if (fromMarker && fromAddressLatLng) {
+    map.removeLayer(fromMarker);
+    fromMarker = L.marker(fromAddressLatLng, { icon: createScaledIcon(fromIconUrl, zoom, [0.5, 1]) }).addTo(map);
+  }
+  if (toMarker && toAddressLatLng) {
+    map.removeLayer(toMarker);
+    toMarker = L.marker(toAddressLatLng, { icon: createScaledIcon(toIconUrl, zoom, [0, 0.9]) }).addTo(map);
+  }
+});
+
+</script>
+
   <style>
 .main-container {
   max-width: 960px;
@@ -15,7 +42,8 @@
 }
 
 .ui-container {
-  padding: 10px;
+  padding-bottom: 10px;
+  padding-top: 10px;
   z-index: 1000;
 }
 
@@ -44,14 +72,38 @@
   gap: 10px;
 }
 
+
 .info-box {
   flex: 1;
-  background: #f0f0f0;
+  background: #5896ed;
+  color: white;
   padding: 10px;
   text-align: center;
   border-radius: 5px;
   box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+  font-family: Arial, sans-serif;
+  height: 84px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 }
+
+.info-label {
+  font-weight: 300;
+  font-size: 14px;
+  opacity: 0.85;
+}
+.label {
+  font-family: Arial, sans-serif;  
+}
+
+.info-value {
+  font-weight: 700;
+  font-size: 18px;
+  margin-top: 4px;
+}
+
 
 .map-container {
   flex-grow: 1;
@@ -63,26 +115,98 @@
   height: 100%;
   width: 100%;
 }
+
+.styled-bar {
+  height: 42px;
+  padding: 8px;
+  font-size: 16px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.suggestion-box {
+  position: absolute;
+  top: 100%;
+  width: 50%;
+  background: #5896ed;
+  z-index: 1001;
+  border: 1px solid #ccc;
+  cursor: pointer;
+  color: white;
+  font-family: Arial, sans-serif;
+}
+.suggestion-box2 {
+  position: absolute;
+  top: 100%;
+  width: 100%;
+  background: #5896ed;
+  z-index: 1001;
+  border: 1px solid #ccc;
+  cursor: pointer;
+  color: white;
+  font-family: Arial, sans-serif;
+}
+
+
+#route-button {
+  background-color: #e63946;
+  color: white;
+  border: none;
+  cursor: pointer;
+}
+
+#route-button:hover {
+  background-color: #d62828;
+}
+
 </style>
 </head>
 <body style="margin: 0;">
+  <h1 style="text-align: left; font-size: 32px; font-family: Arial, sans-serif; margin: 20px 0;">HOW LONG TO OPEN WATER</h1>
   <div class="main-container">
   <div class="ui-container">
-    <div class="top-row" style="display: flex; gap: 10px;">
-      <input type="text" id="address-input" placeholder="Enter address..." style="flex: 1;">
-      <select id="destination-select">
-        <option value="exit">Exit</option>
+    
+
+<div class="top-row" style="display: flex; flex-direction: row; gap: 10px; align-items: flex-start;">
+  <div style="flex: 1; display: flex; flex-direction: column; gap: 5px;">
+    <label style="font-weight: bold;font-family: Arial, sans-serif;">From:</label>
+    <input type="text" id="address-input" placeholder="Enter address..." class="styled-bar">
+    <div id="suggestions" class="suggestion-box"></div>
+  </div>
+  <div style="flex: 1; display: flex; flex-direction: column; gap: 5px; position: relative;">
+    <label style="font-weight: bold;font-family: Arial, sans-serif;">To:</label>
+    <div id="poi-container" style="width: 100%;">
+      <select id="destination-select" class="styled-bar">
+        <option value="openWater">Open Water</option>
         <option value="cellini_citrus">Cellini Citrus</option>
+		<option value="tarponMarina">Pinchers Cape Coral</option>
       </select>
-      <div id="suggestions" style="position: absolute; top: 100%; left: 0; right: 0; background: white; z-index: 1001;"></div>
+      <input type="text" id="destination-address" placeholder="Enter destination..." class="styled-bar" style="display: none;" />
+      <div id="destination-suggestions" class="suggestion-box2"></div>
     </div>
-    <div class="middle-row">
-      <select id="speed-select">
-        <option value="5">5 mph</option><option value="10">10 mph</option><option value="15">15 mph</option><option value="20">20 mph</option><option value="25">25 mph</option><option value="30">30 mph</option><option value="35">35 mph</option><option value="40">40 mph</option><option value="45">45 mph</option><option value="50">50 mph</option><option value="55">55 mph</option><option value="60">60 mph</option>
-      </select>
-      <button id="route-button">Get Directions</button>
+    <div style="display: flex; gap: 10px; justify-content: flex-end;">
+      <label style="font-family: Arial, sans-serif;"><input type="radio" name="dest-type" value="poi" checked> POIs</label>
+      <label style="font-family: Arial, sans-serif;"><input type="radio" name="dest-type" value="address"> Address</label>
     </div>
-    <div class="bottom-row">
+  </div>
+</div>
+
+
+    
+<div class="middle-row">
+  <div style="display: flex; align-items: center; gap: 8px;">
+    <label for="speed-select" style="font-size:14px; font-weight:bold;font-family: Arial, sans-serif;">Max Speed:</label>
+    <select id="speed-select">
+      <option value="5">5 mph</option><option value="10">10 mph</option><option value="15">15 mph</option>
+      <option value="20">20 mph</option><option value="25">25 mph</option><option value="30">30 mph</option>
+      <option value="35">35 mph</option><option value="40">40 mph</option><option value="45">45 mph</option>
+      <option value="50">50 mph</option><option value="55">55 mph</option><option value="60">60 mph</option>
+    </select>
+  </div>
+  <button id="route-button">Get Directions</button>
+</div>
+
+  <div class="bottom-row">
       <div class="info-box" id="distance-box">Distance: --</div>
       <div class="info-box" id="time-box">Time: --</div>
       <div class="info-box" id="clearance-box">Min Clearance: --</div>
@@ -93,164 +217,627 @@
   </div>
 </div>
 
-  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-  <script src="https://unpkg.com/leaflet-geometryutil"></script>
-
   <script>
-    const map = L.map('map').setView([26.6, -82.0], 13);
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-      attribution: '&copy; OpenStreetMap contributors'
-    }).addTo(map);
+// === Leaflet Map & Routing Script for Cape Coral Canal Navigation ===
 
-    const segments = [];
-    const graph = {};
-    let addressData = [];
-let currentRoutePolyline = null;
+let map = L.map('map').setView([26.6, -81.98], 13);
 
-    const segmentGeojsonUrl = 'https://res.cloudinary.com/da0bnopjg/raw/upload/v1750969622/Route_Strings_Singlepart_with_lake4_r8fz9t.geojson';
-    const addressGeojsonUrl = 'https://res.cloudinary.com/da0bnopjg/raw/upload/v1751043675/Gulf_Access_Points_Master_vdfpde.geojson';
 
-    // --- Load segment data for routing ---
-    fetch(segmentGeojsonUrl)
-      .then(res => res.json())
-      .then(canalSegments => {
-        canalSegments.features.forEach(feature => {
-          const coords = feature.geometry.coordinates.map(c => [c[1], c[0]]);
-          const from = feature.properties.from_point;
-          const to = feature.properties.to_point;
-          segments.push({ coords, from, to });
+let fromMarker = null;
+let toMarker = null;
+let fromAddressLatLng = null;
+let toAddressLatLng = null;
 
-          if (!graph[from]) graph[from] = [];
-          graph[from].push({ to, coords });
-        });
 
-        function bfs(start, goal) {
-          const visited = new Set();
-          const queue = [[start, []]];
-          while (queue.length) {
-            const [node, path] = queue.shift();
-            if (node === goal) return path;
-            if (visited.has(node)) continue;
-            visited.add(node);
-            (graph[node] || []).forEach(({ to, coords }) => {
-              queue.push([to, [...path, coords]]);
-            });
-          }
-          return null;
-        }
 
-        function findNearestSegment(clickLatLng) {
-          let closestSegment = null;
-          let minDist = 50;
-          canalSegments.features.forEach(feature => {
-            const coords = feature.geometry.coordinates;
-            for (let i = 0; i < coords.length - 1; i++) {
-              const p1 = L.latLng(coords[i][1], coords[i][0]);
-              const p2 = L.latLng(coords[i + 1][1], coords[i + 1][0]);
-              const dist = L.GeometryUtil.distanceSegment(map, clickLatLng, p1, p2);
-              const distFeet = dist * 3.28084;
-              if (distFeet < minDist) {
-                minDist = distFeet;
-                closestSegment = feature;
-              }
-            }
-          });
-          return closestSegment;
-        }
 
-        
 
-        function simulateClickAndRoute(lat, lng) {
-  const clickLatLng = L.latLng(lat, lng);
-  const nearest = findNearestSegment(clickLatLng);
-  if (!nearest) {
-    alert("Not close enough to a canal.");
-    return;
+
+L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+  maxZoom: 19,
+  attribution: '&copy; OpenStreetMap contributors'
+}).addTo(map);
+document.getElementById('route-button').disabled = true;
+
+
+
+let graph = {}; // Graph for Dijkstra
+let segmentMap = {}; // Map segment_id to feature
+let startNode = null, endNode = null;
+let addressPoints = []; // ✅ define globally
+let canalDataReady = false;
+let routeLine;
+let bridgeMarkers = [];
+
+
+
+
+// === INSERT YOUR CLOUDINARY GEOJSON LINKS BELOW ===
+const CANAL_GEOJSON_URL = 'https://res.cloudinary.com/da0bnopjg/raw/upload/v1751914031/forwardTest3_ls3ify.geojson';
+const ADDRESS_GEOJSON_URL = 'https://res.cloudinary.com/da0bnopjg/raw/upload/v1751043675/Gulf_Access_Points_Master_vdfpde.geojson';
+
+// Utility: Convert speed mph to m/s
+const mphToMps = (mph) => mph * 0.44704;
+
+// Utility: Calculate polyline distance in miles
+function calculateDistance(coords) {
+  let d = 0;
+  for (let i = 1; i < coords.length; i++) {
+    d += map.distance(coords[i - 1], coords[i]);
   }
-  const startPoint = nearest.properties.from_point;
-  const destination = document.getElementById("destination-select").value;
-  const route = bfs(startPoint, destination);
-  if (!route) {
-    alert("No route found.");
-    return;
-  }
-
-  const fullRoute = route.flat();
-  const latLngRoute = fullRoute.map(p => L.latLng(p));
-
-  // Remove previous route if it exists
-  if (currentRoutePolyline) {
-    map.removeLayer(currentRoutePolyline);
-  }
-
-  // Draw new route
-  currentRoutePolyline = L.polyline(latLngRoute, { color: 'blue', weight: 5 }).addTo(map);
-  map.fitBounds(currentRoutePolyline.getBounds());
-
-  // Distance calculation
-  let totalDistance = 0;
-  for (let i = 0; i < latLngRoute.length - 1; i++) {
-    totalDistance += latLngRoute[i].distanceTo(latLngRoute[i + 1]);
-  }
-  const distanceMiles = totalDistance / 1609.34;
-  document.getElementById('distance-box').textContent = 'Distance: ' + distanceMiles.toFixed(2) + ' mi';
-
-  // Time calculation
-  const selectedSpeedValue = parseFloat(document.getElementById('speed-select').value);
-  const timeHours = distanceMiles / selectedSpeedValue;
-  const timeMinutes = timeHours * 60;
-  document.getElementById('time-box').textContent = 'Time: ' + timeMinutes.toFixed(1) + ' min';
-
-  // Placeholder for min clearance
-  document.getElementById('clearance-box').textContent = 'Min Clearance: TBD';
+  return d * 0.000621371; // meters to miles
 }
 
-// Attach button click to simulateClickAndRoute
-        document.getElementById("route-button").addEventListener("click", () => {
-          const matched = addressData.find(a => a.label === input.value);
-          if (matched) {
-            simulateClickAndRoute(matched.lat, matched.lng);
-          } else {
-            alert("Please select a valid address.");
-          }
-        });
+// Load and process canal network
+let geojsonData; // ✅ Add this near the top where your global vars are
 
-        // Allow map click fallback
-        map.on("click", function(e) {
-          simulateClickAndRoute(e.latlng.lat, e.latlng.lng);
-        });
+fetch(CANAL_GEOJSON_URL)
+  .then(res => res.json())
+  .then(data => {
+    geojsonData = data;  // ✅ Save data for future use
+    data.features.forEach(feature => {
+      const { from_point, to_point, segment_id } = feature.properties;
+      const coords = feature.geometry.coordinates.map(c => [c[1], c[0]]);
+      const distance = calculateDistance(coords);
+	  
+	  if (!segmentMap[segment_id]) {
+		segmentMap[segment_id] = { feature, coords, distance };
+		} else {
+		console.warn("Duplicate during map load:", segment_id);
+		}
 
-        // --- Load address data for autocomplete ---
-        fetch(addressGeojsonUrl)
-          .then(res => res.json())
-          .then(addressGeojson => {
-            addressData = addressGeojson.features.map(f => ({
-              label: f.properties.SITEADDR,
-              lat: f.geometry.coordinates[1],
-              lng: f.geometry.coordinates[0]
-            }));
-          });
+	  
+      segmentMap[segment_id] = { feature, coords, distance };
 
-        // --- Autocomplete logic ---
-        const input = document.getElementById("address-input");
-        const suggestionsBox = document.getElementById("suggestions");
+      if (!graph[from_point]) graph[from_point] = [];
+      if (!graph[to_point]) graph[to_point] = [];
 
-        input.addEventListener("input", () => {
-          const val = input.value.toLowerCase();
-          suggestionsBox.innerHTML = "";
-          if (val.length === 0) return;
-          const matches = addressData.filter(a => a.label.toLowerCase().includes(val));
-          matches.slice(0, 3).forEach(match => {
-            const div = document.createElement("div");
-            div.textContent = match.label;
-            div.addEventListener("click", () => {
-      input.value = match.label;
-      suggestionsBox.innerHTML = "";
-            });
-            suggestionsBox.appendChild(div);
-          });
-        });
+      graph[from_point].push({ to: to_point, segment_id });
+      <!-- graph[to_point].push({ to: from_point, segment_id });  // ✅ include reverse for completeness -->
+
+	      });
+	canalDataReady = true;
+	document.getElementById('route-button').disabled = false;
+    console.log(`Graph initialized with ${data.features.length} segments.`);
+  });
+
+
+
+// Load and process addresses
+
+fetch(ADDRESS_GEOJSON_URL)
+  .then(res => res.json())
+  .then(data => {
+    data.features.forEach(feature => {
+      feature.label = feature.properties.SITEADDR;
+      addressPoints.push(feature);
+    });
+
+    console.log(`Loaded ${addressPoints.length} address points.`);
+    console.log("Sample addresses:", addressPoints.slice(0, 5));
+  });
+
+
+// === Autocomplete Functions ===
+function setupAutocomplete(inputId, suggestionsId, isDestination = false) {
+  const input = document.getElementById(inputId);
+  const suggestionBox = document.getElementById(suggestionsId);
+
+  input.addEventListener('input', () => {
+    const value = input.value.toLowerCase();
+    suggestionBox.innerHTML = '';
+    if (value.length < 2) return;
+
+    const matches = addressPoints.filter(f => f.properties?.SITEADDR?.toLowerCase().includes(value));
+    matches.slice(0, 10).forEach(m => {
+      const div = document.createElement('div');
+      div.innerText = m.properties.SITEADDR;
+      div.addEventListener('click', () => {
+
+        const coords = m.geometry.coordinates;
+        const latlng = [coords[1], coords[0]];
+        if (isDestination) {
+            endNode = findNearestNode(latlng[0], latlng[1], "to");
+            const endSegment = geojsonData.features.find(f => f.properties.to_point === endNode);
+            if (toMarker) map.removeLayer(toMarker);
+            toAddressLatLng = latlng;
+            toMarker = L.marker(toAddressLatLng, { icon: createScaledIcon(toIconUrl, map.getZoom()) }).addTo(map);
+console.log('Placed TO marker at', latlng);
+        } else {
+            startNode = findNearestNode(latlng[0], latlng[1], "from");
+            const startSegment = geojsonData.features.find(f => f.properties.from_point === startNode);
+            if (fromMarker) map.removeLayer(fromMarker);
+            fromAddressLatLng = latlng;
+            fromMarker = L.marker(fromAddressLatLng, { icon: createScaledIcon(fromIconUrl, map.getZoom()) }).addTo(map);
+console.log('Placed FROM marker at', latlng);
+        }
+
+        input.value = m.properties.SITEADDR;
+        suggestionBox.innerHTML = '';
+
       });
-  </script>
+      suggestionBox.appendChild(div);
+    });
+  });
+}
+
+setupAutocomplete('address-input', 'suggestions');
+setupAutocomplete('destination-address', 'destination-suggestions', true);
+document.querySelectorAll('input[name="dest-type"]').forEach(radio => {
+  radio.addEventListener('change', () => {
+    const isPOI = document.querySelector('input[name="dest-type"]:checked').value === 'poi';
+    document.getElementById('destination-select').style.display = isPOI ? 'block' : 'none';
+    document.getElementById('destination-address').style.display = isPOI ? 'none' : 'block';
+  });
+});
+
+
+
+function getDistanceFromLatLonInKm(lat1, lon1, lat2, lon2) {
+  const R = 6371; // Earth's radius in kilometers
+  const dLat = deg2rad(lat2 - lat1);
+  const dLon = deg2rad(lon2 - lon1);
+  const a = 
+    Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+    Math.cos(deg2rad(lat1)) * Math.cos(deg2rad(lat2)) *
+    Math.sin(dLon / 2) * Math.sin(dLon / 2);
+  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+  return R * c;
+}
+
+function deg2rad(deg) {
+  return deg * (Math.PI / 180);
+}
+
+
+
+// === Find Nearest Canal Node within 100ft ===
+function findNearestNode(lat, lng, mode) {
+    let nearestNode = null;
+    let minDistance = Infinity;
+
+    geojsonData.features.forEach((feature) => {
+        const props = feature.properties;
+        const coords = feature.geometry.coordinates;
+
+        // Choose which endpoint to consider based on mode
+        let nodeCoord = null;
+        let nodeName = null;
+
+        if (mode === "from") {
+            nodeCoord = coords[0];
+            nodeName = props.from_point;
+        } else if (mode === "to") {
+            nodeCoord = coords[coords.length - 1];
+            nodeName = props.to_point;
+        }
+
+        const distance = getDistanceFromLatLonInKm(
+            lat,
+            lng,
+            nodeCoord[1],
+            nodeCoord[0]
+        );
+
+        if (distance < minDistance) {
+            minDistance = distance;
+            nearestNode = nodeName;
+        }
+    });
+
+    return nearestNode;
+}
+/* UNCOMMENT IF NEEDED
+map.on('click', (e) => {
+  const latlng = e.latlng;
+
+  if (!startNode) {
+    const node = findNearestNode(latlng.lat, latlng.lng, 'from');
+    if (node) {
+      startNode = node;
+      alert('Start location selected.');
+    } else {
+      alert('No nearby start node found within 1000ft.');
+    }
+  } else if (!endNode) {
+    const node = findNearestNode(latlng.lat, latlng.lng, 'to');
+    if (node) {
+      endNode = node;
+      alert('End location selected.');
+    } else {
+      alert('No nearby end node found within 1000ft.');
+    }
+  }
+ });
+*/
+
+<!-- TEST CLICK -->
+map.on('click', (e) => {
+  const latlng = e.latlng;
+
+  if (!startNode) {
+    const node = findNearestNode(latlng.lat, latlng.lng, 'from');
+    if (node) {
+      startNode = node;
+    }
+  } else {
+    const node = findNearestNode(latlng.lat, latlng.lng, 'to');
+    if (node) {
+      endNode = node;
+      document.getElementById('route-button').click();  // Instantly calculate route
+    }
+  }
+});
+
+
+
+
+// === Dijkstra’s Algorithm ===
+function dijkstra(start, end, userSpeed) {
+  const visited = new Set();
+  const distances = {};
+  const prev = {};
+
+  Object.keys(graph).forEach(n => { distances[n] = Infinity; });
+  distances[start] = 0;
+
+  const pq = new Map();
+  pq.set(start, 0);
+
+  while (pq.size) {
+    const curr = [...pq.entries()].sort((a, b) => a[1] - b[1])[0][0];
+    pq.delete(curr);
+
+    if (curr === end) break;
+    if (visited.has(curr)) continue;
+    visited.add(curr);
+
+    for (const edge of graph[curr]) {
+      const { to, segment_id } = edge;
+      if (visited.has(to)) continue;
+
+      const segment = segmentMap[segment_id];
+      if (!segment) {
+        console.warn("Missing segment in segmentMap:", segment_id);
+        continue;
+      }
+
+      const { coords, feature } = segment;
+      if (!coords || coords.length < 2) {
+        console.warn("Bad or missing coords for:", segment_id);
+        continue;
+      }
+
+      const segSpeed = feature.properties.speed_mph;
+      if (!segSpeed) {
+        console.warn("Missing speed_mph for:", segment_id);
+      }
+
+      const distance = calculateDistance(coords);
+      const effSpeed = Math.min(userSpeed, segSpeed || userSpeed); // fallback if segSpeed missing
+      const time = distance / effSpeed;
+
+      if (distances[curr] + time < distances[to]) {
+        distances[to] = distances[curr] + time;
+        prev[to] = { from: curr, segment_id };
+        pq.set(to, distances[to]);
+      }
+    }
+  }
+
+  // Reconstruct path
+  const path = [], segIds = [];
+  let node = end;
+  let totalDistance = 0;
+
+  while (prev[node]) {
+    const { from, segment_id } = prev[node];
+    path.unshift(from);
+    segIds.unshift(segment_id);
+    totalDistance += segmentMap[segment_id].distance;
+    node = from;
+  }
+  path.push(end);
+
+  // Compute final min clearance from route segments
+  const minClearValues = segIds
+    .map(id => segmentMap[id].feature.properties.min_cleara)
+    .filter(val => val !== undefined && val !== null);
+
+  const finalMinClear = minClearValues.length > 0
+    ? Math.min(...minClearValues)
+    : "No Bridges";
+
+  return {
+    path,
+    segIds,
+    totalTime: distances[end],
+    totalDistance,
+    minClear: finalMinClear
+  };
+}
+function getSpeedColor(speed) {
+  if (speed >= 25) return 'green';
+  return 'red';
+}
+
+
+// === Route Button Event ===
+document.getElementById('route-button').addEventListener('click', () => {
+  if (!canalDataReady) {
+    alert("Canal data is still loading. Please wait a moment and try again.");
+    return;
+  }
+
+  
+  if (fromMarker) { map.removeLayer(fromMarker); fromMarker = null; }
+  if (toMarker) { map.removeLayer(toMarker); toMarker = null; }
+
+  const speed = parseInt(document.getElementById('speed-select').value);
+
+  const destType = document.querySelector('input[name="dest-type"]:checked').value;
+if (destType === 'poi') {
+  const poi = document.getElementById('destination-select').value;
+
+  if (poi === 'openWater') {
+    // Find all node keys that contain "openWater"
+    const candidates = Object.keys(graph).filter(p => p.toLowerCase().includes("openwater"));
+
+    if (!candidates.length) {
+      alert("No Open Water destinations found.");
+      return;
+    }
+
+    let bestNode = null;
+    let bestTime = Infinity;
+
+    for (const candidate of candidates) {
+      const result = dijkstra(startNode, candidate, speed);
+
+      if (result.path.length && result.totalTime < bestTime) {
+        bestTime = result.totalTime;
+        bestNode = candidate;
+      }
+    }
+
+    if (!bestNode) {
+      alert("No reachable Open Water destination found.");
+      return;
+    }
+
+    endNode = bestNode;
+	// Place TO marker for Open Water
+const endSegment = geojsonData.features.find(f => f.properties.to_point === endNode);
+if (endSegment) {
+  const coords = endSegment.geometry.coordinates;
+  const latlng = [coords[coords.length - 1][1], coords[coords.length - 1][0]];
+  toAddressLatLng = latlng;
+            toMarker = L.marker(toAddressLatLng, { icon: createScaledIcon(toIconUrl, map.getZoom()) }).addTo(map);
+  console.log("Placed TO marker for Open Water at", latlng);
+}
+
+	
+  } else {
+    const poiNodeMap = {
+      cellini_citrus: 'cellini_citrus',
+      tarponMarina: 'tarponMarina'
+    };
+    endNode = poiNodeMap[poi];
+
+    // Place end marker for POI
+    const endSegment = geojsonData.features.find(f => f.properties.to_point === endNode);
+    if (endSegment) {
+      const coords = endSegment.geometry.coordinates;
+      const latlng = [coords[coords.length - 1][1], coords[coords.length - 1][0]];
+      if (toMarker) map.removeLayer(toMarker);
+      toAddressLatLng = latlng;
+            toMarker = L.marker(toAddressLatLng, { icon: createScaledIcon(toIconUrl, map.getZoom()) }).addTo(map);
+console.log('Placed TO marker at', latlng);
+    }
+
+  }
+}
+
+  console.log("Start node:", startNode);
+  console.log("Edges from start node:", graph[startNode]);
+  console.log("End node:", endNode);
+  console.log("Edges from end node:", graph[endNode]);
+
+  
+  // Re-create From/To markers from stored address latlngs if available
+  if (!fromMarker && fromAddressLatLng) {
+    fromMarker = L.marker(fromAddressLatLng, { icon: createScaledIcon(fromIconUrl, map.getZoom()) }).addTo(map);
+    console.log("Reused original FROM address latlng", fromAddressLatLng);
+  }
+  if (!toMarker && toAddressLatLng && destType === "address") {
+    toMarker = L.marker(toAddressLatLng, { icon: createScaledIcon(toIconUrl, map.getZoom()) }).addTo(map);
+    console.log("Reused original TO address latlng", toAddressLatLng);
+  }
+
+  // Re-create From marker from its segment if not already shown
+  if (!fromMarker && startNode) {
+    const startSegment = geojsonData.features.find(f => f.properties.from_point === startNode);
+    if (startSegment) {
+      const coords = startSegment.geometry.coordinates;
+      const latlng = [coords[0][1], coords[0][0]];
+      fromAddressLatLng = latlng;
+            fromMarker = L.marker(fromAddressLatLng, { icon: createScaledIcon(fromIconUrl, map.getZoom()) }).addTo(map);
+      console.log("Reconstructed FROM marker at", latlng);
+
+  // Re-create To marker from its segment if not already shown (only for address mode)
+  if (!toMarker && endNode && destType === "address") {
+    const endSegment = geojsonData.features.find(f => f.properties.to_point === endNode);
+    if (endSegment) {
+      const coords = endSegment.geometry.coordinates;
+      const latlng = [coords[coords.length - 1][1], coords[coords.length - 1][0]];
+      toAddressLatLng = latlng;
+            toMarker = L.marker(toAddressLatLng, { icon: createScaledIcon(toIconUrl, map.getZoom()) }).addTo(map);
+      console.log("Reconstructed TO marker at", latlng);
+    }
+  }
+
+    }
+  }
+
+
+  if (!startNode || !endNode) {
+    alert('Please select both a start and end location.');
+    return;
+  }
+
+  const result = dijkstra(startNode, endNode, speed);
+  if (!result.path.length) {
+    alert('No route found.');
+    return;
+  }
+
+  console.log("Route segIds:", result.segIds);
+  for (const id of result.segIds) {
+    if (!segmentMap[id]) {
+      console.error("Missing in segmentMap:", id);
+    }
+  }
+
+  // Remove previous route lines
+  if (Array.isArray(routeLine)) {
+    routeLine.forEach(line => map.removeLayer(line));
+  } else if (routeLine) {
+    map.removeLayer(routeLine);
+  }
+  routeLine = [];
+
+  let allCoords = [];
+
+  for (let i = 0; i < result.segIds.length; i++) {
+    const segmentId = result.segIds[i];
+    const segment = segmentMap[segmentId];
+
+    if (!segment) {
+      console.warn("Segment not found in segmentMap:", segmentId);
+      continue;
+    }
+
+    let coords = segment.coords;
+    if (!coords || coords.length === 0) {
+      console.warn("Segment has no coordinates:", segmentId);
+      continue;
+    }
+
+    const from = segment.feature.properties.from_point;
+    const to = segment.feature.properties.to_point;
+    const expectedStart = result.path[i];
+    const expectedEnd = result.path[i + 1];
+
+    if (from === expectedEnd && to === expectedStart) {
+      coords = [...coords].reverse();
+    }
+
+    const speed = segment.feature.properties.speed_mph || 0;
+    const color = getSpeedColor(speed);
+
+    const poly = L.polyline(coords, {
+      color,
+      weight: 4,
+      opacity: 0.9
+    }).addTo(map);
+	
+// Clear previous bridge markers
+for (const marker of bridgeMarkers) {
+  map.removeLayer(marker);
+}
+bridgeMarkers = [];
+
+// Add bridge icons for segments with min_cleara
+for (const segmentId of result.segIds) {
+  const segment = segmentMap[segmentId];
+  if (!segment) continue;
+
+  const minClear = segment.feature.properties.min_cleara;
+  if (minClear !== null && minClear !== undefined) {
+    const coords = segment.coords;
+    if (!coords || coords.length < 2) continue;
+
+    const midIndex = Math.floor(coords.length / 2);
+    const bridgeLatLng = coords[midIndex];
+
+    const marker = L.marker(bridgeLatLng, {
+      icon: L.icon({
+        iconUrl: 'https://res.cloudinary.com/da0bnopjg/image/upload/v1751921623/bridge_2341064_slhkds.png',
+        iconSize: [24, 24],
+        iconAnchor: [12, 12]
+      })
+    }).addTo(map);
+
+    bridgeMarkers.push(marker);
+  }
+}
+
+
+    routeLine.push(poly);
+    allCoords.push(...coords);
+  }
+
+  if (allCoords.length >= 2) {
+    map.fitBounds(L.latLngBounds(allCoords));
+  } else {
+    alert("Unable to draw route. Try selecting a different start or end location.");
+  }
+
+  // Format output values
+  const totalDistanceText = `${result.totalDistance.toFixed(1)} mi`;
+
+  const totalTimeHours = result.totalTime;
+  const hours = Math.floor(totalTimeHours);
+  const minutes = Math.round((totalTimeHours - hours) * 60);
+  const timeDisplay = hours > 0 ? `${hours}h ${minutes}m` : `${minutes} min`;
+
+let minClearText;
+if (typeof result.minClear === "string") {
+  minClearText = result.minClear;
+} else {
+  const clearance = result.minClear || 0;
+  const feet = Math.floor(clearance);
+  const inches = Math.round((clearance - feet) * 12);
+  minClearText = `${feet} ft ${inches} in`;
+}
+
+
+  // Display info
+  document.getElementById('distance-box').innerHTML = `Distance: ${totalDistanceText}`;
+  document.getElementById('time-box').innerHTML = `Time: ${timeDisplay}`;
+  document.getElementById('clearance-box').innerHTML = `Min Clearance: ${minClearText}`;
+});
+
+
+
+
+
+  
+const fromIconUrl = 'https://res.cloudinary.com/da0bnopjg/image/upload/v1751928138/Green_Flag_hy05my.png';
+const toIconUrl = 'https://res.cloudinary.com/da0bnopjg/image/upload/v1751928160/Checkered_Flag_jyxdos.png';
+
+function createScaledIcon(url, zoom, anchor = [0.5, 1]) {
+  const size = Math.max(18, Math.min(zoom * 3, 48));
+  return L.icon({
+    iconUrl: url,
+    iconSize: [size, size],
+    iconAnchor: [size * anchor[0], size * anchor[1]]
+  });
+}
+
+map.on('zoomend', () => {
+  const zoom = map.getZoom();
+  if (fromMarker && fromAddressLatLng) {
+    map.removeLayer(fromMarker);
+    fromMarker = L.marker(fromAddressLatLng, { icon: createScaledIcon(fromIconUrl, zoom, [0.5, 1]) }).addTo(map);
+  }
+  if (toMarker && toAddressLatLng) {
+    map.removeLayer(toMarker);
+    toMarker = L.marker(toAddressLatLng, { icon: createScaledIcon(toIconUrl, zoom, [0.5, 0.9]) }).addTo(map);
+  }
+});
+
+</script>
+
 </body>
 </html>
