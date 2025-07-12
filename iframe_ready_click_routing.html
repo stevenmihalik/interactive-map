@@ -4,849 +4,956 @@
   <meta charset="utf-8" />
   <title></title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!-- Load Leaflet CSS -->
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
-  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js">
-const fromIconUrl = 'https://res.cloudinary.com/da0bnopjg/image/upload/v1751928138/Green_Flag_hy05my.png';
-const toIconUrl = 'https://res.cloudinary.com/da0bnopjg/image/upload/v1751928160/Checkered_Flag_jyxdos.png';
 
-function createScaledIcon(url, zoom, anchor = [0.5, 1]) {
-  const size = Math.max(18, Math.min(zoom * 3, 48));
-  return L.icon({
-    iconUrl: url,
-    iconSize: [size, size],
-    iconAnchor: [size * anchor[0], size * anchor[1]]
-  });
-}
+  <!-- Load Leaflet JS -->
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
-map.on('zoomend', () => {
-  const zoom = map.getZoom();
-  if (fromMarker && fromAddressLatLng) {
-    map.removeLayer(fromMarker);
-    fromMarker = L.marker(fromAddressLatLng, { icon: createScaledIcon(fromIconUrl, zoom, [0.5, 1]) }).addTo(map);
-  }
-  if (toMarker && toAddressLatLng) {
-    map.removeLayer(toMarker);
-    toMarker = L.marker(toAddressLatLng, { icon: createScaledIcon(toIconUrl, zoom, [0, 0.9]) }).addTo(map);
-  }
-});
-
-</script>
-
+  <!-- Leaflet GeometryUtil extension for distance calculations -->
+  <script src="https://unpkg.com/leaflet-geometryutil"></script>
+  
+  <link rel="stylesheet" href="https://res.cloudinary.com/da0bnopjg/raw/upload/v1752241565/L.Control.Boating_dauorv.css" />
+<script src="https://res.cloudinary.com/da0bnopjg/raw/upload/v1752200366/L.Control.Boating_j9kccx.js"></script>
+  
+  <!-- Main CSS styling -->
   <style>
-html, body {
-  height: auto;
-  margin: 0;
-  padding: 0;
-  overflow: visible;
-}
-  
-  
-.main-container {
-  max-width: 960px;
-  margin: 0 auto;
-  display: flex;
-  flex-direction: column;
-}
-
-.ui-container {
-  padding-bottom: 10px;
-  padding-top: 10px;
-  z-index: 1000;
-}
-
-.top-row {
-  margin-bottom: 10px;
-  position: relative;
-}
-
-.middle-row {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 10px;
-  gap: 10px;
-}
-
-.middle-row select,
-.middle-row button {
-  padding: 8px;
-  font-size: 14px;
-}
-
-.bottom-row {
-  display: flex;
-  justify-content: space-between;
-  gap: 10px;
-}
-
-
-.info-box {
-  flex: 1;
-  background: #5896ed;
-  color: white;
-  padding: 10px;
-  text-align: center;
-  border-radius: 5px;
-  box-shadow: 0 1px 3px rgba(0,0,0,0.2);
-  font-family: Arial, sans-serif;
-  height: 84px;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-}
-
-.info-label {
-  font-weight: 300;
-  font-size: 14px;
-  opacity: 0.85;
-}
-.label {
-  font-family: Arial, sans-serif;  
-}
-
-.info-value {
-  font-weight: 700;
-  font-size: 18px;
-  margin-top: 4px;
-}
-
-
-.map-container {
-  height: 450px;
-  position: relative;
-}
-
-#map {
-  height: 100%;
-  width: 100%;
-}
-
-.styled-bar {
-  height: 42px;
-  padding: 8px;
-  font-size: 16px;
-  width: 100%;
-  box-sizing: border-box;
-}
-
-.suggestion-box {
-  position: absolute;
-  top: 100%;
-  width: 50%;
-  background: #5896ed;
-  z-index: 1001;
-  border: 1px solid #ccc;
-  cursor: pointer;
-  color: white;
-  font-family: Arial, sans-serif;
-}
-.suggestion-box2 {
-  position: absolute;
-  top: 100%;
-  width: 100%;
-  background: #5896ed;
-  z-index: 1001;
-  border: 1px solid #ccc;
-  cursor: pointer;
-  color: white;
-  font-family: Arial, sans-serif;
-}
-
-
-#route-button {
-  background-color: #e63946;
-  color: white;
-  border: none;
-  cursor: pointer;
-}
-
-#route-button:hover {
-  background-color: #d62828;
-}
-
-</style>
+    html, body {
+      height: auto;
+      margin: 0;
+      padding: 0;
+      overflow: visible;
+    }
+    .main-container {
+      max-width: 960px;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+    }
+    .ui-container {
+      padding-bottom: 10px;
+      padding-top: 10px;
+      z-index: 1000;
+    }
+    .top-row {
+      margin-bottom: 10px;
+      position: relative;
+    }
+    .middle-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+      gap: 10px;
+    }
+    .middle-row select,
+    .middle-row button {
+      padding: 8px;
+      font-size: 14px;
+    }
+    .bottom-row {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+    }
+    .info-box {
+      flex: 1;
+      background: #5896ed;
+      color: white;
+      padding: 10px;
+      text-align: center;
+      border-radius: 5px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+      font-family: Arial, sans-serif;
+      height: 84px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+    }
+    .info-label {
+      font-weight: 300;
+      font-size: 14px;
+      opacity: 0.85;
+    }
+    .label {
+      font-family: Arial, sans-serif;
+    }
+    .info-value {
+      font-weight: 700;
+      font-size: 18px;
+      margin-top: 4px;
+    }
+    .map-container {
+      height: 450px;
+      position: relative;
+    }
+    #map {
+      height: 100%;
+      width: 100%;
+    }
+    .styled-bar {
+      height: 42px;
+      padding: 8px;
+      font-size: 16px;
+      width: 100%;
+      box-sizing: border-box;
+    }
+    .suggestion-box, .suggestion-box2 {
+      position: absolute;
+      top: 100%;
+      background: #5896ed;
+      z-index: 1001;
+      border: 1px solid #ccc;
+      cursor: pointer;
+      color: white;
+      font-family: Arial, sans-serif;
+    }
+    .suggestion-box {
+      width: 50%;
+    }
+    .suggestion-box2 {
+      width: 100%;
+    }
+    #route-button {
+      background-color: #e63946;
+      color: white;
+      border: none;
+      cursor: pointer;
+    }
+    #route-button:hover {
+      background-color: #d62828;
+    }
+  </style>
 </head>
 <body style="margin: 0;">
   <h1 style="text-align: left; font-size: 32px; font-family: Arial, sans-serif; margin: 20px 0;">HOW LONG TO OPEN WATER</h1>
   <div class="main-container">
-  <div class="ui-container">
-    
-
-<div class="top-row" style="display: flex; flex-direction: row; gap: 10px; align-items: flex-start;">
-  <div style="flex: 1; display: flex; flex-direction: column; gap: 5px;">
-    <label style="font-weight: bold;font-family: Arial, sans-serif;">From:</label>
-    <input type="text" id="address-input" placeholder="Enter address..." class="styled-bar">
-    <div id="suggestions" class="suggestion-box"></div>
-  </div>
-  <div style="flex: 1; display: flex; flex-direction: column; gap: 5px; position: relative;">
-    <label style="font-weight: bold;font-family: Arial, sans-serif;">To:</label>
-    <div id="poi-container" style="width: 100%;">
-      <select id="destination-select" class="styled-bar">
-        <option value="openWater">Open Water</option>
-        <option value="cellini_citrus">Cellini Citrus</option>
-		<option value="tarponMarina">Pinchers Cape Coral</option>
-      </select>
-      <input type="text" id="destination-address" placeholder="Enter destination..." class="styled-bar" style="display: none;" />
-      <div id="destination-suggestions" class="suggestion-box2"></div>
+    <div class="ui-container">
+	  <div class="top-row" style="display: flex; flex-direction: row; gap: 10px; align-items: flex-start;">
+        <div style="flex: 1; display: flex; flex-direction: column; gap: 5px;">
+          <label style="font-weight: bold;font-family: Arial, sans-serif;">From:</label>
+          <input type="text" id="address-input" placeholder="Enter address..." class="styled-bar">
+          <div id="suggestions" class="suggestion-box"></div>
+        </div>
+        <div style="flex: 1; display: flex; flex-direction: column; gap: 5px; position: relative;">
+          <label style="font-weight: bold;font-family: Arial, sans-serif;">To:</label>
+          <div id="poi-container" style="width: 100%;">
+            <select id="destination-select" class="styled-bar">
+              <option value="openWater">Open Water</option>
+              <option value="cellini_citrus">Cellini Citrus</option>
+              <option value="tarponMarina">Pinchers Cape Coral</option>
+            </select>
+            <input type="text" id="destination-address" placeholder="Enter destination..." class="styled-bar" style="display: none;" />
+            <div id="destination-suggestions" class="suggestion-box2"></div>
+          </div>
+          <div style="display: flex; gap: 10px; justify-content: flex-end;">
+            <label style="font-family: Arial, sans-serif;"><input type="radio" name="dest-type" value="poi" checked> POIs</label>
+            <label style="font-family: Arial, sans-serif;"><input type="radio" name="dest-type" value="address"> Address</label>
+          </div>
+        </div>
+      </div>
+      <div class="middle-row">
+        <div style="display: flex; align-items: center; gap: 8px;">
+          <label for="speed-select" style="font-size:14px; font-weight:bold;font-family: Arial, sans-serif;">Max Speed:</label>
+          <select id="speed-select">
+            <option value="5">5 mph</option><option value="10">10 mph</option><option value="15">15 mph</option>
+            <option value="20">20 mph</option><option value="25">25 mph</option><option value="30">30 mph</option>
+            <option value="35">35 mph</option><option value="40">40 mph</option><option value="45">45 mph</option>
+            <option value="50">50 mph</option><option value="55">55 mph</option><option value="60">60 mph</option>
+          </select>
+        </div>
+        <button id="route-button">Get Directions</button>
+      </div>
+      <div class="bottom-row" id="scroll-target">
+        <div class="info-box" id="distance-box">Distance: --</div>
+        <div class="info-box" id="time-box">Time: --</div>
+        <div class="info-box" id="clearance-box">Min Clearance: --</div>
+      </div>
     </div>
-    <div style="display: flex; gap: 10px; justify-content: flex-end;">
-      <label style="font-family: Arial, sans-serif;"><input type="radio" name="dest-type" value="poi" checked> POIs</label>
-      <label style="font-family: Arial, sans-serif;"><input type="radio" name="dest-type" value="address"> Address</label>
-    </div>
-  </div>
-</div>
-
-
-    
-<div class="middle-row">
-  <div style="display: flex; align-items: center; gap: 8px;">
-    <label for="speed-select" style="font-size:14px; font-weight:bold;font-family: Arial, sans-serif;">Max Speed:</label>
-    <select id="speed-select">
-      <option value="5">5 mph</option><option value="10">10 mph</option><option value="15">15 mph</option>
-      <option value="20">20 mph</option><option value="25">25 mph</option><option value="30">30 mph</option>
-      <option value="35">35 mph</option><option value="40">40 mph</option><option value="45">45 mph</option>
-      <option value="50">50 mph</option><option value="55">55 mph</option><option value="60">60 mph</option>
-    </select>
-  </div>
-  <button id="route-button">Get Directions</button>
-</div>
-
-  <div class="bottom-row"id="scroll-target">
-      <div class="info-box" id="distance-box">Distance: --</div>
-      <div class="info-box" id="time-box">Time: --</div>
-      <div class="info-box" id="clearance-box">Min Clearance: --</div>
+    <div class="map-container">
+      <div id="map"></div>
     </div>
   </div>
-  <div class="map-container" >
-    <div id="map"></div>
-  </div>
-</div>
-
-  <script>
-// === Leaflet Map & Routing Script for Cape Coral Canal Navigation ===
-
+ <script>
+// === Initialize the Leaflet map ===
+/*// Centered on Cape Coral, FL with zoom level 13
 let map = L.map('map').setView([26.6, -81.98], 13);
 
-
-let fromMarker = null;
-let toMarker = null;
-let fromAddressLatLng = null;
-let toAddressLatLng = null;
-
-
-
-
-
-
+// === Add OpenStreetMap tile layer ===
 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-  maxZoom: 19,
-  attribution: '&copy; OpenStreetMap contributors'
+    maxZoom: 19,
+    attribution: '&copy; OpenStreetMap contributors'
 }).addTo(map);
-document.getElementById('route-button').disabled = true;
+*/
+
+
+// Create base layers
+const streetMap = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+  attribution: '&copy; OpenStreetMap contributors'
+});
+
+const satelliteMap = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',  {
+    attribution: 'Tiles &copy; Esri &mdash; Source: Esri, Maxar, Earthstar Geographics, and the GIS User Community'
+});
+
+const noaaEnc = L.tileLayer.wms(
+  'https://gis.charttools.noaa.gov/arcgis/rest/services/MCS/ENCOnline/MapServer/exts/MaritimeChartService/WMSServer', {
+    layers: '0,2,6,7,9,10', // '0' is the ENC display layer
+    format: 'image/png',
+    transparent: false,
+    version: '1.3.0',
+    attribution: '© NOAA ENC Online'
+});
+
+const streetsOverlay = L.tileLayer(
+  'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{
+    opacity: 0.4, // make streets semi-transparent
+    attribution: '&copy; OpenStreetMap contributors'
+});
+const blended = L.layerGroup([noaaEnc, streetsOverlay]);
+
+
+// Initialize the map
+const map = L.map('map', {
+  center: [26.6, -81.98],
+  zoom: 13,
+  layers: [streetMap]  // default layer
+});
+
+// Add layer switcher
+const baseMaps = {
+  "Street Map": streetMap,
+  "Satellite": satelliteMap,
+  "Nautical": noaaEnc,
+  'Blended': blended
+
+
+};
+
+L.control.layers(baseMaps).addTo(map);
+L.control.boating().addTo(map)
 
 
 
-let graph = {}; // Graph for Dijkstra
-let segmentMap = {}; // Map segment_id to feature
-let startNode = null, endNode = null;
-let addressPoints = []; // ✅ define globally
-let canalDataReady = false;
-let routeLine;
-let bridgeMarkers = [];
+// === Define global variables ===
+let fromMarker = null; // Marker for "From" location
+let toMarker = null; // Marker for "To" location
+let fromAddressLatLng = null; // Coordinates of selected "From" point
+let toAddressLatLng = null; // Coordinates of selected "To" point
+let graph = {}; // Graph data for Dijkstra routing
+let segmentMap = {}; // Maps segment_id to segment data
+let startNode = null; // Starting node ID in the graph
+let endNode = null; // Ending node ID in the graph
+let addressPoints = []; // List of address point features
+let canalDataReady = false; // Flag to enable routing after canal data loads
+let routeLine; // Polyline object(s) for displayed route
+let bridgeMarkers = []; // Markers for bridge clearance info
 
-
-
-
-// === INSERT YOUR CLOUDINARY GEOJSON LINKS BELOW ===
+// === URLs to GeoJSON resources (stored in Cloudinary) ===
 const CANAL_GEOJSON_URL = 'https://res.cloudinary.com/da0bnopjg/raw/upload/v1751914031/forwardTest3_ls3ify.geojson';
 const ADDRESS_GEOJSON_URL = 'https://res.cloudinary.com/da0bnopjg/raw/upload/v1751043675/Gulf_Access_Points_Master_vdfpde.geojson';
 
-// Utility: Convert speed mph to m/s
+// === Utility function to convert mph to meters per second (used in travel time calc) ===
 const mphToMps = (mph) => mph * 0.44704;
 
-// Utility: Calculate polyline distance in miles
+// === Utility function to calculate total distance (in miles) from a polyline ===
 function calculateDistance(coords) {
-  let d = 0;
-  for (let i = 1; i < coords.length; i++) {
-    d += map.distance(coords[i - 1], coords[i]);
-  }
-  return d * 0.000621371; // meters to miles
+    let d = 0;
+    for (let i = 1; i < coords.length; i++) {
+        d += map.distance(coords[i - 1], coords[i]);
+    }
+    return d * 0.000621371; // Convert meters to miles
 }
 
-// Load and process canal network
-let geojsonData; // ✅ Add this near the top where your global vars are
+// === Load and process the canal network data ===
+let geojsonData; // Stores original GeoJSON object for reference
 
 fetch(CANAL_GEOJSON_URL)
-  .then(res => res.json())
-  .then(data => {
-    geojsonData = data;  // ✅ Save data for future use
+.then(res => res.json())
+.then(data => {
+    geojsonData = data; // Save full feature set for later lookups
+
     data.features.forEach(feature => {
-      const { from_point, to_point, segment_id } = feature.properties;
-      const coords = feature.geometry.coordinates.map(c => [c[1], c[0]]);
-      const distance = calculateDistance(coords);
-	  
-	  if (!segmentMap[segment_id]) {
-		segmentMap[segment_id] = { feature, coords, distance };
-		} else {
-		console.warn("Duplicate during map load:", segment_id);
-		}
+        const { from_point, to_point, segment_id } = feature.properties;
+        const coords = feature.geometry.coordinates.map(c => [c[1], c[0]]); // Convert [lng, lat] → [lat, lng]
+        const distance = calculateDistance(coords);
 
-	  
-      segmentMap[segment_id] = { feature, coords, distance };
+        // Build segmentMap (used in routing to get distance and coordinates)
+        if (!segmentMap[segment_id]) {
+            segmentMap[segment_id] = {
+                feature,
+                coords,
+                distance
+            };
+        } else {
+            console.warn("Duplicate during map load:", segment_id);
+        }
 
-      if (!graph[from_point]) graph[from_point] = [];
-      if (!graph[to_point]) graph[to_point] = [];
+        // Create bidirectional graph edges for Dijkstra
+        if (!graph[from_point])
+            graph[from_point] = [];
+        if (!graph[to_point])
+            graph[to_point] = [];
 
-      graph[from_point].push({ to: to_point, segment_id });
-      <!-- graph[to_point].push({ to: from_point, segment_id });  // ✅ include reverse for completeness -->
+        graph[from_point].push({
+            to: to_point,
+            segment_id
+        });
+        // Note: Reverse direction intentionally left out here (may be added later)
+    });
 
-	      });
-	canalDataReady = true;
-	document.getElementById('route-button').disabled = false;
+    canalDataReady = true;
+    document.getElementById('route-button').disabled = false;
     console.log(`Graph initialized with ${data.features.length} segments.`);
-  });
+});
 
-
-
-// Load and process addresses
-
+// === Load and process the address points for autocomplete ===
 fetch(ADDRESS_GEOJSON_URL)
-  .then(res => res.json())
-  .then(data => {
+.then(res => res.json())
+.then(data => {
     data.features.forEach(feature => {
-      feature.label = feature.properties.SITEADDR;
-      addressPoints.push(feature);
+        feature.label = feature.properties.SITEADDR; // Store readable label
+        addressPoints.push(feature); // Add to global address list
     });
 
     console.log(`Loaded ${addressPoints.length} address points.`);
     console.log("Sample addresses:", addressPoints.slice(0, 5));
-  });
+});
 
-
-// === Autocomplete Functions ===
+// === Set up autocomplete behavior for input fields ===
+// inputId: ID of the HTML input element
+// suggestionsId: ID of the div used to show matching suggestions
+// isDestination: true if this is the 'To' input, false for 'From'
 function setupAutocomplete(inputId, suggestionsId, isDestination = false) {
-  const input = document.getElementById(inputId);
-  const suggestionBox = document.getElementById(suggestionsId);
+    const input = document.getElementById(inputId);
+    const suggestionBox = document.getElementById(suggestionsId);
 
-  input.addEventListener('input', () => {
-    const value = input.value.toLowerCase();
-    suggestionBox.innerHTML = '';
-    if (value.length < 2) return;
+    input.addEventListener('input', () => {
+        const value = input.value.toLowerCase(); // convert typed text to lowercase
+        suggestionBox.innerHTML = ''; // clear previous suggestions
+        if (value.length < 2)
+            return; // don't search unless 2+ characters
 
-    const matches = addressPoints.filter(f => f.properties?.SITEADDR?.toLowerCase().includes(value));
-    matches.slice(0, 10).forEach(m => {
-      const div = document.createElement('div');
-      div.innerText = m.properties.SITEADDR;
-      div.addEventListener('click', () => {
+        // Filter address list for matches
+        const matches = addressPoints.filter(f => f.properties?.SITEADDR?.toLowerCase().includes(value));
 
-        const coords = m.geometry.coordinates;
-        const latlng = [coords[1], coords[0]];
-        if (isDestination) {
-            endNode = findNearestNode(latlng[0], latlng[1], "to");
-            const endSegment = geojsonData.features.find(f => f.properties.to_point === endNode);
-            if (toMarker) map.removeLayer(toMarker);
-            toAddressLatLng = latlng;
-            toMarker = L.marker(toAddressLatLng, { icon: createScaledIcon(toIconUrl, map.getZoom()) }).addTo(map);
-console.log('Placed TO marker at', latlng);
-        } else {
-            startNode = findNearestNode(latlng[0], latlng[1], "from");
-            const startSegment = geojsonData.features.find(f => f.properties.from_point === startNode);
-            if (fromMarker) map.removeLayer(fromMarker);
-            fromAddressLatLng = latlng;
-            fromMarker = L.marker(fromAddressLatLng, { icon: createScaledIcon(fromIconUrl, map.getZoom()) }).addTo(map);
-console.log('Placed FROM marker at', latlng);
-        }
+        // Show top 10 matches in the suggestion box
+        matches.slice(0, 10).forEach(m => {
+            const div = document.createElement('div');
+            div.innerText = m.properties.SITEADDR;
 
-        input.value = m.properties.SITEADDR;
-        suggestionBox.innerHTML = '';
+            // What happens when the user clicks a suggestion
+            div.addEventListener('click', () => {
+                const coords = m.geometry.coordinates; // [lng, lat]
+                const latlng = [coords[1], coords[0]]; // Convert to [lat, lng]
 
-      });
-      suggestionBox.appendChild(div);
+                if (isDestination) {
+                    endNode = findNearestNode(latlng[0], latlng[1], "to"); // store graph node for destination
+                    if (toMarker)
+                        map.removeLayer(toMarker);
+                    toAddressLatLng = latlng;
+                    toMarker = L.marker(toAddressLatLng, {
+                        icon: createScaledIcon(toIconUrl, map.getZoom())
+                    }).addTo(map);
+                    console.log('Placed TO marker at', latlng);
+                } else {
+                    startNode = findNearestNode(latlng[0], latlng[1], "from"); // store graph node for start
+                    if (fromMarker)
+                        map.removeLayer(fromMarker);
+                    fromAddressLatLng = latlng;
+                    fromMarker = L.marker(fromAddressLatLng, {
+                        icon: createScaledIcon(fromIconUrl, map.getZoom())
+                    }).addTo(map);
+                    console.log('Placed FROM marker at', latlng);
+                }
+
+                input.value = m.properties.SITEADDR; // update input box with chosen address
+                suggestionBox.innerHTML = ''; // clear suggestions
+            });
+
+            suggestionBox.appendChild(div); // Add suggestion to list
+        });
     });
-  });
 }
 
+// Attach autocomplete logic to input boxes
 setupAutocomplete('address-input', 'suggestions');
 setupAutocomplete('destination-address', 'destination-suggestions', true);
+
+// === Switch input between POI dropdown and address entry ===
 document.querySelectorAll('input[name="dest-type"]').forEach(radio => {
-  radio.addEventListener('change', () => {
-    const isPOI = document.querySelector('input[name="dest-type"]:checked').value === 'poi';
-    document.getElementById('destination-select').style.display = isPOI ? 'block' : 'none';
-    document.getElementById('destination-address').style.display = isPOI ? 'none' : 'block';
-  });
+    radio.addEventListener('change', () => {
+        const isPOI = document.querySelector('input[name="dest-type"]:checked').value === 'poi';
+        document.getElementById('destination-select').style.display = isPOI ? 'block' : 'none';
+        document.getElementById('destination-address').style.display = isPOI ? 'none' : 'block';
+    });
 });
 
-
-
+// === Calculate geographic distance between two lat/lng points in km ===
 function getDistanceFromLatLonInKm(lat1, lon1, lat2, lon2) {
-  const R = 6371; // Earth's radius in kilometers
-  const dLat = deg2rad(lat2 - lat1);
-  const dLon = deg2rad(lon2 - lon1);
-  const a = 
-    Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-    Math.cos(deg2rad(lat1)) * Math.cos(deg2rad(lat2)) *
-    Math.sin(dLon / 2) * Math.sin(dLon / 2);
-  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-  return R * c;
+    const R = 6371; // Earth's radius in kilometers
+    const dLat = deg2rad(lat2 - lat1);
+    const dLon = deg2rad(lon2 - lon1);
+    const a =
+        Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+        Math.cos(deg2rad(lat1)) * Math.cos(deg2rad(lat2)) *
+        Math.sin(dLon / 2) * Math.sin(dLon / 2);
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+    return R * c;
 }
 
+// === Convert degrees to radians ===
 function deg2rad(deg) {
-  return deg * (Math.PI / 180);
+    return deg * (Math.PI / 180);
 }
 
-
-
-// === Find Nearest Canal Node within 100ft ===
+// === Find the nearest canal node within ~150 ft of a click or address ===
+// Uses GeometryUtil to compute the perpendicular distance to canal segments
 function findNearestNode(lat, lng, mode) {
-    let nearestNode = null;
-    let minDistance = Infinity;
+    const clickLatLng = L.latLng(lat, lng);
+    let closestFeature = null;
+    let minDistFeet = 150;
 
-    geojsonData.features.forEach((feature) => {
-        const props = feature.properties;
+    geojsonData.features.forEach(feature => {
         const coords = feature.geometry.coordinates;
+        for (let i = 0; i < coords.length - 1; i++) {
+            const p1 = L.latLng(coords[i][1], coords[i][0]);
+            const p2 = L.latLng(coords[i + 1][1], coords[i + 1][0]);
 
-        // Choose which endpoint to consider based on mode
-        let nodeCoord = null;
-        let nodeName = null;
+            // Get shortest distance from point to canal segment line
+            const dist = L.GeometryUtil.distanceSegment(map, clickLatLng, p1, p2);
+            const distFeet = dist * 3.28084;
 
-        if (mode === "from") {
-            nodeCoord = coords[0];
-            nodeName = props.from_point;
-        } else if (mode === "to") {
-            nodeCoord = coords[coords.length - 1];
-            nodeName = props.to_point;
-        }
-
-        const distance = getDistanceFromLatLonInKm(
-            lat,
-            lng,
-            nodeCoord[1],
-            nodeCoord[0]
-        );
-
-        if (distance < minDistance) {
-            minDistance = distance;
-            nearestNode = nodeName;
+            // If this segment is closer, store it
+            if (distFeet < minDistFeet) {
+                minDistFeet = distFeet;
+                closestFeature = feature;
+            }
         }
     });
 
-    return nearestNode;
+    if (!closestFeature)
+        return null;
+
+    // Use the from_point node for both from/to logic here
+    return closestFeature.properties.from_point;
 }
-/* UNCOMMENT IF NEEDED
+
+// === Allow user to click on the map to select FROM and TO nodes ===
+// First click sets startNode, second click sets endNode and auto-triggers routing
 map.on('click', (e) => {
-  const latlng = e.latlng;
+    const latlng = e.latlng; // coordinates of click
 
-  if (!startNode) {
-    const node = findNearestNode(latlng.lat, latlng.lng, 'from');
-    if (node) {
-      startNode = node;
-      alert('Start location selected.');
+    if (!startNode) {
+        const node = findNearestNode(latlng.lat, latlng.lng, 'from');
+        if (node) {
+            startNode = node;
+        }
     } else {
-      alert('No nearby start node found within 1000ft.');
+        const node = findNearestNode(latlng.lat, latlng.lng, 'to');
+        if (node) {
+            endNode = node;
+            document.getElementById('route-button').click(); // auto-trigger routing
+        }
     }
-  } else if (!endNode) {
-    const node = findNearestNode(latlng.lat, latlng.lng, 'to');
-    if (node) {
-      endNode = node;
-      alert('End location selected.');
-    } else {
-      alert('No nearby end node found within 1000ft.');
-    }
-  }
- });
-*/
-
-<!-- TEST CLICK -->
-map.on('click', (e) => {
-  const latlng = e.latlng;
-
-  if (!startNode) {
-    const node = findNearestNode(latlng.lat, latlng.lng, 'from');
-    if (node) {
-      startNode = node;
-    }
-  } else {
-    const node = findNearestNode(latlng.lat, latlng.lng, 'to');
-    if (node) {
-      endNode = node;
-      document.getElementById('route-button').click();  // Instantly calculate route
-    }
-  }
 });
 
-
-
-
-// === Dijkstra’s Algorithm ===
+// === Dijkstra's Algorithm ===
+// Calculates shortest travel time from start to end using graph data
 function dijkstra(start, end, userSpeed) {
-  const visited = new Set();
-  const distances = {};
-  const prev = {};
+    const visited = new Set(); // tracks visited nodes
+    const distances = {}; // total travel time to each node
+    const prev = {}; // tracks path from start → end
 
-  Object.keys(graph).forEach(n => { distances[n] = Infinity; });
-  distances[start] = 0;
+    // Set all distances to infinity initially
+    Object.keys(graph).forEach(n => {
+        distances[n] = Infinity;
+    });
+    distances[start] = 0;
 
-  const pq = new Map();
-  pq.set(start, 0);
+    const pq = new Map(); // simple priority queue
+    pq.set(start, 0);
 
-  while (pq.size) {
-    const curr = [...pq.entries()].sort((a, b) => a[1] - b[1])[0][0];
-    pq.delete(curr);
+    while (pq.size) {
+        // Get node with smallest distance in queue
+        const curr = [...pq.entries()].sort((a, b) => a[1] - b[1])[0][0];
+        pq.delete(curr);
 
-    if (curr === end) break;
-    if (visited.has(curr)) continue;
-    visited.add(curr);
+        if (curr === end)
+            break;
+        if (visited.has(curr))
+            continue;
+        visited.add(curr);
 
-    for (const edge of graph[curr]) {
-      const { to, segment_id } = edge;
-      if (visited.has(to)) continue;
+        for (const edge of graph[curr]) {
+            const { to, segment_id } = edge;
+            if (visited.has(to))
+                continue;
 
-      const segment = segmentMap[segment_id];
-      if (!segment) {
-        console.warn("Missing segment in segmentMap:", segment_id);
-        continue;
-      }
+            const segment = segmentMap[segment_id];
+            if (!segment) {
+                console.warn("Missing segment in segmentMap:", segment_id);
+                continue;
+            }
 
-      const { coords, feature } = segment;
-      if (!coords || coords.length < 2) {
-        console.warn("Bad or missing coords for:", segment_id);
-        continue;
-      }
+            const { coords, feature } = segment;
+            if (!coords || coords.length < 2) {
+                console.warn("Bad or missing coords for:", segment_id);
+                continue;
+            }
 
-      const segSpeed = feature.properties.speed_mph;
-      if (!segSpeed) {
-        console.warn("Missing speed_mph for:", segment_id);
-      }
+            const segSpeed = feature.properties.speed_mph; // allowed speed on this segment
+            const distance = calculateDistance(coords);
 
-      const distance = calculateDistance(coords);
-      const effSpeed = Math.min(userSpeed, segSpeed || userSpeed); // fallback if segSpeed missing
-      const time = distance / effSpeed;
+            const effSpeed = Math.min(userSpeed, segSpeed || userSpeed); // respect segment limits
+            const time = distance / effSpeed; // time = distance ÷ speed
 
-      if (distances[curr] + time < distances[to]) {
-        distances[to] = distances[curr] + time;
-        prev[to] = { from: curr, segment_id };
-        pq.set(to, distances[to]);
-      }
-    }
-  }
-
-  // Reconstruct path
-  const path = [], segIds = [];
-  let node = end;
-  let totalDistance = 0;
-
-  while (prev[node]) {
-    const { from, segment_id } = prev[node];
-    path.unshift(from);
-    segIds.unshift(segment_id);
-    totalDistance += segmentMap[segment_id].distance;
-    node = from;
-  }
-  path.push(end);
-
-  // Compute final min clearance from route segments
-  const minClearValues = segIds
-    .map(id => segmentMap[id].feature.properties.min_cleara)
-    .filter(val => val !== undefined && val !== null);
-
-  const finalMinClear = minClearValues.length > 0
-    ? Math.min(...minClearValues)
-    : "No Bridges";
-
-  return {
-    path,
-    segIds,
-    totalTime: distances[end],
-    totalDistance,
-    minClear: finalMinClear
-  };
-}
-function getSpeedColor(speed) {
-  if (speed >= 25) return 'green';
-  return 'red';
-}
-
-
-// === Route Button Event ===
-document.getElementById('route-button').addEventListener('click', () => {
-  if (!canalDataReady) {
-    alert("Canal data is still loading. Please wait a moment and try again.");
-    return;
-  }
-
-  
-  if (fromMarker) { map.removeLayer(fromMarker); fromMarker = null; }
-  if (toMarker) { map.removeLayer(toMarker); toMarker = null; }
-
-  const speed = parseInt(document.getElementById('speed-select').value);
-
-  const destType = document.querySelector('input[name="dest-type"]:checked').value;
-if (destType === 'poi') {
-  const poi = document.getElementById('destination-select').value;
-
-  if (poi === 'openWater') {
-    // Find all node keys that contain "openWater"
-    const candidates = Object.keys(graph).filter(p => p.toLowerCase().includes("openwater"));
-
-    if (!candidates.length) {
-      alert("No Open Water destinations found.");
-      return;
+            // If this route to "to" node is faster, update it
+            if (distances[curr] + time < distances[to]) {
+                distances[to] = distances[curr] + time;
+                prev[to] = {
+                    from: curr,
+                    segment_id
+                };
+                pq.set(to, distances[to]);
+            }
+        }
     }
 
-    let bestNode = null;
-    let bestTime = Infinity;
+    // === Reconstruct shortest path ===
+    const path = [],
+    segIds = [];
+    let node = end;
+    let totalDistance = 0;
 
-    for (const candidate of candidates) {
-      const result = dijkstra(startNode, candidate, speed);
-
-      if (result.path.length && result.totalTime < bestTime) {
-        bestTime = result.totalTime;
-        bestNode = candidate;
-      }
+    while (prev[node]) {
+        const { from, segment_id } = prev[node];
+        path.unshift(from);
+        segIds.unshift(segment_id);
+        totalDistance += segmentMap[segment_id].distance;
+        node = from;
     }
+    path.push(end);
 
-    if (!bestNode) {
-      alert("No reachable Open Water destination found.");
-      return;
-    }
+    // === Determine minimum bridge clearance on this route ===
+    const minClearValues = segIds
+        .map(id => segmentMap[id].feature.properties.min_cleara)
+        .filter(val => val !== undefined && val !== null);
 
-    endNode = bestNode;
-	// Place TO marker for Open Water
-const endSegment = geojsonData.features.find(f => f.properties.to_point === endNode);
-if (endSegment) {
-  const coords = endSegment.geometry.coordinates;
-  const latlng = [coords[coords.length - 1][1], coords[coords.length - 1][0]];
-  toAddressLatLng = latlng;
-            toMarker = L.marker(toAddressLatLng, { icon: createScaledIcon(toIconUrl, map.getZoom()) }).addTo(map);
-  console.log("Placed TO marker for Open Water at", latlng);
-}
+    const finalMinClear = minClearValues.length > 0
+         ? Math.min(...minClearValues)
+         : "No Bridges";
 
-	
-  } else {
-    const poiNodeMap = {
-      cellini_citrus: 'cellini_citrus',
-      tarponMarina: 'tarponMarina'
+    return {
+        path, // ordered list of node IDs in the route
+        segIds, // segment IDs traversed
+        totalTime: distances[end],
+        totalDistance,
+        minClear: finalMinClear
     };
-    endNode = poiNodeMap[poi];
-
-    // Place end marker for POI
-    const endSegment = geojsonData.features.find(f => f.properties.to_point === endNode);
-    if (endSegment) {
-      const coords = endSegment.geometry.coordinates;
-      const latlng = [coords[coords.length - 1][1], coords[coords.length - 1][0]];
-      if (toMarker) map.removeLayer(toMarker);
-      toAddressLatLng = latlng;
-            toMarker = L.marker(toAddressLatLng, { icon: createScaledIcon(toIconUrl, map.getZoom()) }).addTo(map);
-console.log('Placed TO marker at', latlng);
-    }
-
-  }
 }
 
-  console.log("Start node:", startNode);
-  console.log("Edges from start node:", graph[startNode]);
-  console.log("End node:", endNode);
-  console.log("Edges from end node:", graph[endNode]);
-
-  
-  // Re-create From/To markers from stored address latlngs if available
-  if (!fromMarker && fromAddressLatLng) {
-    fromMarker = L.marker(fromAddressLatLng, { icon: createScaledIcon(fromIconUrl, map.getZoom()) }).addTo(map);
-    console.log("Reused original FROM address latlng", fromAddressLatLng);
-  }
-  if (!toMarker && toAddressLatLng && destType === "address") {
-    toMarker = L.marker(toAddressLatLng, { icon: createScaledIcon(toIconUrl, map.getZoom()) }).addTo(map);
-    console.log("Reused original TO address latlng", toAddressLatLng);
-  }
-
-  // Re-create From marker from its segment if not already shown
-  if (!fromMarker && startNode) {
-    const startSegment = geojsonData.features.find(f => f.properties.from_point === startNode);
-    if (startSegment) {
-      const coords = startSegment.geometry.coordinates;
-      const latlng = [coords[0][1], coords[0][0]];
-      fromAddressLatLng = latlng;
-            fromMarker = L.marker(fromAddressLatLng, { icon: createScaledIcon(fromIconUrl, map.getZoom()) }).addTo(map);
-      console.log("Reconstructed FROM marker at", latlng);
-
-  // Re-create To marker from its segment if not already shown (only for address mode)
-  if (!toMarker && endNode && destType === "address") {
-    const endSegment = geojsonData.features.find(f => f.properties.to_point === endNode);
-    if (endSegment) {
-      const coords = endSegment.geometry.coordinates;
-      const latlng = [coords[coords.length - 1][1], coords[coords.length - 1][0]];
-      toAddressLatLng = latlng;
-            toMarker = L.marker(toAddressLatLng, { icon: createScaledIcon(toIconUrl, map.getZoom()) }).addTo(map);
-      console.log("Reconstructed TO marker at", latlng);
-    }
-  }
-
-    }
-  }
-
-
-  if (!startNode || !endNode) {
-    alert('Please select both a start and end location.');
-    return;
-  }
-
-  const result = dijkstra(startNode, endNode, speed);
-  if (!result.path.length) {
-    alert('No route found.');
-    return;
-  }
-
-  console.log("Route segIds:", result.segIds);
-  for (const id of result.segIds) {
-    if (!segmentMap[id]) {
-      console.error("Missing in segmentMap:", id);
-    }
-  }
-
-  // Remove previous route lines
-  if (Array.isArray(routeLine)) {
-    routeLine.forEach(line => map.removeLayer(line));
-  } else if (routeLine) {
-    map.removeLayer(routeLine);
-  }
-  routeLine = [];
-
-  let allCoords = [];
-
-  for (let i = 0; i < result.segIds.length; i++) {
-    const segmentId = result.segIds[i];
-    const segment = segmentMap[segmentId];
-
-    if (!segment) {
-      console.warn("Segment not found in segmentMap:", segmentId);
-      continue;
-    }
-
-    let coords = segment.coords;
-    if (!coords || coords.length === 0) {
-      console.warn("Segment has no coordinates:", segmentId);
-      continue;
-    }
-
-    const from = segment.feature.properties.from_point;
-    const to = segment.feature.properties.to_point;
-    const expectedStart = result.path[i];
-    const expectedEnd = result.path[i + 1];
-
-    if (from === expectedEnd && to === expectedStart) {
-      coords = [...coords].reverse();
-    }
-
-    const speed = segment.feature.properties.speed_mph || 0;
-    const color = getSpeedColor(speed);
-
-    const poly = L.polyline(coords, {
-      color,
-      weight: 4,
-      opacity: 0.9
-    }).addTo(map);
-	
-// Clear previous bridge markers
-for (const marker of bridgeMarkers) {
-  map.removeLayer(marker);
-}
-bridgeMarkers = [];
-
-// Add bridge icons for segments with min_cleara
-for (const segmentId of result.segIds) {
-  const segment = segmentMap[segmentId];
-  if (!segment) continue;
-
-  const minClear = segment.feature.properties.min_cleara;
-  if (minClear !== null && minClear !== undefined) {
-    const coords = segment.coords;
-    if (!coords || coords.length < 2) continue;
-
-    const midIndex = Math.floor(coords.length / 2);
-    const bridgeLatLng = coords[midIndex];
-
-    const marker = L.marker(bridgeLatLng, {
-      icon: L.icon({
-        iconUrl: 'https://res.cloudinary.com/da0bnopjg/image/upload/v1751921623/bridge_2341064_slhkds.png',
-        iconSize: [24, 24],
-        iconAnchor: [12, 12]
-      })
-    }).addTo(map);
-
-    bridgeMarkers.push(marker);
-  }
+// === Define color based on speed for polyline display ===
+function getSpeedColor(speed) {
+    if (speed >= 25)
+        return 'green';
+    return 'red';
 }
 
+// === Main route button logic ===
+document.getElementById('route-button').addEventListener('click', () => {
+    // Prevent routing if canal data hasn't loaded yet
+    if (!canalDataReady) {
+        alert("Canal data is still loading. Please wait a moment and try again.");
+        return;
+    }
 
-    routeLine.push(poly);
-    allCoords.push(...coords);
-  }
+    bridgeMarkers.forEach(marker => map.removeLayer(marker));
+    bridgeMarkers = [];
 
-  if (allCoords.length >= 2) {
-    map.fitBounds(L.latLngBounds(allCoords));
-  } else {
-    alert("Unable to draw route. Try selecting a different start or end location.");
-  }
+    // Clear previous route markers
+    if (fromMarker) {
+        map.removeLayer(fromMarker);
+        fromMarker = null;
+    }
+    if (toMarker) {
+        map.removeLayer(toMarker);
+        toMarker = null;
+    }
 
-  // Format output values
-  const totalDistanceText = `${result.totalDistance.toFixed(1)} mi`;
+    const speed = parseInt(document.getElementById('speed-select').value); // User-selected speed
+    const destType = document.querySelector('input[name="dest-type"]:checked').value; // POI or Address
 
-  const totalTimeHours = result.totalTime;
-  const hours = Math.floor(totalTimeHours);
-  const minutes = Math.round((totalTimeHours - hours) * 60);
-  const timeDisplay = hours > 0 ? `${hours}h ${minutes}m` : `${minutes} min`;
+    if (destType === 'poi') {
+        const poi = document.getElementById('destination-select').value;
 
-let minClearText;
-if (typeof result.minClear === "string") {
-  minClearText = result.minClear;
-} else {
-  const clearance = result.minClear || 0;
-  const feet = Math.floor(clearance);
-  const inches = Math.round((clearance - feet) * 12);
-  minClearText = `${feet} ft ${inches} in`;
-}
+        if (poi === 'openWater') {
+            // Handle open water destination: pick fastest matching endpoint
+            const candidates = Object.keys(graph).filter(p => p.toLowerCase().includes("openwater"));
 
+            if (!candidates.length) {
+                alert("No Open Water destinations found.");
+                return;
+            }
 
-  // Display info
-  document.getElementById('distance-box').innerHTML = `Distance: ${totalDistanceText}`;
-  document.getElementById('time-box').innerHTML = `Time: ${timeDisplay}`;
-  document.getElementById('clearance-box').innerHTML = `Min Clearance: ${minClearText}`;
-  // Smooth scroll to map
-  document.getElementById('scroll-target').scrollIntoView({ behavior: 'smooth' });
+            let bestNode = null;
+            let bestTime = Infinity;
 
+            for (const candidate of candidates) {
+                const result = dijkstra(startNode, candidate, speed);
+                if (result.path.length && result.totalTime < bestTime) {
+                    bestTime = result.totalTime;
+                    bestNode = candidate;
+                }
+            }
+
+            if (!bestNode) {
+                alert("No reachable Open Water destination found.");
+                return;
+            }
+
+            endNode = bestNode;
+
+            // Try placing a marker visually on the last coordinate of the matching segment
+            const endSegment = geojsonData.features.find(f => f.properties.to_point === endNode);
+            if (endSegment) {
+                const coords = endSegment.geometry.coordinates;
+                const latlng = [coords[coords.length - 1][1], coords[coords.length - 1][0]];
+                toAddressLatLng = latlng;
+                toMarker = L.marker(toAddressLatLng, {
+                    icon: createScaledIcon(toIconUrl, map.getZoom())
+                }).addTo(map);
+                console.log("Placed TO marker for Open Water at", latlng);
+            }
+        } else {
+            // Handle static POI destinations
+            const poiNodeMap = {
+                cellini_citrus: 'cellini_citrus',
+                tarponMarina: 'tarponMarina'
+            };
+            endNode = poiNodeMap[poi];
+
+            const endSegment = geojsonData.features.find(f => f.properties.to_point === endNode);
+            if (endSegment) {
+                const coords = endSegment.geometry.coordinates;
+                const latlng = [coords[coords.length - 1][1], coords[coords.length - 1][0]];
+                if (toMarker)
+                    map.removeLayer(toMarker);
+                toAddressLatLng = latlng;
+                toMarker = L.marker(toAddressLatLng, {
+                    icon: createScaledIcon(toIconUrl, map.getZoom())
+                }).addTo(map);
+                console.log('Placed TO marker at', latlng);
+            }
+        }
+    }
+
+    // Log start/end and edge availability
+    console.log("Start node:", startNode);
+    console.log("Edges from start node:", graph[startNode]);
+    console.log("End node:", endNode);
+    console.log("Edges from end node:", graph[endNode]);
+
+    // Re-render markers if they weren't replaced already
+    if (!fromMarker && fromAddressLatLng) {
+        fromMarker = L.marker(fromAddressLatLng, {
+            icon: createScaledIcon(fromIconUrl, map.getZoom())
+        }).addTo(map);
+    }
+    if (!toMarker && toAddressLatLng && destType === "address") {
+        toMarker = L.marker(toAddressLatLng, {
+            icon: createScaledIcon(toIconUrl, map.getZoom())
+        }).addTo(map);
+    }
+
+    // Fallback in case marker not available but we have node
+    if (!fromMarker && startNode) {
+        const startSegment = geojsonData.features.find(f => f.properties.from_point === startNode);
+        if (startSegment) {
+            const coords = startSegment.geometry.coordinates;
+            const latlng = [coords[0][1], coords[0][0]];
+            fromAddressLatLng = latlng;
+            fromMarker = L.marker(fromAddressLatLng, {
+                icon: createScaledIcon(fromIconUrl, map.getZoom())
+            }).addTo(map);
+        }
+    }
+    if (!toMarker && endNode && destType === "address") {
+        const endSegment = geojsonData.features.find(f => f.properties.to_point === endNode);
+        if (endSegment) {
+            const coords = endSegment.geometry.coordinates;
+            const latlng = [coords[coords.length - 1][1], coords[coords.length - 1][0]];
+            toAddressLatLng = latlng;
+            toMarker = L.marker(toAddressLatLng, {
+                icon: createScaledIcon(toIconUrl, map.getZoom())
+            }).addTo(map);
+        }
+    }
+
+    // Prevent route calculation if either point is missing
+    if (!startNode || !endNode) {
+        alert('Please select both a start and end location.');
+        return;
+    }
+
+    const result = dijkstra(startNode, endNode, speed);
+    if (!result.path.length) {
+        alert('No route found.');
+        return;
+    }
+    if (destType === 'address') {
+        // === Replace old start segment with artificial_start ===
+        const oldStartId = result.segIds[0];
+        const oldStart = segmentMap[oldStartId];
+        const oldStartCoords = oldStart.coords;
+
+        const startInterp = L.GeometryUtil.closest(map, oldStartCoords, L.latLng(fromAddressLatLng));
+
+        // Find where to splice in the interpolated point
+        let insertIndexStart = oldStartCoords.findIndex((pt, i) => {
+            if (i === oldStartCoords.length - 1)
+                return false;
+            const seg = [oldStartCoords[i], oldStartCoords[i + 1]];
+            const dist = L.GeometryUtil.distanceSegment(map, L.latLng(startInterp), ...seg);
+            return dist < .9; // tolerance threshold
+        });
+
+        if (insertIndexStart === -1)
+            insertIndexStart = 0;
+        const trimmedStartCoords = [startInterp, ...oldStartCoords.slice(insertIndexStart + 1)];
+
+        segmentMap['artificial_start'] = {
+            coords: trimmedStartCoords,
+            feature: {
+                properties: {
+                    ...oldStart.feature.properties
+                }
+            }
+        };
+
+        result.segIds[0] = 'artificial_start';
+
+        // === Replace old end segment with artificial_end ===
+        const oldEndId = result.segIds[result.segIds.length - 1];
+        const oldEnd = segmentMap[oldEndId];
+        const oldEndCoords = oldEnd.coords;
+
+        // Convert to LatLngs for GeometryUtil
+        const latLngs = oldEndCoords.map(c => L.latLng(c));
+        const endInterp = L.GeometryUtil.closest(map, latLngs, L.latLng(toAddressLatLng));
+
+        let trimmedEndCoords = [];
+        let found = false;
+
+        for (let i = 0; i < latLngs.length - 1; i++) {
+            const p1 = latLngs[i];
+            const p2 = latLngs[i + 1];
+            trimmedEndCoords.push([p1.lat, p1.lng]);
+
+            const dist = L.GeometryUtil.distanceSegment(map, endInterp, p1, p2);
+            console.log(`🔍 Segment ${i}: Distance from endInterp to [${p1.lat.toFixed(6)}, ${p2.lat.toFixed(6)}] = ${dist}`);
+
+            if (dist < 0.9 && !found) {
+                console.log(`✅ Match found at segment ${i}, distance = ${dist}`);
+                trimmedEndCoords.push([endInterp.lat, endInterp.lng]);
+                found = true;
+                break;
+            }
+        }
+
+        if (!found) {
+            // fallback: use full original coords
+            trimmedEndCoords = oldEndCoords;
+            console.warn("End interpolation segment not found — using original segment.");
+        }
+
+        segmentMap['artificial_end'] = {
+            coords: trimmedEndCoords,
+            feature: {
+                properties: {
+                    ...oldEnd.feature.properties
+                }
+            }
+        };
+
+        console.log("Final number of segments in route:", result.segIds.length);
+        console.log("Final segment IDs:", result.segIds);
+
+        result.segIds[result.segIds.length - 1] = 'artificial_end';
+    }
+    if (destType === 'poi') {
+        // === Replace old start segment with artificial_start ===
+        const oldStartId = result.segIds[0];
+        const oldStart = segmentMap[oldStartId];
+        const oldStartCoords = oldStart.coords;
+
+        const startInterp = L.GeometryUtil.closest(map, oldStartCoords, L.latLng(fromAddressLatLng));
+
+        // Find where to splice in the interpolated point
+        let insertIndexStart = oldStartCoords.findIndex((pt, i) => {
+            if (i === oldStartCoords.length - 1)
+                return false;
+            const seg = [oldStartCoords[i], oldStartCoords[i + 1]];
+            const dist = L.GeometryUtil.distanceSegment(map, L.latLng(startInterp), ...seg);
+            return dist < .9; // tolerance threshold
+        });
+
+        if (insertIndexStart === -1)
+            insertIndexStart = 0;
+        const trimmedStartCoords = [startInterp, ...oldStartCoords.slice(insertIndexStart + 1)];
+
+        segmentMap['artificial_start'] = {
+            coords: trimmedStartCoords,
+            feature: {
+                properties: {
+                    ...oldStart.feature.properties
+                }
+            }
+        };
+
+        result.segIds[0] = 'artificial_start';
+
+    }
+
+    // Remove previous route polylines if any
+    if (Array.isArray(routeLine)) {
+        routeLine.forEach(line => map.removeLayer(line));
+    } else if (routeLine) {
+        map.removeLayer(routeLine);
+    }
+    routeLine = [];
+
+    let allCoords = [];
+
+    for (let i = 0; i < result.segIds.length; i++) {
+        const segmentId = result.segIds[i];
+        const segment = segmentMap[segmentId];
+        if (i === result.segIds.length - 1) {
+            console.log("Last segment ID:", segmentId);
+            console.log("Last segment coordinates:", segment.coords);
+        }
+
+        if (!segment)
+            continue;
+
+        let coords = segment.coords;
+
+        const from = segment.feature.properties.from_point;
+        const to = segment.feature.properties.to_point;
+        const expectedStart = result.path[i];
+        const expectedEnd = result.path[i + 1];
+
+        // Reverse if traveling backward on segment
+        if (from === expectedEnd && to === expectedStart) {
+            coords = [...coords].reverse();
+        }
+
+        const speed = segment.feature.properties.speed_mph || 0;
+        const color = getSpeedColor(speed);
+
+        const poly = L.polyline(coords, {
+            color,
+            weight: 4,
+            opacity: 0.9
+        }).addTo(map);
+
+        routeLine.push(poly);
+
+        // === Add bridge icon if this segment includes a clearance value ===
+        const minClear = segment.feature.properties.min_cleara;
+        if (minClear !== null && minClear !== undefined) {
+            const midIndex = Math.floor(coords.length / 2); // Pick midpoint of segment
+            const bridgeLatLng = coords[midIndex];
+
+            // Convert clearance to feet and inches
+            const feet = Math.floor(minClear);
+            const inches = Math.round((minClear - feet) * 12);
+
+            // Create and place bridge icon
+            const marker = L.marker(bridgeLatLng, {
+                icon: L.icon({
+                    iconUrl: 'https://res.cloudinary.com/da0bnopjg/image/upload/v1751921623/bridge_2341064_slhkds.png',
+                    iconSize: [24, 24],
+                    iconAnchor: [12, 12]
+                })
+            }).addTo(map)
+                .bindTooltip(`Bridge Clearance: ${feet}ft ${inches}in.`, {
+                    permanent: false,
+                    direction: "top",
+                    offset: [0, -10]
+                });
+
+            bridgeMarkers.push(marker); // Track marker so it can be removed on next route
+        }
+        allCoords.push(...coords);
+    }
+
+    // Zoom map to fit route
+    if (allCoords.length >= 2) {
+        map.fitBounds(L.latLngBounds(allCoords));
+    } else {
+        alert("Unable to draw route. Try selecting a different start or end location.");
+    }
+
+    // Format and display route info
+    const totalDistanceText = `${result.totalDistance.toFixed(1)} mi`;
+    const totalTimeHours = result.totalTime;
+    const hours = Math.floor(totalTimeHours);
+    const minutes = Math.round((totalTimeHours - hours) * 60);
+    const timeDisplay = hours > 0 ? `${hours}h ${minutes}m` : `${minutes} min`;
+
+    let minClearText;
+    if (typeof result.minClear === "string") {
+        minClearText = result.minClear;
+    } else {
+        const clearance = result.minClear || 0;
+        const feet = Math.floor(clearance);
+        const inches = Math.round((clearance - feet) * 12);
+        minClearText = `${feet} ft ${inches} in`;
+    }
+
+    document.getElementById('distance-box').innerHTML = `Distance: ${totalDistanceText}`;
+    document.getElementById('time-box').innerHTML = `Time: ${timeDisplay}`;
+    document.getElementById('clearance-box').innerHTML = `Min Clearance: ${minClearText}`;
+
+    // Scroll to results
+    document.getElementById('scroll-target').scrollIntoView({
+        behavior: 'smooth'
+    });
 });
 
+// === Icon image URLs for start and end markers ===
+const fromIconUrl = 'https://res.cloudinary.com/da0bnopjg/image/upload/v1751993412/start_placeholder_hihvwp.png';
+const toIconUrl = 'https://res.cloudinary.com/da0bnopjg/image/upload/v1751993427/end_placeholder_b5qzy9.png';
 
-
-
-
-  
-const fromIconUrl = 'https://res.cloudinary.com/da0bnopjg/image/upload/v1751928138/Green_Flag_hy05my.png';
-const toIconUrl = 'https://res.cloudinary.com/da0bnopjg/image/upload/v1751928160/Checkered_Flag_jyxdos.png';
-
+// === Creates a marker icon scaled to current zoom level ===
 function createScaledIcon(url, zoom, anchor = [0.5, 1]) {
-  const size = Math.max(18, Math.min(zoom * 3, 48));
-  return L.icon({
-    iconUrl: url,
-    iconSize: [size, size],
-    iconAnchor: [size * anchor[0], size * anchor[1]]
-  });
+    const size = Math.max(18, Math.min(zoom * 3, 48)); // size adjusts based on zoom level
+    return L.icon({
+        iconUrl: url,
+        iconSize: [size, size],
+        iconAnchor: [size * anchor[0], size * anchor[1]]
+    });
 }
 
+// === Redraws the markers with new icon sizes whenever zoom changes ===
 map.on('zoomend', () => {
-  const zoom = map.getZoom();
-  if (fromMarker && fromAddressLatLng) {
-    map.removeLayer(fromMarker);
-    fromMarker = L.marker(fromAddressLatLng, { icon: createScaledIcon(fromIconUrl, zoom, [0.5, 1]) }).addTo(map);
-  }
-  if (toMarker && toAddressLatLng) {
-    map.removeLayer(toMarker);
-    toMarker = L.marker(toAddressLatLng, { icon: createScaledIcon(toIconUrl, zoom, [0.5, 0.9]) }).addTo(map);
-  }
+    const zoom = map.getZoom();
+    if (fromMarker && fromAddressLatLng) {
+        map.removeLayer(fromMarker);
+        fromMarker = L.marker(fromAddressLatLng, {
+            icon: createScaledIcon(fromIconUrl, zoom, [0.5, 1])
+        }).addTo(map);
+    }
+    if (toMarker && toAddressLatLng) {
+        map.removeLayer(toMarker);
+        toMarker = L.marker(toAddressLatLng, {
+            icon: createScaledIcon(toIconUrl, zoom, [0.5, 0.9])
+        }).addTo(map);
+    }
 });
-
 </script>
-
 </body>
 </html>
