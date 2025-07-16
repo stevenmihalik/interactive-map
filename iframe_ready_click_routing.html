@@ -150,6 +150,12 @@
     #route-button:hover {
       background-color: #d62828;
     }
+      .sounding-label {
+    font-size: 11px;
+    font-weight: 300;
+    color: #ffffff;
+    text-align: center;
+    }
   </style>
 </head>
 <body style="margin: 0;">
@@ -280,6 +286,8 @@ let bridgeMarkers = []; // Markers for bridge clearance info
 const CANAL_GEOJSON_URL = 'https://res.cloudinary.com/da0bnopjg/raw/upload/v1751914031/forwardTest3_ls3ify.geojson';
 const ADDRESS_GEOJSON_URL = 'https://res.cloudinary.com/da0bnopjg/raw/upload/v1751043675/Gulf_Access_Points_Master_vdfpde.geojson';
 const NAVAID_GEOJSON_URL = 'https://res.cloudinary.com/da0bnopjg/raw/upload/v1752634446/Markers6_ytzjc0.geojson';
+const soundingLayer = L.layerGroup().addTo(map);
+let soundingGeojson = null;
 let navaidLayerGroup = L.layerGroup().addTo(map);
 function getNavaidIconSize(zoom) {
   // Clamp zoom range from 14 → 18
@@ -1609,17 +1617,125 @@ function updateMarkersOnZoom() {
     marker.setIcon(icon);
   });
 }
-
+let contourLayer;
 // 🗺️ Initialize Navaids First
 addNavaidsToMap();
+addSoundingsToMap();
 
-// ⏳ Debounced zoom event handler
+
+// ➕ Load Depth Contours but don't add to map yet
+fetch("https://res.cloudinary.com/da0bnopjg/raw/upload/v1752707975/Contours2_evue3m.geojson")
+  .then(res => res.json())
+  .then(data => {
+    contourLayer = L.geoJSON(data, {
+      style: {
+        color: '#ffffff',
+        weight: 1,
+        opacity: 0.6
+      }
+    });
+
+    // Initially add only if zoom >= 13
+    if (map.getZoom() >= 13) {
+      contourLayer.addTo(map);
+    }
+  });
+
+// ➕ Load Recommended Track but don't add to map yet
+fetch("https://res.cloudinary.com/da0bnopjg/raw/upload/v1752707978/Recommended_Track_uf2si8.geojson")
+  .then(res => res.json())
+  .then(data => {
+    recommendedTrack = L.geoJSON(data, {
+      style: {
+        color: '#ffffff',
+        dashArray: '4,4',
+        weight: 1,
+        opacity: 0.6
+      }
+    });
+
+    // Initially add only if zoom >= 13
+    if (map.getZoom() >= 13) {
+      recommendedTrack.addTo(map);
+    }
+  });
+
+function addSoundingsToMap() {
+  fetch('https://res.cloudinary.com/da0bnopjg/raw/upload/v1752703734/Sounding_Points_spyevr.geojson')
+    .then(res => res.json())
+    .then(data => {
+      // Save for use later on zoom/pan
+      map._allSoundingFeatures = data.features;
+
+      updateSoundingsVisibleInView();
+      map.on('moveend zoomend', updateSoundingsVisibleInView);
+    });
+}
+
+function updateSoundingsVisibleInView() {
+  if (map.getZoom() < 14) {
+    soundingLayer.clearLayers();
+    return;
+  }
+
+  const bounds = map.getBounds();
+  const features = map._allSoundingFeatures;
+
+  soundingLayer.clearLayers();
+
+  features.forEach(feature => {
+    const [lng, lat, depth] = feature.geometry.coordinates;
+    if (!bounds.contains([lat, lng])) return;
+    const depthFeet = Math.round(depth * 3.28084);
+    const marker = L.marker([lat, lng], {
+      icon: L.divIcon({
+        className: 'sounding-label',
+        html: `<div class="sounding-text">${depthFeet}</div>`,
+        iconSize: [30, 12],
+        iconAnchor: [15, 6]
+      }),
+      interactive: false
+    });
+
+    soundingLayer.addLayer(marker);
+  });
+}
+
+
+
+
+// ⏳ Debounced zoom handler
 let zoomTimeout;
 map.on('zoomend', () => {
   clearTimeout(zoomTimeout);
   zoomTimeout = setTimeout(() => {
     updateMarkersOnZoom();
-  }, 250); // Try 250ms — smooth but snappy
+
+    // ✅ Show/hide contour lines based on zoom
+    if (contourLayer) {
+      if (map.getZoom() >= 13) {
+        if (!map.hasLayer(contourLayer)) {
+          map.addLayer(contourLayer);
+        }
+      } else {
+        if (map.hasLayer(contourLayer)) {
+          map.removeLayer(contourLayer);
+        }
+      }
+    }
+    // ✅ Show/hide recommended track lines based on zoom
+    if (recommendedTrack) {
+      if (map.getZoom() >= 13) {
+        if (!map.hasLayer(recommendedTrack)) {
+          map.addLayer(recommendedTrack);
+        }
+      } else {
+        if (map.hasLayer(recommendedTrack)) {
+          map.removeLayer(recommendedTrack);
+        }
+      }
+    }
+  }, 250);
 });
 
 </script>
