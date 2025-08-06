@@ -198,6 +198,42 @@
             color: #ffffff;
             text-align: center;
         }
+                /* Make layout more mobile-friendly */
+        @media (max-width: 768px) {
+            /* Stack rows vertically for narrow screens */
+            .middle-row,
+            .bottom-row {
+                flex-direction: column;
+                align-items: stretch;
+                gap: 8px;
+            }
+
+            .info-box {
+                height: auto;
+                padding: 12px;
+                margin-bottom: 8px;
+            }
+
+            .map-container {
+                height: 400px; /* Optional: make map slightly shorter on phones */
+            }
+
+            .suggestion-box,
+            .suggestion-box2 {
+                width: 100% !important;
+                font-size: 14px;
+            }
+
+            .styled-bar,
+            .middle-row select,
+            .middle-row button {
+                font-size: 16px;
+                padding: 10px;
+                width: 100%;
+            }
+        }
+
+
     </style>
 </head>
 
