@@ -326,12 +326,6 @@
                         <option value="20">20 mph</option>
                         <option value="25">25 mph</option>
                         <option value="30">30 mph</option>
-                        <option value="35">35 mph</option>
-                        <option value="40">40 mph</option>
-                        <option value="45">45 mph</option>
-                        <option value="50">50 mph</option>
-                        <option value="55">55 mph</option>
-                        <option value="60">60 mph</option>
                     </select>
                 </div>
                 <button id="route-button">Get Directions</button>
@@ -381,7 +375,7 @@
         // Initialize the map
         const map = L.map('map', {
             center: [26.6, -81.98],
-            zoom: 13,
+            zoom: 11,
             layers: [streetMap]  // default layer
         });
 
@@ -1818,7 +1812,6 @@
 
         // Trigger initial UI state
         document.querySelector('input[name="dest-type"]:checked').dispatchEvent(new Event('change'));
-
 
         // Attach autocomplete logic to input boxes
         setupAutocomplete('address-input', 'suggestions');
