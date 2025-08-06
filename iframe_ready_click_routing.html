@@ -1,131 +1,151 @@
 <!DOCTYPE html>
 <html>
+
 <head>
-  <meta charset="utf-8" />
-  <title></title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="utf-8" />
+    <title></title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <!-- Load Leaflet CSS -->
-  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+    <!-- Load Leaflet CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
 
-  <!-- Load Leaflet JS -->
-  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <!-- Load Leaflet JS -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
-  <!-- Leaflet GeometryUtil extension for distance calculations -->
-  <script src="https://unpkg.com/leaflet-geometryutil"></script>
-  
-  <link rel="stylesheet" href="https://res.cloudinary.com/da0bnopjg/raw/upload/v1752241565/L.Control.Boating_dauorv.css" />
-<script src="https://res.cloudinary.com/da0bnopjg/raw/upload/v1752200366/L.Control.Boating_j9kccx.js"></script>
-  
-  <!-- Main CSS styling -->
-  <style>
-    html, body {
-      height: auto;
-      margin: 0;
-      padding: 0;
-      overflow: visible;
-    }
-    .main-container {
-      max-width: 960px;
-      margin: 0 auto;
-      display: flex;
-      flex-direction: column;
-    }
-    .ui-container {
-      padding-bottom: 10px;
-      padding-top: 10px;
-      z-index: 1000;
-    }
-    .top-row {
-      margin-bottom: 10px;
-      position: relative;
-    }
-    .middle-row {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 10px;
-      gap: 10px;
-    }
-    .middle-row select,
-    .middle-row button {
-      padding: 8px;
-      font-size: 14px;
-    }
-    .bottom-row {
-      display: flex;
-      justify-content: space-between;
-      gap: 10px;
-    }
-    .info-box {
-      flex: 1;
-      background: #5896ed;
-      color: white;
-      padding: 10px;
-      text-align: center;
-      border-radius: 5px;
-      box-shadow: 0 1px 3px rgba(0,0,0,0.2);
-      font-family: Arial, sans-serif;
-      height: 84px;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-    }
-    .info-label {
-      font-weight: 300;
-      font-size: 14px;
-      opacity: 0.85;
-    }
-    .label {
-      font-family: Arial, sans-serif;
-    }
-    .info-value {
-      font-weight: 700;
-      font-size: 18px;
-      margin-top: 4px;
-    }
-    .map-container {
-      height: 450px;
-      position: relative;
-    }
-    #map {
-      height: 100%;
-      width: 100%;
-    }
-    .styled-bar {
-      height: 42px;
-      padding: 8px;
-      font-size: 16px;
-      width: 100%;
-      box-sizing: border-box;
-    }
-	    /* Container style */
-    .suggestion-box, .suggestion-box2 {
-      position: absolute;
-      top: 100%;		
-	  background: white;	
-      /*background-color: #f0f0f0; /* Light grey */
-      z-index: 1001;
-      border: 1px solid #ccc;
-      cursor: pointer;
-      color: black;
-      font-family: Arial;
-    }
+    <!-- Leaflet GeometryUtil extension for distance calculations -->
+    <script src="https://unpkg.com/leaflet-geometryutil"></script>
 
-    /* Individual suggestion item */
-    .autocomplete-suggestion {
-      padding: 1px 2px;
-      cursor: pointer;
-      transition: background-color 0.2s;
-    }
+    <link rel="stylesheet"
+        href="https://res.cloudinary.com/da0bnopjg/raw/upload/v1752241565/L.Control.Boating_dauorv.css" />
+    <script src="https://res.cloudinary.com/da0bnopjg/raw/upload/v1752200366/L.Control.Boating_j9kccx.js"></script>
 
-    /* Hover effect */
-    .autocomplete-suggestion:hover {
-      background-color: #5896ed; /* Blue */
-      color: white;
-    }
-   /* .suggestion-box, .suggestion-box2 {
+    <!-- Main CSS styling -->
+    <style>
+        html,
+        body {
+            height: auto;
+            margin: 0;
+            padding: 0;
+            overflow: visible;
+        }
+
+        .main-container {
+            max-width: 960px;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .ui-container {
+            padding-bottom: 10px;
+            padding-top: 10px;
+            z-index: 1000;
+        }
+
+        .top-row {
+            margin-bottom: 10px;
+            position: relative;
+        }
+
+        .middle-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+            gap: 10px;
+        }
+
+        .middle-row select,
+        .middle-row button {
+            padding: 8px;
+            font-size: 14px;
+        }
+
+        .bottom-row {
+            display: flex;
+            justify-content: space-between;
+            gap: 10px;
+        }
+
+        .info-box {
+            flex: 1;
+            background: #5896ed;
+            color: white;
+            padding: 10px;
+            text-align: center;
+            border-radius: 5px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+            font-family: Arial, sans-serif;
+            height: 84px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .info-label {
+            font-weight: 300;
+            font-size: 14px;
+            opacity: 0.85;
+        }
+
+        .label {
+            font-family: Arial, sans-serif;
+        }
+
+        .info-value {
+            font-weight: 700;
+            font-size: 18px;
+            margin-top: 4px;
+        }
+
+        .map-container {
+            height: 650px;
+            position: relative;
+        }
+
+        #map {
+            height: 100%;
+            width: 100%;
+        }
+
+        .styled-bar {
+            height: 42px;
+            padding: 8px;
+            font-size: 16px;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        /* Container style */
+        .suggestion-box,
+        .suggestion-box2 {
+            position: absolute;
+            top: 100%;
+            background: white;
+            /*background-color: #f0f0f0; /* Light grey */
+            z-index: 1001;
+            border: 1px solid #ccc;
+            cursor: pointer;
+            color: black;
+            font-family: Arial;
+        }
+
+        /* Individual suggestion item */
+        .autocomplete-suggestion {
+            padding: 1px 2px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        /* Hover effect */
+        .autocomplete-suggestion:hover {
+            background-color: #5896ed;
+            /* Blue */
+            color: white;
+        }
+
+        /* .suggestion-box, .suggestion-box2 {
       position: absolute;
       top: 100%;
       background: #5896ed;
@@ -135,1609 +155,2356 @@
       color: white;
       font-family: Arial, sans-serif;
     }*/
-    .suggestion-box {
-      width: 50%;
-    }
-    .suggestion-box2 {
-      width: 100%;
-    }
-    #route-button {
-      background-color: #e63946;
-      color: white;
-      border: none;
-      cursor: pointer;
-    }
-    #route-button:hover {
-      background-color: #d62828;
-    }
-      .sounding-label {
-    font-size: 11px;
-    font-weight: 300;
-    color: #ffffff;
-    text-align: center;
-    }
-  </style>
+        .suggestion-box {
+            width: 50%;
+        }
+
+        .suggestion-box2 {
+            width: 100%;
+        }
+
+        #route-button {
+            background-color: #e63946;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+
+        #route-button:hover {
+            background-color: #d62828;
+        }
+
+        .poi-button.active {
+            background-color: #007BFF;
+            /* Blue or your preferred color */
+            color: white;
+            border: 1px solid #0056b3;
+            border-radius: 2px;
+        }
+
+        .leaflet-tooltip.custom-tooltip {
+            background-color: white;
+            color: #333;
+            border: 1px solid #ccc;
+            padding: 2px 6px;
+            font-family: Arial, sans-serif;
+            font-size: 12px;
+            box-shadow: 1px 1px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        .sounding-label {
+            font-size: 11px;
+            font-weight: 300;
+            color: #ffffff;
+            text-align: center;
+        }
+    </style>
 </head>
+
 <body style="margin: 0;">
-  <h1 style="text-align: left; font-size: 32px; font-family: Arial, sans-serif; margin: 20px 0;">HOW LONG TO OPEN WATER</h1>
-  <div class="main-container">
-    <div class="ui-container">
-	  <div class="top-row" style="display: flex; flex-direction: row; gap: 10px; align-items: flex-start;">
-        <div style="flex: 1; display: flex; flex-direction: column; gap: 5px;">
-          <label style="font-weight: bold;font-family: Arial, sans-serif;">From:</label>
-          <input type="text" id="address-input" placeholder="Enter address..." class="styled-bar">
-          <div id="suggestions" class="suggestion-box"></div>
+    <h1 style="text-align: left; font-size: 32px; font-family: Arial, sans-serif; margin: 20px 0;">HOW LONG TO OPEN
+        WATER</h1>
+    <div class="main-container">
+        <div class="ui-container">
+            <div class="top-row" style="display: flex; flex-direction: row; gap: 10px; align-items: flex-start;">
+                <div style="flex: 1; display: flex; flex-direction: column; gap: 5px;">
+                    <label style="font-weight: bold;font-family: Arial, sans-serif;">From:</label>
+                    <input type="text" id="address-input" placeholder="Enter address..." class="styled-bar">
+                    <!-- <button id="use-location-btn" style="margin-top: 5px; font-size: 13px;">📍 Use My Location</button> -->
+                    <div id="suggestions" class="suggestion-box"></div>
+                </div>
+                <div style="flex: 1; display: flex; flex-direction: column; gap: 5px; position: relative;">
+                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                        <label style="font-weight: bold; font-family: Arial, sans-serif;">To:</label>
+                        <div id="category-buttons"
+                            style="display: none; gap: 8px; flex-wrap: wrap; margin-top: -3px; position: relative; top:-2px;">
+                        </div>
+                    </div>
+                    <div id="destination-ui-container"></div>
+
+                    <div id="destination-type-selector" style="display: flex; gap: 10px; margin-top: 8px;">
+                        <label style="font-family: Arial, sans-serif;"><input type="radio" name="dest-type"
+                                value="openWater" checked> Open Water</label>
+                        <label style="font-family: Arial, sans-serif;"><input type="radio" name="dest-type" value="poi">
+                            POI</label>
+                        <label style="font-family: Arial, sans-serif;"><input type="radio" name="dest-type"
+                                value="address"> Address</label>
+                    </div>
+
+
+                </div>
+            </div>
+            <div class="middle-row">
+                <div style="display: flex; align-items: center; gap: 8px;">
+                    <label for="speed-select"
+                        style="font-size:14px; font-weight:bold;font-family: Arial, sans-serif;">Max Speed:</label>
+                    <select id="speed-select">
+                        <option value="25">Posted Limits</option>
+                        <option value="5">5 mph</option>
+                        <option value="10">10 mph</option>
+                        <option value="15">15 mph</option>
+                        <option value="20">20 mph</option>
+                        <option value="25">25 mph</option>
+                        <option value="30">30 mph</option>
+                        <option value="35">35 mph</option>
+                        <option value="40">40 mph</option>
+                        <option value="45">45 mph</option>
+                        <option value="50">50 mph</option>
+                        <option value="55">55 mph</option>
+                        <option value="60">60 mph</option>
+                    </select>
+                </div>
+                <button id="route-button">Get Directions</button>
+            </div>
+            <div class="bottom-row" id="scroll-target">
+                <div class="info-box" id="distance-box">Distance: --</div>
+                <div class="info-box" id="time-box">Time: --</div>
+                <div class="info-box" id="clearance-box">Min Clearance: --</div>
+            </div>
         </div>
-        <div style="flex: 1; display: flex; flex-direction: column; gap: 5px; position: relative;">
-          <label style="font-weight: bold;font-family: Arial, sans-serif;">To:</label>
-          <div id="poi-container" style="width: 100%;">
-            <select id="destination-select" class="styled-bar">
-              <option value="openWater">Open Water</option>
-              <option value="cellini_citrus">Cellini Citrus</option>
-              <option value="tarponMarina">Pinchers Cape Coral</option>
-            </select>
-            <input type="text" id="destination-address" placeholder="Enter destination..." class="styled-bar" style="display: none;" />
-            <div id="destination-suggestions" class="suggestion-box2"></div>
-          </div>
-          <div style="display: flex; gap: 10px; justify-content: flex-end;">
-            <label style="font-family: Arial, sans-serif;"><input type="radio" name="dest-type" value="poi" checked> POIs</label>
-            <label style="font-family: Arial, sans-serif;"><input type="radio" name="dest-type" value="address"> Address</label>
-          </div>
+        <div class="map-container">
+            <div id="map"></div>
         </div>
-      </div>
-      <div class="middle-row">
-        <div style="display: flex; align-items: center; gap: 8px;">
-          <label for="speed-select" style="font-size:14px; font-weight:bold;font-family: Arial, sans-serif;">Max Speed:</label>
-          <select id="speed-select">
-            <option value="5">5 mph</option><option value="10">10 mph</option><option value="15">15 mph</option>
-            <option value="20">20 mph</option><option value="25">25 mph</option><option value="30">30 mph</option>
-            <option value="35">35 mph</option><option value="40">40 mph</option><option value="45">45 mph</option>
-            <option value="50">50 mph</option><option value="55">55 mph</option><option value="60">60 mph</option>
-          </select>
-        </div>
-        <button id="route-button">Get Directions</button>
-      </div>
-      <div class="bottom-row" id="scroll-target">
-        <div class="info-box" id="distance-box">Distance: --</div>
-        <div class="info-box" id="time-box">Time: --</div>
-        <div class="info-box" id="clearance-box">Min Clearance: --</div>
-      </div>
     </div>
-    <div class="map-container">
-      <div id="map"></div>
-    </div>
-  </div>
- <script>
-// === Initialize the Leaflet map ===
-/*// Centered on Cape Coral, FL with zoom level 13
-let map = L.map('map').setView([26.6, -81.98], 13);
+    <script>
+        // Create base layers
+        const streetMap = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            maxZoom: 19,
+            attribution: '&copy; OpenStreetMap contributors'
+        });
 
-// === Add OpenStreetMap tile layer ===
-L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-    maxZoom: 19,
-    attribution: '&copy; OpenStreetMap contributors'
-}).addTo(map);
-*/
-
-
-// Create base layers
-const streetMap = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-  attribution: '&copy; OpenStreetMap contributors'
-});
-
-const satelliteMap = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',  {
-    attribution: 'Tiles &copy; Esri &mdash; Source: Esri, Maxar, Earthstar Geographics, and the GIS User Community'
-});
-
-const noaaEnc = L.tileLayer.wms(
-  'https://gis.charttools.noaa.gov/arcgis/rest/services/MCS/ENCOnline/MapServer/exts/MaritimeChartService/WMSServer', {
-    layers: '0,3,4,5,6', // '0' is the ENC display layer
-    format: 'image/png',
-    transparent: false,
-    version: '1.3.0',
-    attribution: '© NOAA ENC Online'
-});
-
-const streetsOverlay = L.tileLayer(
-  'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{
-    opacity: 0.4, // make streets semi-transparent
-    attribution: '&copy; OpenStreetMap contributors'
-});
-const blended = L.layerGroup([noaaEnc, streetsOverlay]);
-
-
-// Initialize the map
-const map = L.map('map', {
-  center: [26.6, -81.98],
-  zoom: 13,
-  layers: [streetMap]  // default layer
-});
-
-// Add layer switcher
-const baseMaps = {
-  "Street Map": streetMap,
-  "Satellite": satelliteMap,
-  "Nautical": noaaEnc,
-  'Blended': blended
-
-
-};
-
-L.control.layers(baseMaps).addTo(map);
-L.control.boating().addTo(map)
-
-
-
-// === Define global variables ===
-let fromMarker = null; // Marker for "From" location
-let toMarker = null; // Marker for "To" location
-let fromAddressLatLng = null; // Coordinates of selected "From" point
-let toAddressLatLng = null; // Coordinates of selected "To" point
-let graph = {}; // Graph data for Dijkstra routing
-let segmentMap = {}; // Maps segment_id to segment data
-let startNode = null; // Starting node ID in the graph
-let endNode = null; // Ending node ID in the graph
-let addressPoints = []; // List of address point features
-let canalDataReady = false; // Flag to enable routing after canal data loads
-let routeLine; // Polyline object(s) for displayed route
-let bridgeMarkers = []; // Markers for bridge clearance info
-
-// === URLs to GeoJSON resources (stored in Cloudinary) ===
-const CANAL_GEOJSON_URL = 'https://res.cloudinary.com/da0bnopjg/raw/upload/v1751914031/forwardTest3_ls3ify.geojson';
-const ADDRESS_GEOJSON_URL = 'https://res.cloudinary.com/da0bnopjg/raw/upload/v1751043675/Gulf_Access_Points_Master_vdfpde.geojson';
-const NAVAID_GEOJSON_URL = 'https://res.cloudinary.com/da0bnopjg/raw/upload/v1752634446/Markers6_ytzjc0.geojson';
-const soundingLayer = L.layerGroup().addTo(map);
-let soundingGeojson = null;
-let navaidLayerGroup = L.layerGroup().addTo(map);
-function getNavaidIconSize(zoom) {
-  // Clamp zoom range from 14 → 18
-  const effectiveZoom = Math.max(14, Math.min(zoom, 18));
-  const scale = (effectiveZoom - 14) * 8 + 8;  // Starts at 24px at zoom 14, goes to 54px at zoom 18
-  return [scale, scale];
-}
-
-function addNavaidsToMap() {
-  const zoom = map.getZoom(); // ✅ Get current zoom level at load
-
-  fetch(NAVAID_GEOJSON_URL)
-    .then(res => res.json())
-    .then(data => {
-      data.features.forEach(feature => {
-        const [lng, lat] = feature.geometry.coordinates;
-        const props = feature.properties;
-
-        const type = props.navaid_type?.toLowerCase();
-        const number = props.marker_num ?? null;
-        const rawColor = props.COLOUR;
-        const colorValues = rawColor
-          ? rawColor.split(',').map(c => Number(c.trim()))
-          : [];
-        const popupText = props.OBJNAM || "Navaid";
-
-        let iconSvg;
-
-        if (type === "daybeacon") {
-          if (colorValues.length === 1 && colorValues[0] === 3) {
-            iconSvg = createRedDayBeaconSVG(number);
-          } else if (colorValues.length === 1 && colorValues[0] === 4) {
-            iconSvg = createGreenDayBeaconSVG(number);
-          } else if (colorValues.length === 1 && colorValues[0] === 11) {
-            iconSvg = createHazardDayBeaconSVG();
-          } else if (colorValues.join(',') === '4,3,4') {
-            iconSvg = createGreenRedGreenDayBeaconSVG();
-          } else if (colorValues.join(',') === '3,4,3') {
-            iconSvg = createRedGreenRedDayBeaconSVG(number);
-          } else if (colorValues.join(',') === '1,1,3') {
-            iconSvg = createSafeOctagonDayBeaconSVG();
-          } else {
-            console.warn(`⚠️ Skipping daybeacon with unsupported COLOUR: ${rawColor}`, props);
-            return;
-          }
-
-        } else if (type === "buoy") {
-          if (colorValues.length === 1 && colorValues[0] === 3) {
-            iconSvg = createRedBuoySVG(number);
-          } else if (colorValues.length === 1 && colorValues[0] === 4) {
-            iconSvg = createGreenBuoySVG(number);
-          } else if (colorValues.join(',') === '4,3,4') {
-            iconSvg = createGreenRedGreenBuoySVG(number);
-          } else {
-            console.warn(`⚠️ Skipping buoy with unsupported COLOUR: ${rawColor}`, props);
-            return;
-          }
-
-        } else if (type === "light") {
-          if (colorValues.length === 1) {
-            switch (colorValues[0]) {
-              case 1:
-                iconSvg = createWhiteLightSVG();
-                break;
-              case 3:
-                iconSvg = createRedLightSVG();
-                break;
-              case 4:
-                iconSvg = createGreenLightSVG();
-                break;
-              case 6:
-                iconSvg = createYellowLightSVG();
-                break;
-              default:
-                console.warn(`⚠️ Skipping light with unsupported COLOUR: ${rawColor}`, props);
-                return;
+        const satelliteMap = L.tileLayer(
+            'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
+            {
+                maxZoom: 21, // 🔥 allow higher zooms
+                attribution: 'Tiles &copy; Esri &mdash; Source: Esri, Maxar, Earthstar Geographics, and the GIS User Community'
             }
-          } else {
-            console.warn(`⚠️ Skipping light with invalid COLOUR value: ${rawColor}`, props);
-            return;
-          }
+        );
 
-        } else if (type === "danger") {
-          if (colorValues.length === 1) {
-            switch (colorValues[0]) {
-              case 95:
-                iconSvg = createExposedWreckDangerSVG();
-                break;
-              case 96:
-                iconSvg = createSubmergedWreckDangerSVG();
-                break;
-              case 97:
-                iconSvg = createRocksDangerSVG();
-                break;
-              case 98:
-                iconSvg = createCautionDangerSVG();
-                break;
-              case 99:
-                iconSvg = createObstructionDangerSVG();
-                break;
-              default:
-                console.warn(`⚠️ Skipping light with unsupported COLOUR: ${rawColor}`, props);
-                return;
-            }
-          } else {
-            console.warn(`⚠️ Skipping light with invalid COLOUR value: ${rawColor}`, props);
-            return;
-          }
+        const noaaEnc = L.tileLayer.wms(
+            'https://gis.charttools.noaa.gov/arcgis/rest/services/MCS/ENCOnline/MapServer/exts/MaritimeChartService/WMSServer', {
+            layers: '2,4,14', // '0' is the ENC display layer
+            format: 'image/png',
+            transparent: false,
+            version: '1.3.0',
+            attribution: '© NOAA ENC Online'
+        });
 
-        } else {
-          iconSvg = createDefaultNavaidSVG();
+        const streetsOverlay = L.tileLayer(
+            'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            opacity: 0.4, // make streets semi-transparent
+            attribution: '&copy; OpenStreetMap contributors'
+        });
+
+        const blended = L.layerGroup([noaaEnc, streetsOverlay]);
+
+        // Initialize the map
+        const map = L.map('map', {
+            center: [26.6, -81.98],
+            zoom: 13,
+            layers: [streetMap]  // default layer
+        });
+
+        // Add layer switcher
+        const baseMaps = {
+            "Street Map": streetMap,
+            "Satellite": satelliteMap,
+            "Nautical": noaaEnc,
+            'Blended': blended
+
+
+        };
+
+        L.control.layers(baseMaps).addTo(map);
+        L.control.boating().addTo(map)
+        L.control.scale().addTo(map);
+
+
+
+
+        // === Define global variables ===
+        let fromMarker = null; // Marker for "From" location
+        let toMarker = null; // Marker for "To" location
+        let fromAddressLatLng = null; // Coordinates of selected "From" point
+        let toAddressLatLng = null; // Coordinates of selected "To" point
+        let graph = {}; // Graph data for Dijkstra routing
+        let segmentMap = {}; // Maps segment_id to segment data
+        let startNode = null; // Starting node ID in the graph
+        let endNode = null; // Ending node ID in the graph
+        let addressPoints = []; // List of address point features
+        let canalDataReady = false; // Flag to enable routing after canal data loads
+        let routeLine; // Polyline object(s) for displayed route
+        let bridgeMarkers = []; // Markers for bridge clearance info
+        const defaultIcon = new L.Icon.Default();
+        const iconSize = [48, 48]; // Adjust as needed
+        let selectedPOIId = null; // 🔴 Track which POI is selected for highlighting
+        let previouslySelectedPOIMarker = null;
+        let suppressNextPopup = false;
+        let selectedCategory = 'restaurant';
+
+
+
+
+
+        const restaurantIcon = new L.Icon({
+            iconUrl: 'https://res.cloudinary.com/da0bnopjg/image/upload/v1754337466/Restaurant_Marker_LG_xhr3he.png',
+            iconSize,
+            iconAnchor: [24, 48],
+            popupAnchor: [0, -48]
+        });
+
+        const rampIcon = new L.Icon({
+            iconUrl: 'https://res.cloudinary.com/da0bnopjg/image/upload/v1754338238/Ramp_Marker_LG_to2kz0.png',
+            iconSize,
+            iconAnchor: [24, 48],
+            popupAnchor: [0, -48]
+        });
+
+        const beachIcon = new L.Icon({
+            iconUrl: 'https://res.cloudinary.com/da0bnopjg/image/upload/v1754338234/Beach_Marker_LG_vvoz6i.png',
+            iconSize,
+            iconAnchor: [24, 48],
+            popupAnchor: [0, -48]
+        });
+
+        const marinaWithGasIcon = new L.Icon({
+            iconUrl: 'https://res.cloudinary.com/da0bnopjg/image/upload/v1754338960/Marina_Gas_Marker_Orange_LG_v5havu.png',
+            iconSize,
+            iconAnchor: [24, 48],
+            popupAnchor: [0, -48]
+        });
+
+        const marinaNoGasIcon = new L.Icon({
+            iconUrl: 'https://res.cloudinary.com/da0bnopjg/image/upload/v1754338237/Marina_Marker_LG_bmy8vt.png',
+            iconSize,
+            iconAnchor: [24, 48],
+            popupAnchor: [0, -48]
+        });
+
+        const restaurantIconRed = new L.Icon({
+            iconUrl: 'https://res.cloudinary.com/da0bnopjg/image/upload/v1754346278/Restaurant_Marker_LG_Red_cug64s.png',
+            iconSize,
+            iconAnchor: [24, 48],
+            popupAnchor: [0, -48]
+        });
+
+        const rampIconRed = new L.Icon({
+            iconUrl: 'https://res.cloudinary.com/da0bnopjg/image/upload/v1754346278/Ramp_Marker_LG_Red_odlv0v.png',
+            iconSize,
+            iconAnchor: [24, 48],
+            popupAnchor: [0, -48]
+        });
+
+        const beachIconRed = new L.Icon({
+            iconUrl: 'https://res.cloudinary.com/da0bnopjg/image/upload/v1754346278/Beach_Marker_LG_Red_iqvtj2.png',
+            iconSize,
+            iconAnchor: [24, 48],
+            popupAnchor: [0, -48]
+        });
+
+        const marinaWithGasIconRed = new L.Icon({
+            iconUrl: 'https://res.cloudinary.com/da0bnopjg/image/upload/v1754346278/Marina_Gas_Marker_Orange_LG_Red_rz0bmj.png',
+            iconSize,
+            iconAnchor: [24, 48],
+            popupAnchor: [0, -48]
+        });
+
+        const marinaNoGasIconRed = new L.Icon({
+            iconUrl: 'https://res.cloudinary.com/da0bnopjg/image/upload/v1754346278/Marina_Marker_LG_Red_ck5xmn.png',
+            iconSize,
+            iconAnchor: [24, 48],
+            popupAnchor: [0, -48]
+        });
+
+
+        // === URLs to GeoJSON resources (stored in Cloudinary) ===
+        const CANAL_GEOJSON_URL = 'https://res.cloudinary.com/da0bnopjg/raw/upload/v1754311320/canals8_e8ogch.geojson';
+        const ADDRESS_GEOJSON_URL = 'https://res.cloudinary.com/da0bnopjg/raw/upload/v1751043675/Gulf_Access_Points_Master_vdfpde.geojson';
+        const NAVAID_GEOJSON_URL = 'https://res.cloudinary.com/da0bnopjg/raw/upload/v1752634446/Markers6_ytzjc0.geojson';
+        let navaidLayerGroup = L.layerGroup().addTo(map);
+        let poiMap = {};
+        let poiMarkerGroup = L.layerGroup().addTo(map);
+        const poiMarkers = {}; // key: POI id, value: marker
+
+        function clearBridgeMarkers() {
+            bridgeMarkers.forEach(marker => map.removeLayer(marker));
+            bridgeMarkers = []; // Clear the array
         }
 
-        // 🔧 Adjust size and anchor based on type
-        const isLight = type === "light";
-        const baseSize = getNavaidIconSize(zoom);
-        const iconSize = isLight
-          ? [baseSize[0] * 2, baseSize[1] * 2]
-          : baseSize;
+        function clearRouteLine() {
+            if (Array.isArray(routeLine)) {
+                routeLine.forEach(line => map.removeLayer(line));
+            } else if (routeLine) {
+                map.removeLayer(routeLine);
+            }
+            routeLine = [];
 
-        const iconAnchor = isLight
-          ? [iconSize[0] / 2, iconSize[1] / 2] // Adjust as needed
-          : [iconSize[0] / 2, iconSize[1]];
-
-        const icon = L.icon({
-          iconUrl: iconSvg,
-          iconSize,
-          iconAnchor
-        });
-        const zIndexOffset = isLight ? 0 : 1000; // lights stay low, others rise
-        const marker = L.marker([lat, lng], { icon, zIndexOffset
-        }).bindPopup(popupText);
-        marker.feature = feature;
-        navaidLayerGroup.addLayer(marker);
-      });
-    });
-}
+            // Clear bridge markers
+            clearBridgeMarkers();
+        }
 
 
-// === Utility function to convert mph to meters per second (used in travel time calc) ===
-const mphToMps = (mph) => mph * 0.44704;
+        function clearRouteAndOutputs() {
+            // Clear route lines
+            if (Array.isArray(routeLine)) {
+                routeLine.forEach(line => map.removeLayer(line));
+            } else if (routeLine) {
+                map.removeLayer(routeLine);
+            }
+            routeLine = [];
 
-// === Utility function to calculate total distance (in miles) from a polyline ===
-function calculateDistance(coords) {
-    let d = 0;
-    for (let i = 1; i < coords.length; i++) {
-        d += map.distance(coords[i - 1], coords[i]);
-    }
-    return d * 0.000621371; // Convert meters to miles
-}
-// === colours for beacons lights and signs: 1-white,3-red,4-green,6-yellow,11-orange ===
-// === colours for obstructions represent obstruction type: 99-obstruction,98-caution,97-awash,96-wreck === 
-function createGreenDayBeaconSVG(number) {
-  const label = number !== null ? `
-    <text x="24" y="30" font-size="16" text-anchor="middle" fill="black" font-family="Arial">${number}</text>` : '';
-  return `data:image/svg+xml;base64,${btoa(`<?xml version="1.0" encoding="UTF-8"?>
-  <svg width="48" height="48" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
-    <g>
-      <rect style="fill:none;stroke:#4a6235;stroke-width:2.35" width="33.649" height="37.649" x="7.175" y="3.778"/>
-      <rect style="fill:#55f786" width="31.297" height="35.297" x="8.352" y="4.953"/>
-      ${label}
-    </g>
-  </svg>`)}`
-}
+            // Clear route info boxes
+            const distanceBox = document.getElementById('distance-box');
+            const timeBox = document.getElementById('time-box');
+            const clearanceBox = document.getElementById('clearance-box');
 
-function createRedDayBeaconSVG(number) {
-  const label = number !== null ? `
-    <text x="24" y="36" font-size="16" text-anchor="middle" fill="black" font-family="Arial">${number}</text>` : '';
-  return `data:image/svg+xml;base64,${btoa(`<?xml version="1.0" encoding="UTF-8"?>
-  <svg width="48" height="48" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
-    <g>
-      <path style="fill:#f75555" d="M 33.89,21.51 9.64,21.51 21.76,0.50 Z" transform="matrix(1.52,0,0,1.52,-9.27,7.80)" />
-      <path style="fill:none;stroke:#8a0d0d;stroke-width:2.71" d="M 38.97,17.24 2.07,17.24 20.52,-14.72 Z" transform="matrix(1.14,0,0,1.14,0.40,22.30)" />
-      ${label}
-    </g>
-  </svg>`)}`
-}
+            if (distanceBox) distanceBox.innerHTML = 'Distance: --';
+            if (timeBox) timeBox.innerHTML = 'Time: --';
+            if (clearanceBox) clearanceBox.innerHTML = 'Min Clearance: --';
 
-function createGreenRedGreenDayBeaconSVG() {
-  const svg = `<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<svg width="48" height="48" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
-  <g>
-    <rect
-      style="display:inline;fill:#55f786;fill-opacity:1;stroke:none;stroke-width:0.218357"
-      width="14"
-      height="40"
-      x="17"
-      y="4" />
-    <rect
-      style="display:inline;fill:#f75555;fill-opacity:1;stroke:none;stroke-width:2.07605"
-      width="14"
-      height="9.0156116"
-      x="17"
-      y="13.788582" />
-  </g>
-</svg>`;
-  return `data:image/svg+xml;base64,${btoa(svg)}`;
-}
+            // Clear bridge markers
+            clearBridgeMarkers();
+        }
 
-function createRedGreenRedDayBeaconSVG() {
-  const svg = `<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<svg width="48" height="48" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
-  <g>
-    <rect
-      style="display:inline;fill:#f75555;fill-opacity:1;stroke:none;stroke-width:0.218357"
-      width="14"
-      height="40"
-      x="17"
-      y="4" />
-    <rect
-      style="display:inline;fill:#55f786;fill-opacity:1;stroke:none;stroke-width:2.07605"
-      width="14"
-      height="9.0156116"
-      x="17"
-      y="13.788582" />
-  </g>
-</svg>`;
-  return `data:image/svg+xml;base64,${btoa(svg)}`;
-}
 
-function createHazardDayBeaconSVG() {
-  const svg = `<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<svg
-   width="48"
-   height="48"
-   viewBox="0 0 48 48"
-   version="1.1"
-   xmlns="http://www.w3.org/2000/svg"
-   xmlns:svg="http://www.w3.org/2000/svg">
-  <g>
-    <rect
-       style="fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:0.214092;stroke-dasharray:none;stroke-opacity:1"
-       width="13.4375"
-       height="40.0625"
-       x="17.546938"
-       y="4.3306122" />
-    <path
-       style="fill:none;fill-opacity:1;stroke:#ffc523;stroke-width:3.53189;stroke-dasharray:none;stroke-opacity:1"
-       d="M 19.5625,24.4375 8,12.875 19.5625,1.3125 31.125,12.875 Z"
-       transform="matrix(0.41481749,0,0,0.77301644,16.213322,12.534275)" />
-  </g>
-</svg>`;
-  return `data:image/svg+xml;base64,${btoa(svg)}`;
-}
+        function refreshDropdownForCurrentCategory() {
+            const currentCategory = document.querySelector('.category-button.active')?.dataset.category;
+            if (currentCategory) {
+                populateDropdownByCategory(currentCategory);
+            }
+        }
 
-function createSafeOctagonDayBeaconSVG() {
-  const svg = `<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<svg
-   width="48"
-   height="48"
-   viewBox="0 0 48 48"
-   version="1.1"
-   xmlns="http://www.w3.org/2000/svg"
-   xmlns:svg="http://www.w3.org/2000/svg">
-  <g>
-    <g style="display:inline">
-      <path
-         style="display:inline;fill:#f75555;fill-opacity:1;stroke:#ffffff;stroke-width:1.87154;stroke-dasharray:none;stroke-opacity:1"
-         d="m 1.2657608,-4.8303532 9.5934782,1e-7 6.783614,6.7836139 0,9.5934782 -6.783614,6.783614 -9.5934784,0 -6.7836138,-6.783614 1e-7,-9.5934784 z"
-         transform="matrix(1.5976848,0,0,1.5978564,14.310856,13.213437)" />
-      <rect
-         style="display:inline;fill:#f75555;fill-opacity:1;stroke:#ffffff;stroke-width:2.79144;stroke-dasharray:none;stroke-opacity:1"
-         width="0.20855899"
-         height="24.583561"
-         x="11.39572"
-         y="11.395719" />
-      <rect
-         style="display:inline;fill:#f75555;fill-opacity:1;stroke:#ffffff;stroke-width:2.85555;stroke-dasharray:none;stroke-opacity:1"
-         width="0.14444545"
-         height="37.144447"
-         x="23.927774"
-         y="5.4277749" />
-      <rect
-         style="display:inline;fill:#f75555;fill-opacity:1;stroke:#ffffff;stroke-width:2.85555;stroke-dasharray:none;stroke-opacity:1"
-         width="0.14444545"
-         height="37.144447"
-         x="30.427776"
-         y="5.4277773" />
-      <rect
-         style="display:inline;fill:#f75555;fill-opacity:1;stroke:#ffffff;stroke-width:2.79144;stroke-dasharray:none;stroke-opacity:1"
-         width="0.20855899"
-         height="24.583561"
-         x="36.395721"
-         y="11.39572" />
-      <rect
-         style="fill:#f75555;fill-opacity:1;stroke:#ffffff;stroke-width:2.85555;stroke-dasharray:none;stroke-opacity:1"
-         width="0.14444545"
-         height="37.144447"
-         x="17.427776"
-         y="5.4277773" />
-    </g>
-  </g>
-</svg>`;
-  return `data:image/svg+xml;base64,${btoa(svg)}`;
-}
+        function getNavaidIconSize(zoom) {
+            // Clamp zoom range from 14 → 18
+            const effectiveZoom = Math.max(14, Math.min(zoom, 18));
+            const scale = (effectiveZoom - 14) * 8 + 8;  // Starts at 24px at zoom 14, goes to 54px at zoom 18
+            return [scale, scale];
+        }
 
-function createGreenBuoySVG(number) {
-  const label = number !== null ? `
-    <text x="30" y="32" font-size="16" text-anchor="middle" fill="black" font-family="Arial">${number}</text>` : '';
-  
-  return `data:image/svg+xml;base64,${btoa(`<?xml version="1.0" encoding="UTF-8"?>
-  <svg width="48" height="48" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
-    <g transform="translate(1,0)">
-      <path style="fill:#55f786;stroke:#000000;stroke-width:0.2;" d="m 26.553073,3.7537177 -9.106146,-1e-7 L 22,-4.1324353 Z"
-            transform="matrix(1.2079755,0,0,1.2377585,-3.5754609,5.3575217)" />
-      <rect style="fill:#55f786;stroke:#000000;stroke-width:0.2;" width="11" height="38" x="17.5" y="10" />
-      <rect style="fill:#55f786;stroke:#000000;stroke-width:0.2;" width="10.797" height="1.797" x="17.601" y="10.101" />
-      <rect style="fill:#55f786;stroke:#000000;stroke-width:0.2;" width="10.797" height="1.797" x="17.601" y="34.101" />
-      <rect style="fill:#55f786;stroke:#000000;stroke-width:0.22;" width="12.78" height="1.78" x="16.61" y="46.11" />
-      ${label}
-    </g>
-  </svg>`)}`
-}
-
-function createRedBuoySVG(number) {
-  const label = number !== null ? `
-    <text x="30" y="32" font-size="16" text-anchor="middle" fill="black" font-family="Arial">${number}</text>` : '';
-  
-  return `data:image/svg+xml;base64,${btoa(`<?xml version="1.0" encoding="UTF-8"?>
-  <svg width="48" height="48" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
-    <g transform="translate(1,0)">
-      <path style="fill:#f75555;stroke:#000000;stroke-width:0.2;" d="m 26.553073,3.7537177 -9.106146,-1e-7 L 22,-4.1324353 Z"
-            transform="matrix(1.2079755,0,0,1.2377585,-3.5754609,5.3575217)" />
-      <rect style="fill:#f75555;stroke:#000000;stroke-width:0.2;" width="11" height="38" x="17.5" y="10" />
-      <rect style="fill:#f75555;stroke:#000000;stroke-width:0.2;" width="10.797" height="1.797" x="17.601" y="10.101" />
-      <rect style="fill:#f75555;stroke:#000000;stroke-width:0.2;" width="10.797" height="1.797" x="17.601" y="34.101" />
-      <rect style="fill:#f75555;stroke:#000000;stroke-width:0.22;" width="12.78" height="1.78" x="16.61" y="46.11" />
-      ${label}
-    </g>
-  </svg>`)}`
-}
-
-function createGreenLightSVG() {
-  return `data:image/svg+xml;base64,${btoa(`<?xml version="1.0" encoding="UTF-8"?>
-<svg width="96" height="96" viewBox="0 0 96 96" xmlns="http://www.w3.org/2000/svg">
-  <g transform="translate(44,48)">
-    <g transform="translate(-3.6367188,-2.0625)">
-      <path
-        style="fill:#55f786;fill-opacity:1;stroke:none;stroke-width:3.1;stroke-dasharray:none;stroke-opacity:1"
-        transform="rotate(-6.0378257)"
-        d="M 35.433382,19.102105 A 10.474019,10.474019 0 0 1 37.659878,33.741155 10.474019,10.474019 0 0 1 23.022364,35.97773 10.474019,10.474019 0 0 1 20.77571,21.34176 10.474019,10.474019 0 0 1 35.410129,19.085029"/>
-      <path
-        style="fill:#55f786;fill-opacity:1;stroke:none;stroke-width:0.200059;stroke-dasharray:none;stroke-opacity:1"
-        d="M 23.390625,30.336885 3.6367188,2.0625 35.847656,14.581962"/>
-    </g>
-  </g>
-</svg>`)}`
-}
-
-function createRedLightSVG() {
-  return `data:image/svg+xml;base64,${btoa(`<?xml version="1.0" encoding="UTF-8"?>
-  <svg width="96" height="96" viewBox="0 0 96 96" xmlns="http://www.w3.org/2000/svg">
-    <g transform="translate(44,48)">
-      <g transform="translate(-3.6367188,-2.0625)">
-        <path
-          style="fill:#f75555;fill-opacity:1;stroke:none;stroke-width:3.1"
-          transform="rotate(-6.0378257)"
-          d="M 35.433382,19.102105 A 10.474019,10.474019 0 0 1 37.659878,33.741155 10.474019,10.474019 0 0 1 23.022364,35.97773 10.474019,10.474019 0 0 1 20.77571,21.34176 10.474019,10.474019 0 0 1 35.410129,19.085029" />
-        <path
-          style="fill:#f75555;fill-opacity:1;stroke:none;stroke-width:0.2"
-          d="M 23.390625,30.336885 3.6367188,2.0625 35.847656,14.581962" />
-      </g>
-    </g>
-  </svg>`)}`
-}
-
-function createYellowLightSVG() {
-  return `data:image/svg+xml;base64,${btoa(`<?xml version="1.0" encoding="UTF-8"?>
-<svg width="96" height="96" viewBox="0 0 96 96" xmlns="http://www.w3.org/2000/svg">
-  <g transform="translate(44,48)">
-    <g transform="translate(-3.6367188,-2.0625)">
-      <path
-        style="fill:#f6f52c;fill-opacity:1;stroke:none;stroke-width:3.1;stroke-dasharray:none;stroke-opacity:1"
-        transform="rotate(-6.0378257)"
-        d="M 35.433382,19.102105 A 10.474019,10.474019 0 0 1 37.659878,33.741155 10.474019,10.474019 0 0 1 23.022364,35.97773 10.474019,10.474019 0 0 1 20.77571,21.34176 10.474019,10.474019 0 0 1 35.410129,19.085029" />
-      <path
-        style="fill:#f6f52c;fill-opacity:1;stroke:none;stroke-width:0.200059;stroke-dasharray:none;stroke-opacity:1"
-        d="M 23.390625,30.336885 3.6367188,2.0625 35.847656,14.581962" />
-    </g>
-  </g>
-</svg>`)}`
-}
-
-function createWhiteLightSVG() {
-  return `data:image/svg+xml;base64,${btoa(`<?xml version="1.0" encoding="UTF-8"?>
-<svg width="96" height="96" viewBox="0 0 96 96" xmlns="http://www.w3.org/2000/svg">
-  <g transform="translate(44,48)">
-    <g transform="translate(-3.6367188,-2.0625)">
-      <path
-        style="fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:3.1;stroke-dasharray:none;stroke-opacity:1"
-        transform="rotate(-6.0378257)"
-        d="M 35.433382,19.102105 A 10.474019,10.474019 0 0 1 37.659878,33.741155 10.474019,10.474019 0 0 1 23.022364,35.97773 10.474019,10.474019 0 0 1 20.77571,21.34176 10.474019,10.474019 0 0 1 35.410129,19.085029" />
-      <path
-        style="fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:0.200059;stroke-dasharray:none;stroke-opacity:1"
-        d="M 23.390625,30.336885 3.6367188,2.0625 35.847656,14.581962" />
-    </g>
-  </g>
-</svg>`)}`
-}
-
-function createExposedWreckDangerSVG() {
-  const svg = `<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<svg
-   width="48"
-   height="48"
-   viewBox="0 0 48 48"
-   version="1.1"
-   xmlns="http://www.w3.org/2000/svg"
-   xmlns:svg="http://www.w3.org/2000/svg">
-  <g>
-    <g transform="matrix(1.5889389,0,0,1.5999858,-13.631976,-8.8023736)">
-      <path
-         style="fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:1.5;stroke-dasharray:none;stroke-opacity:1"
-         d="m 24.893677,22.792727 a 1.5026019,1.5026019 0 0 1 0.319413,2.100117 1.5026019,1.5026019 0 0 1 -2.099897,0.320859 1.5026019,1.5026019 0 0 1 -0.322304,-2.099675 1.5026019,1.5026019 0 0 1 2.099452,-0.323751" />
-      <path
-         style="fill:#ffffff;fill-opacity:1;stroke:#ffffff;stroke-width:2.054;stroke-linecap:round;stroke-dasharray:none;stroke-opacity:1"
-         d="M 16.214479,23.423059 H 31.165985" />
-      <path
-         style="fill:#ffffff;fill-opacity:1;stroke:#ffffff;stroke-width:1.53717;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:none;stroke-opacity:1"
-         d="m 22.204487,23.09754 -3.916395,-3.837183 10.269659,4.17085" />
-      <path
-         style="fill:#ffffff;fill-opacity:1;stroke:#ffffff;stroke-width:2.054;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:none;stroke-opacity:1"
-         d="m 22.715805,21.92031 2.121321,-5.391689" />
-    </g>
-  </g>
-</svg>`;
-  return `data:image/svg+xml;base64,${btoa(svg)}`;
-}
-
-function createSubmergedWreckDangerSVG() {
-  const svg = `<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<svg
-   width="48"
-   height="48"
-   viewBox="0 0 48 48"
-   version="1.1"
-   xmlns="http://www.w3.org/2000/svg"
-   xmlns:svg="http://www.w3.org/2000/svg">
-  <g>
-    <g>
-      <path
-         style="display:inline;fill:none;fill-opacity:1;stroke:#ffffff;stroke-width:1.19695;stroke-dasharray:1.19695, 3.59086;stroke-opacity:1"
-         d="M 36.690619,12.403905 A 21.400053,14.401306 0 0 1 41.239696,32.531942 21.400053,14.401306 0 0 1 11.332975,35.607132 21.400053,14.401306 0 0 1 6.7427107,15.483331 21.400053,14.401306 0 0 1 36.64311,12.380426" />
-      <path
-         style="fill:none;stroke:#ffffff;stroke-width:1.4879"
-         d="M 8,23.99395 H 40" />
-      <path
-         style="fill:none;stroke:#ffffff;stroke-width:1.51808"
-         d="M 24.00904,14 V 34" />
-      <path
-         style="fill:none;stroke:#ffffff;stroke-width:1.5459"
-         d="M 15.52295,18 V 30" />
-      <path
-         style="fill:none;stroke:#ffffff;stroke-width:1.5459"
-         d="M 32.52295,18 V 30" />
-    </g>
-  </g>
-</svg>`;
-  return `data:image/svg+xml;base64,${btoa(svg)}`;
-}
-
-function createRocksDangerSVG() {
-  const svg = `<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<svg
-   width="48"
-   height="48"
-   viewBox="0 0 48 48"
-   version="1.1"
-   xmlns="http://www.w3.org/2000/svg"
-   xmlns:svg="http://www.w3.org/2000/svg">
-  <g>
-    <path
-       style="display:inline;fill:none;fill-opacity:1;stroke:#ffffff;stroke-width:1.5;stroke-dasharray:none;stroke-opacity:1"
-       d="M 31.652631,39.63104 21.478369,22.212185 11.304105,39.631039 21.302145,22.110442 1.1298428,22.008698 21.302145,21.906957 11.304107,4.3863585 21.478369,21.805214 31.652633,4.3863595 21.654592,21.906957 41.826895,22.0087 21.654592,22.110442 Z"
-       transform="matrix(0.98268788,0,0,1.0001847,2.8934345,1.9911724)" />
-  </g>
-</svg>`;
-  return `data:image/svg+xml;base64,${btoa(svg)}`;
-}
-
-function createCautionDangerSVG() {
-  const svg = `<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<svg
-   width="48"
-   height="48"
-   viewBox="0 0 48 48"
-   version="1.1"
-   xmlns="http://www.w3.org/2000/svg"
-   xmlns:svg="http://www.w3.org/2000/svg">
-  <g>
-    <path
-       style="display:inline;fill:none;fill-opacity:1;stroke:#ffffff;stroke-width:1.5;stroke-dasharray:none;stroke-opacity:1"
-       d="M 39.026296,40.440511 22.185474,23.837855 5.3446525,40.440511 21.947309,23.599689 5.3446524,6.7588676 22.185474,23.361524 39.026296,6.7588675 22.42364,23.599689 Z"
-       transform="matrix(1.0359566,0,0,1.0365611,1.0164695,-0.45235884)" />
-  </g>
-</svg>`;
-  return `data:image/svg+xml;base64,${btoa(svg)}`;
-}
-
-function createObstructionDangerSVG() {
-  const svg = `<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<svg
-   width="48"
-   height="48"
-   viewBox="0 0 48 48"
-   version="1.1"
-   xmlns="http://www.w3.org/2000/svg"
-   xmlns:svg="http://www.w3.org/2000/svg">
-  <g>
-    <path
-       style="display:inline;fill:none;fill-opacity:1;stroke:#ffffff;stroke-width:1.5;stroke-dasharray:1.5, 4.5;stroke-opacity:1"
-       d="M 36.796032,5.9692985 A 22,22 0 0 1 41.472642,36.717677 22,22 0 0 1 10.727491,41.415458 22,22 0 0 1 6.0085394,10.67355 22,22 0 0 1 36.747191,5.9334305" />
-  </g>
-</svg>`;
-  return `data:image/svg+xml;base64,${btoa(svg)}`;
-}
-// === Load and process the canal network data ===
-let geojsonData; // Stores original GeoJSON object for reference
-
-fetch(CANAL_GEOJSON_URL)
-.then(res => res.json())
-.then(data => {
-    geojsonData = data; // Save full feature set for later lookups
-
-    data.features.forEach(feature => {
-        const { from_point, to_point, segment_id } = feature.properties;
-        const coords = feature.geometry.coordinates.map(c => [c[1], c[0]]); // Convert [lng, lat] → [lat, lng]
-        const distance = calculateDistance(coords);
-
-        // Build segmentMap (used in routing to get distance and coordinates)
-        if (!segmentMap[segment_id]) {
-            segmentMap[segment_id] = {
-                feature,
-                coords,
-                distance
+        function setupCategoryButtons() {
+            const labelMap = {
+                restaurant: "Restaurants",
+                marina: "Marinas",
+                beach: "Beaches",
+                ramp: "Boat Ramps",
+                bar: "Bars",
+                gas: "Fuel Docks",
+                // Add more as needed...
             };
-        } else {
-            console.warn("Duplicate during map load:", segment_id);
+
+            const categories = [...new Set(Object.values(poiMap).map(p => p.properties.category))];
+            const container = document.getElementById('category-buttons');
+            container.innerHTML = ''; // Clear any existing buttons
+
+            categories.forEach(category => {
+                const button = document.createElement('button');
+                button.dataset.category = category; // ← Add this line
+
+                // Use labelMap if available, fallback to capitalized category
+                const label = labelMap[category] || category.charAt(0).toUpperCase() + category.slice(1);
+                button.textContent = label;
+
+                button.className = 'poi-button';
+
+                if (category === 'restaurant') {
+                    button.classList.add('active');
+                }
+
+                button.addEventListener('click', () => {
+                    // ✅ Clear old route
+                    clearRouteAndOutputs();
+                    // ✅ Update selected category
+                    selectedCategory = category;
+                    document.querySelectorAll('.poi-button').forEach(btn => btn.classList.remove('active'));
+                    button.classList.add('active');
+                    showPOIsByCategory(category);
+                    populateDropdownByCategory(category);
+                });
+
+                container.appendChild(button);
+            });
         }
 
-        // Create bidirectional graph edges for Dijkstra
-        if (!graph[from_point])
-            graph[from_point] = [];
-        if (!graph[to_point])
-            graph[to_point] = [];
+        function getOpenStatusFromHours(hoursArray) {
+            if (!Array.isArray(hoursArray) || hoursArray.length !== 7) {
+                return 'Call for hours';
+            }
 
-        graph[from_point].push({
-            to: to_point,
-            segment_id
+            // Check for "Temporarily closed"
+            if (hoursArray.some(line => line.toLowerCase().includes('temporarily closed'))) {
+                return 'Temporarily closed';
+            }
+
+            // Check for all days being "Daylight hours"
+            const isAllDaylight = hoursArray.every(line => line.toLowerCase().includes('daylight hours'));
+            if (isAllDaylight) {
+                return 'Daylight hours';
+            }
+
+            const now = new Date();
+            const jsDayIndex = now.getDay(); // 0 = Sunday
+            const currentMinutes = now.getHours() * 60 + now.getMinutes();
+
+            const parseTime = (str, baseDate) => {
+                const [time, meridian] = str.toLowerCase().split(/ (am|pm)/);
+                let [hour, minute] = time.split(':').map(Number);
+                if (meridian === 'pm' && hour !== 12) hour += 12;
+                if (meridian === 'am' && hour === 12) hour = 0;
+                baseDate.setHours(hour, minute || 0, 0, 0);
+                return new Date(baseDate);
+            };
+
+            const rotatedHours = [
+                hoursArray[6], // Sunday
+                hoursArray[0], // Monday
+                hoursArray[1], // Tuesday
+                hoursArray[2], // Wednesday
+                hoursArray[3], // Thursday
+                hoursArray[4], // Friday
+                hoursArray[5]  // Saturday
+            ];
+
+            const todayLine = rotatedHours[jsDayIndex];
+
+            if (!todayLine || todayLine.toLowerCase().includes('closed')) {
+                return findNextOpenDay();
+            }
+
+            if (todayLine.toLowerCase().includes('open 24 hours')) {
+                return 'Open 24 hours';
+            }
+
+            const timePart = todayLine.split(':').slice(1).join(':').trim();
+            const [openStr, closeStr] = timePart
+                .replace(/\u2013|\u2014/g, '-')
+                .replace(/\u202f|\u2009|\u00a0/g, ' ')
+                .replace(/\s+/g, ' ')
+                .split('-')
+                .map(str => str.trim());
+
+            const open = parseTime(openStr, new Date(now));
+            const close = parseTime(closeStr, new Date(now));
+
+            if (close <= open) {
+                close.setDate(close.getDate() + 1); // Overnight
+            }
+
+            const isOpen = now >= open && now <= close;
+            const closingTimeStr = close.toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' });
+
+            if (isOpen) {
+                return `Open · Closes at ${closingTimeStr}`;
+            }
+
+            if (now < open) {
+                const openTimeStr = open.toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' });
+                return `Closed · Opens at ${openTimeStr}`;
+            }
+
+            return findNextOpenDay();
+
+            function findNextOpenDay() {
+                for (let i = 1; i <= 7; i++) {
+                    const dayIndex = (jsDayIndex + i) % 7;
+                    const dayLine = rotatedHours[dayIndex];
+
+                    if (dayLine && !dayLine.toLowerCase().includes('closed')) {
+                        if (dayLine.toLowerCase().includes('open 24 hours')) {
+                            return i === 1 ? 'Closed · Opens tomorrow (24 hours)' : `Closed · Opens ${getDayName(dayIndex)} (24 hours)`;
+                        }
+
+                        const nextTimePart = dayLine.split(':').slice(1).join(':').trim();
+                        const [nextOpenStr] = nextTimePart
+                            .replace(/\u2013|\u2014/g, '-')
+                            .replace(/\u202f|\u2009|\u00a0/g, ' ')
+                            .replace(/\s+/g, ' ')
+                            .split('-')
+                            .map(str => str.trim());
+
+                        const openDate = new Date(now);
+                        openDate.setDate(openDate.getDate() + i);
+                        const nextOpen = parseTime(nextOpenStr, openDate);
+                        const openTimeFormatted = nextOpen.toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' });
+
+                        const dayLabel = i === 1 ? 'tomorrow' : getDayName(dayIndex);
+                        return `Closed · Opens ${dayLabel} at ${openTimeFormatted}`;
+                    }
+                }
+
+                return 'Closed';
+            }
+
+            function getDayName(index) {
+                const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+                return days[index];
+            }
+        }
+
+        function getStarHTML(ratingValue) {
+            const fullStars = Math.floor(ratingValue);
+            const fractional = ratingValue - fullStars;
+            const hasHalfStar = fractional >= 0.25 && fractional < 0.75;
+            const emptyStars = 5 - fullStars - (hasHalfStar ? 1 : 0);
+
+            let starHTML = '';
+
+            for (let i = 0; i < fullStars; i++) {
+                starHTML += '<span style="color: gold;">★</span>';
+            }
+
+            if (hasHalfStar) {
+                starHTML += '<span style="color: gold;">⯨</span>'; // Or ☆ if you prefer
+            } else if (fractional >= 0.75) {
+                starHTML += '<span style="color: gold;">★</span>';
+            }
+
+            for (let i = 0; i < emptyStars; i++) {
+                starHTML += '<span style="color: #ccc;">★</span>';
+            }
+
+            return starHTML;
+        }
+
+        function showPOIsByCategory(category, selectedId = null) {
+            poiMarkerGroup.clearLayers();
+            // const dropdown = document.getElementById('destination-select');
+            //selectedId = selectedId || (dropdown ? dropdown.value : null); // ✅ No 'const'
+
+
+            Object.values(poiMap).forEach(feature => {
+                if (feature.properties.category === category) {
+                    const [lng, lat] = feature.geometry.coordinates;
+                    const props = feature.properties;
+                    const id = props.id;
+                    const name = props.name;
+                    const address = props.address || 'Address not available';
+                    const phone = props.phone
+                        ? `<a href="tel:${props.phone}" style="color: inherit; text-decoration: none;">${props.phone}</a>`
+                        : 'Phone not available';
+                    const website = props.website
+                        ? `<a href="${props.website}" style="text-decoration: none;" target="_blank">Visit Website</a>`
+                        : 'Website not available';
+                    const hours = props.hours || [];
+                    const rating = props.rating
+                        ? `${props.rating} ${getStarHTML(props.rating)}`
+                        : 'No rating';
+                    const reviews = props.reviews ? `(${props.reviews} reviews)` : '';
+                    const gmapLink = props.gmap_link
+                        ? `<a href="${props.gmap_link}" style="text-decoration: none;" target="_blank">View on Google Maps</a>`
+                        : '';
+                    const statusText = getOpenStatusFromHours(hours);
+
+                    const orderedHoursHTML = (() => {
+                        if (!Array.isArray(hours) || hours.length === 0) return 'Hours not available';
+                        const todayIndex = new Date().getDay();
+                        const dayMap = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+                        const hoursByDay = {};
+                        hours.forEach(entry => {
+                            const splitIndex = entry.indexOf(':');
+                            const day = entry.slice(0, splitIndex).trim();
+                            const time = entry.slice(splitIndex + 1).trim();
+                            hoursByDay[day] = `${day}: ${time}`;
+                        });
+                        const ordered = [];
+                        for (let i = 0; i < 7; i++) {
+                            const index = (todayIndex + i) % 7;
+                            const day = dayMap[index];
+                            if (hoursByDay[day]) {
+                                ordered.push(`<div>${hoursByDay[day]}</div>`);
+                            }
+                        }
+                        return ordered.join('');
+                    })();
+
+                    const vhfCalling = props.vhf_monitored;
+                    const vhfWorking = props.vhf_working;
+                    const vhfLine = (vhfCalling !== null || vhfWorking !== null)
+                        ? `<div style="margin: 4px 0;">📻 <strong>VHF:</strong> Calling: ${vhfCalling ?? 'N/A'} - Working: ${vhfWorking ?? 'N/A'}</div>`
+                        : '';
+
+                    const approachDepth = props.approach_depth;
+                    const docksideDepth = props.dockside_depth;
+                    const depthLine = (approachDepth !== null || docksideDepth !== null)
+                        ? `<div style="margin: 4px 0;">⬇️ <strong>Depths:</strong> Approach: ${approachDepth ?? 'N/A'}ft. - Dockside: ${docksideDepth ?? 'N/A'}ft.</div>`
+                        : '';
+
+                    const totalSlips = props.total_slips;
+                    const transientSlips = props.transient_slips;
+                    const slipLine = (totalSlips !== null || transientSlips !== null)
+                        ? `<div style="margin: 4px 0;">🛥️ <strong>Slips:</strong> Total: ${totalSlips ?? 'N/A'} - Transient: ${transientSlips ?? 'N/A'}</div>`
+                        : '';
+
+                    const rampLanes = props.lanes;
+                    const trailerSpots = props.trailer_spots;
+                    const vehicleSpots = props.vehicle_spots;
+                    const fee = props.fee;
+                    let rampBlock = '';
+                    // ➤ Lanes (↘️)
+                    if (rampLanes !== null && rampLanes !== undefined) {
+                        rampBlock += `<div style="margin: 4px 0;">↘️ <strong>Lanes:</strong> ${rampLanes}</div>`;
+                    }
+
+                    // 🅿️ Parking (Trailer + Vehicle)
+                    if ((trailerSpots !== null && trailerSpots !== undefined) || (vehicleSpots !== null && vehicleSpots !== undefined)) {
+                        rampBlock += `<div style="margin: 4px 0;">🅿️ <strong>Parking:</strong> Trailer: ${trailerSpots ?? 'N/A'} - Vehicle: ${vehicleSpots ?? 'N/A'}</div>`;
+                    }
+
+                    // 💲 Fee
+                    if (fee !== null && fee !== undefined) {
+                        rampBlock += `<div style="margin: 4px 0;">💲 <strong>Fee:</strong> $${Number(fee).toFixed(2)}</div>`;
+                    }
+
+                    const services = props.services?.split(',').map(s => s.trim()).filter(Boolean) || [];
+                    const serviceColorMap = {
+                        Gas: '#ff4d4d',       // Red
+                        Diesel: '#4CAF50',    // Green
+                        Pumpout: '#FFD700',   // Yellow
+                        Repairs: '#4da6ff'    // Blue
+                    };
+                    const serviceHTML = services.length > 0
+                        ? `<div style="margin: 4px 0;">${services.map(service => {
+                            const bgColor = serviceColorMap[service] || '#e0f0ff'; // Default light blue if not matched
+                            return `<span style="background-color:${bgColor};border-radius:10px;padding:2px 8px;margin:2px;display:inline-block;font-size:12px;color:#000;">${service}</span>`;
+                        }).join(' ')}</div>`
+                        : '';
+
+                    const popupContent = `
+                        <div style="font-family: Arial, sans-serif; font-size: 13px; line-height: 1.5; max-width: 360px;">
+                            <strong style="font-size: 15px;">${name}</strong><br>
+                            ${serviceHTML}
+                            <div style="margin: 4px 0;">${rating} ${reviews}</div>
+                            <div style="margin: 4px 0;">📍 ${address}</div>
+                            <div style="margin: 4px 0;">🕒 ${statusText}
+                                <a href="#" class="toggle-hours" style="color:#666;text-decoration: none; margin-left: 8px;">▼</a>
+                                <div class="full-hours" style="display: none; margin-top: 4px;">${orderedHoursHTML}</div>
+                            </div>
+                            <div style="margin: 4px 0;">🌐 ${website}</div>
+                            <div style="margin: 4px 0;">📞 ${phone}</div>
+                            ${rampBlock}
+                            ${vhfLine}
+                            ${depthLine}
+                            ${slipLine}
+                            <div style="margin: 4px 0;">
+                                <img src="https://res.cloudinary.com/da0bnopjg/image/upload/v1754177681/Google__G__logo.svg_t1tc6h.png"
+                                alt="Google Maps"
+                                style="height: 14px; vertical-align: middle; margin-left: 2px; margin-right: 6px;">
+                                ${gmapLink}
+                            </div>                           
+                            <div style="margin-top: 12px; text-align: center;">
+                                <a href="#"
+                                    class="set-destination-link"
+                                    data-id="${id}" 
+                                    style="
+                                    display: inline-block;
+                                    background-color: #007bff;
+                                    color: white;
+                                    padding: 6px 14px;
+                                    border-radius: 6px;
+                                    text-decoration: none;
+                                    font-weight: bold;
+                                    font-size: 13px;
+                                    transition: background-color 0.3s;">
+                                    Get Directions
+                                </a>
+                            </div>
+                        </div>
+                    `;
+
+                    // Determine if this marker is selected
+                    const isSelected = id === selectedId;
+                    let iconToUse = defaultIcon;
+
+                    if (props.category === 'restaurant') {
+                        iconToUse = isSelected ? restaurantIconRed : restaurantIcon;
+                    } else if (props.category === 'ramp') {
+                        iconToUse = isSelected ? rampIconRed : rampIcon;
+                    } else if (props.category === 'beach') {
+                        iconToUse = isSelected ? beachIconRed : beachIcon;
+                    } else if (props.category === 'marina') {
+                        const servicesLower = props.services?.toLowerCase() || '';
+                        iconToUse = servicesLower.includes('gas')
+                            ? (isSelected ? marinaWithGasIconRed : marinaWithGasIcon)
+                            : (isSelected ? marinaNoGasIconRed : marinaNoGasIcon);
+                    }
+                    // Create the marker
+                    const marker = L.marker([lat, lng], {
+                        icon: iconToUse,
+                        zIndexOffset: isSelected ? 1001 : 1000
+                    });
+
+                    marker._poiId = id;
+                    marker.featureProps = props;
+                    marker.bindPopup(popupContent);
+
+                    marker.on('click', () => {
+                        const dropdown = document.getElementById('destination-select');
+                        if (dropdown) {
+                            dropdown.value = id;
+                            selectedPOIId = id;
+
+                            // ✅ Clear old route
+                            clearRouteAndOutputs();
+
+                            // Directly re-render POIs (this will handle popup via isSelected)
+                            showPOIsByCategory(category, id);
+                        }
+                    });
+
+
+                    if (isSelected) {
+                        if (previouslySelectedPOIMarker && previouslySelectedPOIMarker._poiId !== id) {
+                            const prevProps = previouslySelectedPOIMarker.featureProps;
+                            const prevCategory = prevProps?.category || '';
+                            const prevServices = prevProps?.services?.toLowerCase() || '';
+                            let defaultIcon;
+
+                            if (prevCategory === 'restaurant') {
+                                defaultIcon = restaurantIcon;
+                            } else if (prevCategory === 'ramp') {
+                                defaultIcon = rampIcon;
+                            } else if (prevCategory === 'beach') {
+                                defaultIcon = beachIcon;
+                            } else if (prevCategory === 'marina') {
+                                defaultIcon = prevServices.includes('gas') ? marinaWithGasIcon : marinaNoGasIcon;
+                            } else {
+                                defaultIcon = defaultIcon;
+                            }
+
+                            previouslySelectedPOIMarker.setIcon(defaultIcon);
+                            previouslySelectedPOIMarker.setZIndexOffset(1000);
+                        }
+
+                        previouslySelectedPOIMarker = marker;
+                        marker.featureProps = props;
+
+                        // Only open the popup if we're not suppressing it
+                        if (!suppressNextPopup) {
+                            setTimeout(() => {
+                                marker.openPopup();
+                            }, 0);
+                        } else {
+                            suppressNextPopup = false; // Reset for next click
+                        }
+                    }
+
+
+                    const status = getOpenStatusFromHours(props.hours);
+                    const tooltipHTML = `<strong>${name}</strong><br>${status}`;
+
+                    marker.bindTooltip(tooltipHTML, {
+                        permanent: false,
+                        direction: 'top',
+                        offset: [0, -10],
+                        opacity: 0.9
+                    });
+
+                    poiMarkerGroup.addLayer(marker);
+                }
+            });
+        }
+        map.on('popupopen', function (e) { // Center the popup within the map view   
+            const px = map.project(e.popup._latlng);
+            px.y -= e.popup._container.clientHeight / 1.5;
+            map.panTo(map.unproject(px), { animate: true });
+
+            // Scroll the page to bring the map into full view
+            const mapContainer = document.getElementById('map'); // Adjust this ID if yours differs
+
+            if (mapContainer) {
+                mapContainer.scrollIntoView({
+                    behavior: 'smooth',
+                    block: 'center' // 'start' | 'center' | 'end' | 'nearest'
+                });
+            }
         });
-        // Note: Reverse direction intentionally left out here (may be added later)
-    });
 
-    canalDataReady = true;
-    document.getElementById('route-button').disabled = false;
-    console.log(`Graph initialized with ${data.features.length} segments.`);
-});
+        document.addEventListener('click', function (e) {  // Show Hours
+            if (e.target.classList.contains('toggle-hours')) {
+                e.preventDefault();
+                const fullHours = e.target.nextElementSibling;
+                if (fullHours) {
+                    fullHours.style.display = fullHours.style.display === 'none' ? 'block' : 'none';
+                    e.target.textContent = fullHours.style.display === 'none' ? '▼' : 'Hide hours ▼';
+                }
+            }
+        });
 
-// === Load and process the address points for autocomplete ===
-fetch(ADDRESS_GEOJSON_URL)
-.then(res => res.json())
-.then(data => {
-    data.features.forEach(feature => {
-        feature.label = feature.properties.SITEADDR; // Store readable label
-        addressPoints.push(feature); // Add to global address list
-    });
+        document.addEventListener('click', function (e) {  // Get Directions Popup Button
+            if (e.target.classList.contains('set-destination-link')) {
+                e.preventDefault();
+                const id = e.target.dataset.id;
+                const dropdown = document.getElementById('destination-select');
 
-    console.log(`Loaded ${addressPoints.length} address points.`);
-    console.log("Sample addresses:", addressPoints.slice(0, 5));
-});
+                if (dropdown) {
+                    dropdown.value = id;
+                    suppressNextPopup = true;  // 🚫 suppress popup
+                    dropdown.dispatchEvent(new Event('change'));
+                }
 
-// === Set up autocomplete behavior for input fields ===
-// inputId: ID of the HTML input element
-// suggestionsId: ID of the div used to show matching suggestions
-// isDestination: true if this is the 'To' input, false for 'From'
-function setupAutocomplete(inputId, suggestionsId, isDestination = false) {
-    const input = document.getElementById(inputId);
-    const suggestionBox = document.getElementById(suggestionsId);
+                // Close the popup manually
+                map.closePopup();
 
-    input.addEventListener('input', () => {
-        const value = input.value.toLowerCase(); // convert typed text to lowercase
-        suggestionBox.innerHTML = ''; // clear previous suggestions
-        if (value.length < 2)
-            return; // don't search unless 2+ characters
+                // Trigger the route-button click after a short delay
+                setTimeout(() => {
+                    document.getElementById('route-button').click();
+                }, 10); // 10ms delay to ensure dropdown change has been processed
+            }
+        });
 
-        // Filter address list for matches
-        const matches = addressPoints.filter(f => f.properties?.SITEADDR?.toLowerCase().includes(value));
+        /*function populateDropdownByCategory(category) {  // Create POI Dropdown on Category
+            const dropdown = document.getElementById('destination-select');
+            dropdown.innerHTML = '';
 
-        // Show top 10 matches in the suggestion box
-        matches.slice(0, 4).forEach(m => {
-            const div = document.createElement('div');
-			div.className = 'autocomplete-suggestion';  // ✅ Add this line
-            div.innerText = m.properties.SITEADDR;
+            Object.values(poiMap).forEach(feature => {
+                if (feature.properties.category === category) {
+                    const opt = document.createElement('option');
+                    opt.value = feature.properties.id;
+                    opt.textContent = feature.properties.name;
+                    dropdown.appendChild(opt);
+                }
+            });
+        }*/
 
-            // What happens when the user clicks a suggestion
-            div.addEventListener('click', () => {
-                const coords = m.geometry.coordinates; // [lng, lat]
-                const latlng = [coords[1], coords[0]]; // Convert to [lat, lng]
+        function populateDropdownByCategory(category) {
+            const dropdown = document.getElementById('destination-select');
+            dropdown.innerHTML = '';
 
-                if (isDestination) {
-                    endNode = findNearestNode(latlng[0], latlng[1], "to"); // store graph node for destination
-                    if (toMarker)
-                        map.removeLayer(toMarker);
+            const fromNodeId = startNode;
+            const userSpeed = parseInt(document.getElementById('speed-select')?.value) || 25;
+
+            const options = [];
+
+            Object.values(poiMap).forEach(feature => {
+                if (feature.properties.category !== category) return;
+
+                const toNodeId = feature.properties.to_point;
+                const poiName = feature.properties.name;
+                const poiId = feature.properties.id;
+
+                let timeLabel = '';
+                let totalTime = Infinity;
+
+                if (fromNodeId && toNodeId && fromNodeId !== toNodeId) {
+                    try {
+                        const result = dijkstra(fromNodeId, toNodeId, userSpeed);
+                        totalTime = result.totalTime;
+
+                        const totalMinutes = Math.round(totalTime * 60);
+                        const hours = Math.floor(totalMinutes / 60);
+                        const minutes = totalMinutes % 60;
+
+                        if (hours > 0) {
+                            timeLabel = ` - ⏱ ${hours}h ${minutes}m`;
+                        } else {
+                            timeLabel = ` - ⏱ ${minutes} min`;
+                        }
+                        // ⛽ Append gas pump if service includes Gas
+                        const services = feature.properties.services?.toLowerCase() || '';
+                        if (category === 'marina' && services.includes('gas')) {
+                            timeLabel += ' ⛽';
+                        }
+                    } catch (err) {
+                        console.warn(`⚠️ Failed to calculate time to "${poiName}"`, err);
+                        timeLabel = ' ⏱ unreachable';
+                    }
+                }
+
+                const opt = document.createElement('option');
+                opt.value = poiId;
+                opt.textContent = poiName + timeLabel;
+                options.push({ element: opt, time: totalTime });
+            });
+
+            // Sort options by total time
+            options.sort((a, b) => a.time - b.time);
+            options.forEach(opt => dropdown.appendChild(opt.element));
+        }
+
+
+
+        document.addEventListener('change', function (e) {
+            const dropdown = document.getElementById('destination-select');
+            if (!dropdown) return;
+
+            if (e.target === dropdown) {
+                const selectedId = dropdown.value;
+                selectedPOIId = selectedId; // ✅ Now this comes after selectedId is declared
+
+                // ✅ Clear old route
+                clearRouteAndOutputs();
+
+                // ✅ Use global variable instead of DOM query
+                showPOIsByCategory(selectedCategory, selectedPOIId);
+            }
+        });
+
+
+        function addNavaidsToMap() {  // Add Bouys and Marker to Map
+            const zoom = map.getZoom(); // ✅ Get current zoom level at load
+
+            fetch(NAVAID_GEOJSON_URL)
+                .then(res => res.json())
+                .then(data => {
+                    data.features.forEach(feature => {
+                        const [lng, lat] = feature.geometry.coordinates;
+                        const props = feature.properties;
+
+                        const type = props.navaid_type?.toLowerCase();
+                        const number = props.marker_num ?? null;
+                        const rawColor = props.COLOUR;
+                        const colorValues = rawColor
+                            ? rawColor.split(',').map(c => Number(c.trim()))
+                            : [];
+                        const popupText = props.OBJNAM || "Navaid";
+
+                        let iconSvg;
+
+                        if (type === "daybeacon") {
+                            if (colorValues.length === 1 && colorValues[0] === 3) {
+                                iconSvg = createRedDayBeaconSVG(number);
+                            } else if (colorValues.length === 1 && colorValues[0] === 4) {
+                                iconSvg = createGreenDayBeaconSVG(number);
+                            } else if (colorValues.length === 1 && colorValues[0] === 11) {
+                                iconSvg = createHazardDayBeaconSVG();
+                            } else if (colorValues.join(',') === '4,3,4') {
+                                iconSvg = createGreenRedGreenDayBeaconSVG();
+                            } else if (colorValues.join(',') === '3,4,3') {
+                                iconSvg = createRedGreenRedDayBeaconSVG(number);
+                            } else if (colorValues.join(',') === '1,1,3') {
+                                iconSvg = createSafeOctagonDayBeaconSVG();
+                            } else {
+                                console.warn(`⚠️ Skipping daybeacon with unsupported COLOUR: ${rawColor}`, props);
+                                return;
+                            }
+
+                        } else if (type === "buoy") {
+                            if (colorValues.length === 1 && colorValues[0] === 3) {
+                                iconSvg = createRedBuoySVG(number);
+                            } else if (colorValues.length === 1 && colorValues[0] === 4) {
+                                iconSvg = createGreenBuoySVG(number);
+                            } else if (colorValues.join(',') === '4,3,4') {
+                                iconSvg = createGreenRedGreenBuoySVG(number);
+                            } else {
+                                console.warn(`⚠️ Skipping buoy with unsupported COLOUR: ${rawColor}`, props);
+                                return;
+                            }
+
+                        } else if (type === "light") {
+                            if (colorValues.length === 1) {
+                                switch (colorValues[0]) {
+                                    case 1:
+                                        iconSvg = createWhiteLightSVG();
+                                        break;
+                                    case 3:
+                                        iconSvg = createRedLightSVG();
+                                        break;
+                                    case 4:
+                                        iconSvg = createGreenLightSVG();
+                                        break;
+                                    case 6:
+                                        iconSvg = createYellowLightSVG();
+                                        break;
+                                    default:
+                                        console.warn(`⚠️ Skipping light with unsupported COLOUR: ${rawColor}`, props);
+                                        return;
+                                }
+                            } else {
+                                console.warn(`⚠️ Skipping light with invalid COLOUR value: ${rawColor}`, props);
+                                return;
+                            }
+
+                        } else if (type === "danger") {
+                            if (colorValues.length === 1) {
+                                switch (colorValues[0]) {
+                                    case 95:
+                                        iconSvg = createExposedWreckDangerSVG();
+                                        break;
+                                    case 96:
+                                        iconSvg = createSubmergedWreckDangerSVG();
+                                        break;
+                                    case 97:
+                                        iconSvg = createRocksDangerSVG();
+                                        break;
+                                    case 98:
+                                        iconSvg = createCautionDangerSVG();
+                                        break;
+                                    case 99:
+                                        iconSvg = createObstructionDangerSVG();
+                                        break;
+                                    default:
+                                        console.warn(`⚠️ Skipping light with unsupported COLOUR: ${rawColor}`, props);
+                                        return;
+                                }
+                            } else {
+                                console.warn(`⚠️ Skipping light with invalid COLOUR value: ${rawColor}`, props);
+                                return;
+                            }
+
+                        } else {
+                            iconSvg = createDefaultNavaidSVG();
+                        }
+
+                        // 🔧 Adjust size and anchor based on type
+                        const isLight = type === "light";
+                        const baseSize = getNavaidIconSize(zoom);
+                        const iconSize = isLight
+                            ? [baseSize[0] * 2, baseSize[1] * 2]
+                            : baseSize;
+
+                        const iconAnchor = isLight
+                            ? [iconSize[0] / 2, iconSize[1] / 2] // Adjust as needed
+                            : [iconSize[0] / 2, iconSize[1]];
+
+                        const icon = L.icon({
+                            iconUrl: iconSvg,
+                            iconSize,
+                            iconAnchor
+                        });
+                        const zIndexOffset = isLight ? 0 : 1000; // lights stay low, others rise
+                        const marker = L.marker([lat, lng], {
+                            icon, zIndexOffset
+                        }).bindPopup(popupText);
+                        marker.feature = feature;
+                        navaidLayerGroup.addLayer(marker);
+                    });
+                });
+        }
+
+        // === Utility function to convert mph to meters per second (used in travel time calc) ===
+        const mphToMps = (mph) => mph * 0.44704;
+
+        // === Utility function to calculate total distance (in miles) from a polyline ===
+        function calculateDistance(coords) {
+            let d = 0;
+            for (let i = 1; i < coords.length; i++) {
+                d += map.distance(coords[i - 1], coords[i]);
+            }
+            return d * 0.000621371; // Convert meters to miles
+        }
+        // === colours for beacons lights and signs: 1-white,3-red,4-green,6-yellow,11-orange ===
+        // === colours for obstructions represent obstruction type: 99-obstruction,98-caution,97-awash,96-wreck === 
+        function createGreenDayBeaconSVG(number) {
+            const label = number !== null ? `
+            <text x="24" y="30" font-size="16" text-anchor="middle" fill="black" font-family="Arial">${number}</text>` : '';
+            return `data:image/svg+xml;base64,${btoa(`<?xml version="1.0" encoding="UTF-8"?>
+            <svg width="48" height="48" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+                <g>
+                <rect style="fill:none;stroke:#4a6235;stroke-width:2.35" width="33.649" height="37.649" x="7.175" y="3.778"/>
+                <rect style="fill:#55f786" width="31.297" height="35.297" x="8.352" y="4.953"/>
+                ${label}
+                </g>
+            </svg>`)}`
+        }
+
+        function createRedDayBeaconSVG(number) {
+            const label = number !== null ? `
+            <text x="24" y="36" font-size="16" text-anchor="middle" fill="black" font-family="Arial">${number}</text>` : '';
+            return `data:image/svg+xml;base64,${btoa(`<?xml version="1.0" encoding="UTF-8"?>
+            <svg width="48" height="48" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+                <g>
+                <path style="fill:#f75555" d="M 33.89,21.51 9.64,21.51 21.76,0.50 Z" transform="matrix(1.52,0,0,1.52,-9.27,7.80)" />
+                <path style="fill:none;stroke:#8a0d0d;stroke-width:2.71" d="M 38.97,17.24 2.07,17.24 20.52,-14.72 Z" transform="matrix(1.14,0,0,1.14,0.40,22.30)" />
+                ${label}
+                </g>
+            </svg>`)}`
+        }
+
+        function createGreenRedGreenDayBeaconSVG() {
+            const svg = `<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+                <svg width="48" height="48" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+                    <g>
+                        <rect
+                        style="display:inline;fill:#55f786;fill-opacity:1;stroke:none;stroke-width:0.218357"
+                        width="14"
+                        height="40"
+                        x="17"
+                        y="4" />
+                        <rect
+                        style="display:inline;fill:#f75555;fill-opacity:1;stroke:none;stroke-width:2.07605"
+                        width="14"
+                        height="9.0156116"
+                        x="17"
+                        y="13.788582" />
+                    </g>
+                </svg>`;
+            return `data:image/svg+xml;base64,${btoa(svg)}`;
+        }
+
+        function createRedGreenRedDayBeaconSVG() {
+            const svg = `<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+                <svg width="48" height="48" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+                    <g>
+                        <rect
+                        style="display:inline;fill:#f75555;fill-opacity:1;stroke:none;stroke-width:0.218357"
+                        width="14"
+                        height="40"
+                        x="17"
+                        y="4" />
+                        <rect
+                        style="display:inline;fill:#55f786;fill-opacity:1;stroke:none;stroke-width:2.07605"
+                        width="14"
+                        height="9.0156116"
+                        x="17"
+                        y="13.788582" />
+                    </g>
+                </svg>`;
+            return `data:image/svg+xml;base64,${btoa(svg)}`;
+        }
+
+        function createHazardDayBeaconSVG() {
+            const svg = `<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+                <svg
+                width="48"
+                height="48"
+                viewBox="0 0 48 48"
+                version="1.1"
+                xmlns="http://www.w3.org/2000/svg"
+                xmlns:svg="http://www.w3.org/2000/svg">
+                    <g>
+                        <rect
+                        style="fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:0.214092;stroke-dasharray:none;stroke-opacity:1"
+                        width="13.4375"
+                        height="40.0625"
+                        x="17.546938"
+                        y="4.3306122" />
+                        <path
+                        style="fill:none;fill-opacity:1;stroke:#ffc523;stroke-width:3.53189;stroke-dasharray:none;stroke-opacity:1"
+                        d="M 19.5625,24.4375 8,12.875 19.5625,1.3125 31.125,12.875 Z"
+                        transform="matrix(0.41481749,0,0,0.77301644,16.213322,12.534275)" />
+                    </g>
+                </svg>`;
+            return `data:image/svg+xml;base64,${btoa(svg)}`;
+        }
+
+        function createSafeOctagonDayBeaconSVG() {
+            const svg = `<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+                <svg
+                width="48"
+                height="48"
+                viewBox="0 0 48 48"
+                version="1.1"
+                xmlns="http://www.w3.org/2000/svg"
+                xmlns:svg="http://www.w3.org/2000/svg">
+                    <g>
+                        <g style="display:inline">
+                        <path
+                            style="display:inline;fill:#f75555;fill-opacity:1;stroke:#ffffff;stroke-width:1.87154;stroke-dasharray:none;stroke-opacity:1"
+                            d="m 1.2657608,-4.8303532 9.5934782,1e-7 6.783614,6.7836139 0,9.5934782 -6.783614,6.783614 -9.5934784,0 -6.7836138,-6.783614 1e-7,-9.5934784 z"
+                            transform="matrix(1.5976848,0,0,1.5978564,14.310856,13.213437)" />
+                        <rect
+                            style="display:inline;fill:#f75555;fill-opacity:1;stroke:#ffffff;stroke-width:2.79144;stroke-dasharray:none;stroke-opacity:1"
+                            width="0.20855899"
+                            height="24.583561"
+                            x="11.39572"
+                            y="11.395719" />
+                        <rect
+                            style="display:inline;fill:#f75555;fill-opacity:1;stroke:#ffffff;stroke-width:2.85555;stroke-dasharray:none;stroke-opacity:1"
+                            width="0.14444545"
+                            height="37.144447"
+                            x="23.927774"
+                            y="5.4277749" />
+                        <rect
+                            style="display:inline;fill:#f75555;fill-opacity:1;stroke:#ffffff;stroke-width:2.85555;stroke-dasharray:none;stroke-opacity:1"
+                            width="0.14444545"
+                            height="37.144447"
+                            x="30.427776"
+                            y="5.4277773" />
+                        <rect
+                            style="display:inline;fill:#f75555;fill-opacity:1;stroke:#ffffff;stroke-width:2.79144;stroke-dasharray:none;stroke-opacity:1"
+                            width="0.20855899"
+                            height="24.583561"
+                            x="36.395721"
+                            y="11.39572" />
+                        <rect
+                            style="fill:#f75555;fill-opacity:1;stroke:#ffffff;stroke-width:2.85555;stroke-dasharray:none;stroke-opacity:1"
+                            width="0.14444545"
+                            height="37.144447"
+                            x="17.427776"
+                            y="5.4277773" />
+                        </g>
+                    </g>
+                </svg>`;
+            return `data:image/svg+xml;base64,${btoa(svg)}`;
+        }
+
+        function createGreenBuoySVG(number) {
+            const label = number !== null ? `
+                <text x="30" y="32" font-size="16" text-anchor="middle" fill="black" font-family="Arial">${number}</text>` : '';
+
+            return `data:image/svg+xml;base64,${btoa(`<?xml version="1.0" encoding="UTF-8"?>
+                    <svg width="48" height="48" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+                        <g transform="translate(1,0)">
+                        <path style="fill:#55f786;stroke:#000000;stroke-width:0.2;" d="m 26.553073,3.7537177 -9.106146,-1e-7 L 22,-4.1324353 Z"
+                                transform="matrix(1.2079755,0,0,1.2377585,-3.5754609,5.3575217)" />
+                        <rect style="fill:#55f786;stroke:#000000;stroke-width:0.2;" width="11" height="38" x="17.5" y="10" />
+                        <rect style="fill:#55f786;stroke:#000000;stroke-width:0.2;" width="10.797" height="1.797" x="17.601" y="10.101" />
+                        <rect style="fill:#55f786;stroke:#000000;stroke-width:0.2;" width="10.797" height="1.797" x="17.601" y="34.101" />
+                        <rect style="fill:#55f786;stroke:#000000;stroke-width:0.22;" width="12.78" height="1.78" x="16.61" y="46.11" />
+                        ${label}
+                        </g>
+                    </svg>`)}`
+        }
+
+        function createRedBuoySVG(number) {
+            const label = number !== null ? `
+                <text x="30" y="32" font-size="16" text-anchor="middle" fill="black" font-family="Arial">${number}</text>` : '';
+
+            return `data:image/svg+xml;base64,${btoa(`<?xml version="1.0" encoding="UTF-8"?>
+                <svg width="48" height="48" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+                    <g transform="translate(1,0)">
+                    <path style="fill:#f75555;stroke:#000000;stroke-width:0.2;" d="m 26.553073,3.7537177 -9.106146,-1e-7 L 22,-4.1324353 Z"
+                            transform="matrix(1.2079755,0,0,1.2377585,-3.5754609,5.3575217)" />
+                    <rect style="fill:#f75555;stroke:#000000;stroke-width:0.2;" width="11" height="38" x="17.5" y="10" />
+                    <rect style="fill:#f75555;stroke:#000000;stroke-width:0.2;" width="10.797" height="1.797" x="17.601" y="10.101" />
+                    <rect style="fill:#f75555;stroke:#000000;stroke-width:0.2;" width="10.797" height="1.797" x="17.601" y="34.101" />
+                    <rect style="fill:#f75555;stroke:#000000;stroke-width:0.22;" width="12.78" height="1.78" x="16.61" y="46.11" />
+                    ${label}
+                    </g>
+                </svg>`)}`
+        }
+
+        function createGreenLightSVG() {
+            return `data:image/svg+xml;base64,${btoa(`<?xml version="1.0" encoding="UTF-8"?>
+            <svg width="96" height="96" viewBox="0 0 96 96" xmlns="http://www.w3.org/2000/svg">
+                <g transform="translate(44,48)">
+                    <g transform="translate(-3.6367188,-2.0625)">
+                    <path
+                        style="fill:#55f786;fill-opacity:1;stroke:none;stroke-width:3.1;stroke-dasharray:none;stroke-opacity:1"
+                        transform="rotate(-6.0378257)"
+                        d="M 35.433382,19.102105 A 10.474019,10.474019 0 0 1 37.659878,33.741155 10.474019,10.474019 0 0 1 23.022364,35.97773 10.474019,10.474019 0 0 1 20.77571,21.34176 10.474019,10.474019 0 0 1 35.410129,19.085029"/>
+                    <path
+                        style="fill:#55f786;fill-opacity:1;stroke:none;stroke-width:0.200059;stroke-dasharray:none;stroke-opacity:1"
+                        d="M 23.390625,30.336885 3.6367188,2.0625 35.847656,14.581962"/>
+                    </g>
+                </g>
+            </svg>`)}`
+        }
+
+        function createRedLightSVG() {
+            return `data:image/svg+xml;base64,${btoa(`<?xml version="1.0" encoding="UTF-8"?>
+            <svg width="96" height="96" viewBox="0 0 96 96" xmlns="http://www.w3.org/2000/svg">
+                <g transform="translate(44,48)">
+                    <g transform="translate(-3.6367188,-2.0625)">
+                        <path
+                        style="fill:#f75555;fill-opacity:1;stroke:none;stroke-width:3.1"
+                        transform="rotate(-6.0378257)"
+                        d="M 35.433382,19.102105 A 10.474019,10.474019 0 0 1 37.659878,33.741155 10.474019,10.474019 0 0 1 23.022364,35.97773 10.474019,10.474019 0 0 1 20.77571,21.34176 10.474019,10.474019 0 0 1 35.410129,19.085029" />
+                        <path
+                        style="fill:#f75555;fill-opacity:1;stroke:none;stroke-width:0.2"
+                        d="M 23.390625,30.336885 3.6367188,2.0625 35.847656,14.581962" />
+                    </g>
+                </g>
+            </svg>`)}`
+        }
+
+        function createYellowLightSVG() {
+            return `data:image/svg+xml;base64,${btoa(`<?xml version="1.0" encoding="UTF-8"?>
+            <svg width="96" height="96" viewBox="0 0 96 96" xmlns="http://www.w3.org/2000/svg">
+                <g transform="translate(44,48)">
+                    <g transform="translate(-3.6367188,-2.0625)">
+                    <path
+                        style="fill:#f6f52c;fill-opacity:1;stroke:none;stroke-width:3.1;stroke-dasharray:none;stroke-opacity:1"
+                        transform="rotate(-6.0378257)"
+                        d="M 35.433382,19.102105 A 10.474019,10.474019 0 0 1 37.659878,33.741155 10.474019,10.474019 0 0 1 23.022364,35.97773 10.474019,10.474019 0 0 1 20.77571,21.34176 10.474019,10.474019 0 0 1 35.410129,19.085029" />
+                    <path
+                        style="fill:#f6f52c;fill-opacity:1;stroke:none;stroke-width:0.200059;stroke-dasharray:none;stroke-opacity:1"
+                        d="M 23.390625,30.336885 3.6367188,2.0625 35.847656,14.581962" />
+                    </g>
+                </g>
+            </svg>`)}`
+        }
+
+        function createWhiteLightSVG() {
+            return `data:image/svg+xml;base64,${btoa(`<?xml version="1.0" encoding="UTF-8"?>
+            <svg width="96" height="96" viewBox="0 0 96 96" xmlns="http://www.w3.org/2000/svg">
+                <g transform="translate(44,48)">
+                    <g transform="translate(-3.6367188,-2.0625)">
+                    <path
+                        style="fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:3.1;stroke-dasharray:none;stroke-opacity:1"
+                        transform="rotate(-6.0378257)"
+                        d="M 35.433382,19.102105 A 10.474019,10.474019 0 0 1 37.659878,33.741155 10.474019,10.474019 0 0 1 23.022364,35.97773 10.474019,10.474019 0 0 1 20.77571,21.34176 10.474019,10.474019 0 0 1 35.410129,19.085029" />
+                    <path
+                        style="fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:0.200059;stroke-dasharray:none;stroke-opacity:1"
+                        d="M 23.390625,30.336885 3.6367188,2.0625 35.847656,14.581962" />
+                    </g>
+                </g>
+            </svg>`)}`
+        }
+
+        function createExposedWreckDangerSVG() {
+            const svg = `<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+                <svg
+                width="48"
+                height="48"
+                viewBox="0 0 48 48"
+                version="1.1"
+                xmlns="http://www.w3.org/2000/svg"
+                xmlns:svg="http://www.w3.org/2000/svg">
+                    <g>
+                        <g transform="matrix(1.5889389,0,0,1.5999858,-13.631976,-8.8023736)">
+                        <path
+                            style="fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:1.5;stroke-dasharray:none;stroke-opacity:1"
+                            d="m 24.893677,22.792727 a 1.5026019,1.5026019 0 0 1 0.319413,2.100117 1.5026019,1.5026019 0 0 1 -2.099897,0.320859 1.5026019,1.5026019 0 0 1 -0.322304,-2.099675 1.5026019,1.5026019 0 0 1 2.099452,-0.323751" />
+                        <path
+                            style="fill:#ffffff;fill-opacity:1;stroke:#ffffff;stroke-width:2.054;stroke-linecap:round;stroke-dasharray:none;stroke-opacity:1"
+                            d="M 16.214479,23.423059 H 31.165985" />
+                        <path
+                            style="fill:#ffffff;fill-opacity:1;stroke:#ffffff;stroke-width:1.53717;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:none;stroke-opacity:1"
+                            d="m 22.204487,23.09754 -3.916395,-3.837183 10.269659,4.17085" />
+                        <path
+                            style="fill:#ffffff;fill-opacity:1;stroke:#ffffff;stroke-width:2.054;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:none;stroke-opacity:1"
+                            d="m 22.715805,21.92031 2.121321,-5.391689" />
+                        </g>
+                    </g>
+                </svg>`;
+            return `data:image/svg+xml;base64,${btoa(svg)}`;
+        }
+
+        function createSubmergedWreckDangerSVG() {
+            const svg = `<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+                <svg
+                width="48"
+                height="48"
+                viewBox="0 0 48 48"
+                version="1.1"
+                xmlns="http://www.w3.org/2000/svg"
+                xmlns:svg="http://www.w3.org/2000/svg">
+                    <g>
+                        <g>
+                        <path
+                            style="display:inline;fill:none;fill-opacity:1;stroke:#ffffff;stroke-width:1.19695;stroke-dasharray:1.19695, 3.59086;stroke-opacity:1"
+                            d="M 36.690619,12.403905 A 21.400053,14.401306 0 0 1 41.239696,32.531942 21.400053,14.401306 0 0 1 11.332975,35.607132 21.400053,14.401306 0 0 1 6.7427107,15.483331 21.400053,14.401306 0 0 1 36.64311,12.380426" />
+                        <path
+                            style="fill:none;stroke:#ffffff;stroke-width:1.4879"
+                            d="M 8,23.99395 H 40" />
+                        <path
+                            style="fill:none;stroke:#ffffff;stroke-width:1.51808"
+                            d="M 24.00904,14 V 34" />
+                        <path
+                            style="fill:none;stroke:#ffffff;stroke-width:1.5459"
+                            d="M 15.52295,18 V 30" />
+                        <path
+                            style="fill:none;stroke:#ffffff;stroke-width:1.5459"
+                            d="M 32.52295,18 V 30" />
+                        </g>
+                    </g>
+                </svg>`;
+            return `data:image/svg+xml;base64,${btoa(svg)}`;
+        }
+
+        function createRocksDangerSVG() {
+            const svg = `<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+                <svg
+                width="48"
+                height="48"
+                viewBox="0 0 48 48"
+                version="1.1"
+                xmlns="http://www.w3.org/2000/svg"
+                xmlns:svg="http://www.w3.org/2000/svg">
+                    <g>
+                        <path
+                        style="display:inline;fill:none;fill-opacity:1;stroke:#ffffff;stroke-width:1.5;stroke-dasharray:none;stroke-opacity:1"
+                        d="M 31.652631,39.63104 21.478369,22.212185 11.304105,39.631039 21.302145,22.110442 1.1298428,22.008698 21.302145,21.906957 11.304107,4.3863585 21.478369,21.805214 31.652633,4.3863595 21.654592,21.906957 41.826895,22.0087 21.654592,22.110442 Z"
+                        transform="matrix(0.98268788,0,0,1.0001847,2.8934345,1.9911724)" />
+                    </g>
+                </svg>`;
+            return `data:image/svg+xml;base64,${btoa(svg)}`;
+        }
+
+        function createCautionDangerSVG() {
+            const svg = `<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+                <svg
+                width="48"
+                height="48"
+                viewBox="0 0 48 48"
+                version="1.1"
+                xmlns="http://www.w3.org/2000/svg"
+                xmlns:svg="http://www.w3.org/2000/svg">
+                    <g>
+                        <path
+                        style="display:inline;fill:none;fill-opacity:1;stroke:#ffffff;stroke-width:1.5;stroke-dasharray:none;stroke-opacity:1"
+                        d="M 39.026296,40.440511 22.185474,23.837855 5.3446525,40.440511 21.947309,23.599689 5.3446524,6.7588676 22.185474,23.361524 39.026296,6.7588675 22.42364,23.599689 Z"
+                        transform="matrix(1.0359566,0,0,1.0365611,1.0164695,-0.45235884)" />
+                    </g>
+                </svg>`;
+            return `data:image/svg+xml;base64,${btoa(svg)}`;
+        }
+
+        function createObstructionDangerSVG() {
+            const svg = `<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+                <svg
+                width="48"
+                height="48"
+                viewBox="0 0 48 48"
+                version="1.1"
+                xmlns="http://www.w3.org/2000/svg"
+                xmlns:svg="http://www.w3.org/2000/svg">
+                    <g>
+                        <path
+                        style="display:inline;fill:none;fill-opacity:1;stroke:#ffffff;stroke-width:1.5;stroke-dasharray:1.5, 4.5;stroke-opacity:1"
+                        d="M 36.796032,5.9692985 A 22,22 0 0 1 41.472642,36.717677 22,22 0 0 1 10.727491,41.415458 22,22 0 0 1 6.0085394,10.67355 22,22 0 0 1 36.747191,5.9334305" />
+                    </g>
+                </svg>`;
+            return `data:image/svg+xml;base64,${btoa(svg)}`;
+        }
+
+        // === Load and process the canal network data ===
+        let geojsonData; // Stores original GeoJSON object for reference
+
+        fetch(CANAL_GEOJSON_URL)
+            .then(res => res.json())
+            .then(data => {
+                geojsonData = data; // Save full feature set for later lookups
+
+                data.features.forEach(feature => {
+                    const { from_point, to_point, segment_id } = feature.properties;
+                    const coords = feature.geometry.coordinates.map(c => [c[1], c[0]]); // Convert [lng, lat] → [lat, lng]
+                    const distance = calculateDistance(coords);
+
+                    // Build segmentMap (used in routing to get distance and coordinates)
+                    if (!segmentMap[segment_id]) {
+                        segmentMap[segment_id] = {
+                            feature,
+                            coords,
+                            distance
+                        };
+                    } else {
+                        console.warn("Duplicate during map load:", segment_id);
+                    }
+
+                    // Create bidirectional graph edges for Dijkstra
+                    if (!graph[from_point])
+                        graph[from_point] = [];
+                    if (!graph[to_point])
+                        graph[to_point] = [];
+
+                    graph[from_point].push({
+                        to: to_point,
+                        segment_id
+                    });
+                    // Note: Reverse direction intentionally left out here (may be added later)
+                });
+
+                canalDataReady = true;
+                document.getElementById('route-button').disabled = false;
+                console.log(`Graph initialized with ${data.features.length} segments.`);
+            });
+
+        // === Load and process the address points for autocomplete ===
+        fetch(ADDRESS_GEOJSON_URL)
+            .then(res => res.json())
+            .then(data => {
+                data.features.forEach(feature => {
+                    feature.label = feature.properties.SITEADDR; // Store readable label
+                    addressPoints.push(feature); // Add to global address list
+                });
+
+                console.log(`Loaded ${addressPoints.length} address points.`);
+                console.log("Sample addresses:", addressPoints.slice(0, 5));
+                const POI_GEOJSON_URL = 'https://res.cloudinary.com/da0bnopjg/raw/upload/v1754328282/rest_marina_ramp_grgyiq.geojson'; // ← Replace with actual hosted URL
+
+                fetch(POI_GEOJSON_URL)
+                    .then(res => res.json())
+                    .then(data => {
+                        data.features.forEach(feature => {
+                            const id = feature.properties.id;
+                            poiMap[id] = feature;
+                        });
+                        console.log("✅ POI GeoJSON loaded into memory");
+                        // Do NOT show any POIs here
+                    });
+            });
+
+        // === Set up autocomplete behavior for input fields ===
+        // inputId: ID of the HTML input element
+        // suggestionsId: ID of the div used to show matching suggestions
+        // isDestination: true if this is the 'To' input, false for 'From'
+        function setupAutocomplete(inputId, suggestionsId, isDestination = false) {
+            const input = document.getElementById(inputId);
+            const suggestionBox = document.getElementById(suggestionsId);
+
+            input.addEventListener('input', () => {
+                const value = input.value.toLowerCase(); // convert typed text to lowercase
+                suggestionBox.innerHTML = ''; // clear previous suggestions
+                if (value.length < 2)
+                    return; // don't search unless 2+ characters
+
+                // Filter address list for matches
+                const matches = addressPoints.filter(f => f.properties?.SITEADDR?.toLowerCase().includes(value));
+
+                // Show top 10 matches in the suggestion box
+                matches.slice(0, 4).forEach(m => {
+                    const div = document.createElement('div');
+                    div.className = 'autocomplete-suggestion';  // ✅ Add this line
+                    div.innerText = m.properties.SITEADDR;
+
+                    // What happens when the user clicks a suggestion
+                    div.addEventListener('click', () => {
+                        const coords = m.geometry.coordinates; // [lng, lat]
+                        const latlng = [coords[1], coords[0]]; // Convert to [lat, lng]
+
+                        if (isDestination) {
+                            endNode = findNearestNode(latlng[0], latlng[1], "to"); // store graph node for destination
+                            if (toMarker)
+                                map.removeLayer(toMarker);
+                            toAddressLatLng = latlng;
+                            toMarker = L.marker(toAddressLatLng, {
+                                icon: createScaledIcon(toIconUrl, map.getZoom())
+                            }).addTo(map);
+                            console.log('Placed TO marker at', latlng);
+                        } else {
+                            startNode = findNearestNode(latlng[0], latlng[1], "from"); // store graph node for start
+                            if (fromMarker)
+                                map.removeLayer(fromMarker);
+                            fromAddressLatLng = latlng;
+                            fromMarker = L.marker(fromAddressLatLng, {
+                                icon: createScaledIcon(fromIconUrl, map.getZoom())
+                            }).addTo(map);
+                            console.log('Placed FROM marker at', latlng);
+
+                            const destType = document.querySelector('input[name="dest-type"]:checked')?.value;
+                            console.log('📡 Destination type:', destType);
+
+                            if (destType === 'poi') {
+                                const activeCategoryBtn = document.querySelector('.poi-button.active');
+                                if (activeCategoryBtn) {
+                                    const category = activeCategoryBtn.dataset.category;
+                                    console.log('📂 Active POI category:', category);
+                                    showPOIsByCategory(category);
+                                    populateDropdownByCategory(category);
+                                } else {
+                                    console.warn('⚠️ No active POI category button found.');
+                                }
+                            } else {
+                                console.log('✅ Skipping POI update because destination type is not POI.');
+                            }
+                        }
+
+                        input.value = m.properties.SITEADDR; // update input box with chosen address
+                        suggestionBox.innerHTML = ''; // clear suggestions
+
+                    });
+
+                    suggestionBox.appendChild(div); // Add suggestion to list
+                });
+            });
+        }
+
+        document.querySelectorAll('input[name="dest-type"]').forEach(radio => {
+            radio.addEventListener('change', () => {
+                const container = document.getElementById('destination-ui-container');
+                const destType = document.querySelector('input[name="dest-type"]:checked').value;
+
+                // ✅ Clear old route
+                clearRouteAndOutputs();
+
+                // Always clear POI markers when switching types
+                poiMarkerGroup.clearLayers();
+
+                // ✅ Remove destination marker unless we're in "address" mode
+                if (destType !== 'address' && toMarker) {
+                    map.removeLayer(toMarker);
+                    toMarker = null;
+                    console.log('🧹 Cleared TO marker');
+                }
+
+                if (destType === 'poi') {
+                    container.innerHTML = `
+                    <select id="destination-select" class="styled-bar"></select>
+                    `;
+                    document.getElementById('category-buttons').style.display = 'flex';
+                    setupCategoryButtons();
+                    populateDropdownByCategory('restaurant');
+                    showPOIsByCategory('restaurant');
+
+                } else if (destType === 'address') {
+                    container.innerHTML = `
+                    <input type="text" id="destination-address" placeholder="Enter destination address..." class="styled-bar" />
+                    <div id="destination-suggestions" class="suggestion-box2"></div>
+                    `;
+                    setupAutocomplete('destination-address', 'destination-suggestions', true);
+                    document.getElementById('category-buttons').style.display = 'none';
+                } else {
+                    container.innerHTML = `
+                    <input type="text" class="styled-bar" value="Open Water" disabled />
+                    `;
+                    document.getElementById('category-buttons').style.display = 'none';
+                }
+            });
+        });
+
+        // Trigger initial UI state
+        document.querySelector('input[name="dest-type"]:checked').dispatchEvent(new Event('change'));
+
+
+        // Attach autocomplete logic to input boxes
+        setupAutocomplete('address-input', 'suggestions');
+        /*document.addEventListener('click', function (e) {
+            if (e.target.classList.contains('set-destination-link')) {
+                e.preventDefault();
+
+                const poiId = e.target.dataset.id;
+                console.log('🔍 set-destination-link clicked. POI ID:', poiId); // ✅ Debugging line
+
+                const dropdown = document.getElementById('destination-select');
+                if (dropdown) {
+                    dropdown.value = poiId;
+                    map.closePopup(); // 👈 auto-close the popup
+                } else {
+                    console.warn('Destination dropdown not found.');
+                }
+            }
+        });*/
+
+
+        // === Calculate geographic distance between two lat/lng points in km ===
+        function getDistanceFromLatLonInKm(lat1, lon1, lat2, lon2) {
+            const R = 6371; // Earth's radius in kilometers
+            const dLat = deg2rad(lat2 - lat1);
+            const dLon = deg2rad(lon2 - lon1);
+            const a =
+                Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+                Math.cos(deg2rad(lat1)) * Math.cos(deg2rad(lat2)) *
+                Math.sin(dLon / 2) * Math.sin(dLon / 2);
+            const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+            return R * c;
+        }
+
+        // === Convert degrees to radians ===
+        function deg2rad(deg) {
+            return deg * (Math.PI / 180);
+        }
+
+        // === Find the nearest canal node within ~150 ft of a click or address ===
+        // Uses GeometryUtil to compute the perpendicular distance to canal segments
+        function findNearestNode(lat, lng, mode) {
+            const clickLatLng = L.latLng(lat, lng);
+            let closestFeature = null;
+            let minDistFeet = 150;
+
+            geojsonData.features.forEach(feature => {
+                const coords = feature.geometry.coordinates;
+                for (let i = 0; i < coords.length - 1; i++) {
+                    const p1 = L.latLng(coords[i][1], coords[i][0]);
+                    const p2 = L.latLng(coords[i + 1][1], coords[i + 1][0]);
+
+                    // Get shortest distance from point to canal segment line
+                    const dist = L.GeometryUtil.distanceSegment(map, clickLatLng, p1, p2);
+                    const distFeet = dist * 3.28084;
+
+                    // If this segment is closer, store it
+                    if (distFeet < minDistFeet) {
+                        minDistFeet = distFeet;
+                        closestFeature = feature;
+                    }
+                }
+            });
+
+            if (!closestFeature)
+                return null;
+
+            // Use the from_point node for both from/to logic here
+            return closestFeature.properties.from_point;
+        }
+
+        // === Allow user to click on the map to select FROM and TO nodes ===
+        // First click sets startNode, second click sets endNode and auto-triggers routing
+        map.on('click', (e) => {
+            const latlng = e.latlng; // coordinates of click
+
+            if (!startNode) {
+                const node = findNearestNode(latlng.lat, latlng.lng, 'from');
+                if (node) {
+                    startNode = node;
+                }
+            } else {
+                const node = findNearestNode(latlng.lat, latlng.lng, 'to');
+                if (node) {
+                    endNode = node;
+                    document.getElementById('route-button').click(); // auto-trigger routing
+                }
+            }
+        });
+
+        // === Dijkstra's Algorithm ===
+        // Calculates shortest travel time from start to end using graph data
+        function dijkstra(start, end, userSpeed) {
+            const visited = new Set(); // tracks visited nodes
+            const distances = {}; // total travel time to each node
+            const prev = {}; // tracks path from start → end
+
+            // Set all distances to infinity initially
+            Object.keys(graph).forEach(n => {
+                distances[n] = Infinity;
+            });
+            distances[start] = 0;
+
+            const pq = new Map(); // simple priority queue
+            pq.set(start, 0);
+
+            while (pq.size) {
+                // Get node with smallest distance in queue
+                const curr = [...pq.entries()].sort((a, b) => a[1] - b[1])[0][0];
+                pq.delete(curr);
+
+                if (curr === end)
+                    break;
+                if (visited.has(curr))
+                    continue;
+                visited.add(curr);
+
+                for (const edge of graph[curr]) {
+                    const { to, segment_id } = edge;
+                    if (visited.has(to))
+                        continue;
+
+                    const segment = segmentMap[segment_id];
+                    if (!segment) {
+                        console.warn("Missing segment in segmentMap:", segment_id);
+                        continue;
+                    }
+
+                    const { coords, feature } = segment;
+                    if (!coords || coords.length < 2) {
+                        console.warn("Bad or missing coords for:", segment_id);
+                        continue;
+                    }
+
+                    const segSpeed = feature.properties.speed_mph; // allowed speed on this segment
+                    const distance = calculateDistance(coords);
+
+                    const effSpeed = Math.min(userSpeed, segSpeed || userSpeed); // respect segment limits
+                    const time = distance / effSpeed; // time = distance ÷ speed
+
+                    // If this route to "to" node is faster, update it
+                    if (distances[curr] + time < distances[to]) {
+                        distances[to] = distances[curr] + time;
+                        prev[to] = {
+                            from: curr,
+                            segment_id
+                        };
+                        pq.set(to, distances[to]);
+                    }
+                }
+            }
+
+            // === Reconstruct shortest path ===
+            const path = [],
+                segIds = [];
+            let node = end;
+            let totalDistance = 0;
+
+            while (prev[node]) {
+                const { from, segment_id } = prev[node];
+                path.unshift(from);
+                segIds.unshift(segment_id);
+                totalDistance += segmentMap[segment_id].distance;
+                node = from;
+            }
+            path.push(end);
+
+            // === Determine minimum bridge clearance on this route ===
+            const minClearValues = segIds
+                .map(id => segmentMap[id].feature.properties.min_cleara)
+                .filter(val => val !== undefined && val !== null);
+
+            const finalMinClear = minClearValues.length > 0
+                ? Math.min(...minClearValues)
+                : "No Bridges";
+
+            return {
+                path, // ordered list of node IDs in the route
+                segIds, // segment IDs traversed
+                totalTime: distances[end],
+                totalDistance,
+                minClear: finalMinClear
+            };
+        }
+
+        // === Define color based on speed for polyline display ===
+        function getSpeedColor(speed) {
+            if (speed >= 25)
+                return 'green';
+            return 'red';
+        }
+
+        // === Main route button logic ===
+        document.getElementById('route-button').addEventListener('click', () => {
+            suppressNextPopup = true;
+            // Prevent routing if canal data hasn't loaded yet
+            if (!canalDataReady) {
+                alert("Canal data is still loading. Please wait a moment and try again.");
+                return;
+            }
+
+            bridgeMarkers.forEach(marker => map.removeLayer(marker));
+            bridgeMarkers = [];
+
+            // Clear previous route markers
+            if (fromMarker) {
+                map.removeLayer(fromMarker);
+                fromMarker = null;
+            }
+            if (toMarker) {
+                map.removeLayer(toMarker);
+                toMarker = null;
+            }
+
+            const speed = parseInt(document.getElementById('speed-select').value); // User-selected speed
+            const destType = document.querySelector('input[name="dest-type"]:checked').value; // POI or Address
+            if (destType === 'openWater') {
+                // Handle open water destination: pick fastest matching endpoint
+                const candidates = Object.keys(graph).filter(p => p.toLowerCase().includes("openwater"));
+
+                if (!candidates.length) {
+                    alert("No Open Water destinations found.");
+                    return;
+                }
+
+                let bestNode = null;
+                let bestTime = Infinity;
+
+                for (const candidate of candidates) {
+                    const result = dijkstra(startNode, candidate, speed);
+                    if (result.path.length && result.totalTime < bestTime) {
+                        bestTime = result.totalTime;
+                        bestNode = candidate;
+                    }
+                }
+
+                if (!bestNode) {
+                    alert("No reachable Open Water destination found.");
+                    return;
+                }
+
+                endNode = bestNode;
+
+                // Try placing a marker visually on the last coordinate of the matching segment
+                const endSegment = geojsonData.features.find(f => f.properties.to_point === endNode);
+                if (endSegment) {
+                    const coords = endSegment.geometry.coordinates;
+                    const latlng = [coords[coords.length - 1][1], coords[coords.length - 1][0]];
                     toAddressLatLng = latlng;
                     toMarker = L.marker(toAddressLatLng, {
                         icon: createScaledIcon(toIconUrl, map.getZoom())
                     }).addTo(map);
+                    console.log("Placed TO marker for Open Water at", latlng);
+                }
+            } else if (destType === 'poi') {
+                const poiId = document.getElementById('destination-select').value;
+                const poiFeature = poiMap[poiId];
+
+                if (!poiFeature) {
+                    alert("Could not find selected POI.");
+                    return;
+                }
+
+                // ✅ Set the selected POI globally
+                selectedPOIId = poiId;
+
+                // ✅ Refresh POI markers to highlight selected one
+                showPOIsByCategory(poiFeature.properties.category, poiId);
+
+
+                const [lng, lat] = poiFeature.geometry.coordinates;
+                console.log("Selected POI feature:", poiFeature);
+                console.log("Using coordinates:", lat, lng);
+
+                // endNode = findNearestNode(lat, lng, 'to');
+                endNode = poiFeature.properties.to_point;
+
+                if (!endNode) {
+                    alert("Could not find a nearest canal node for the selected POI.");
+                    return;
+                }
+
+                const endSegment = geojsonData.features.find(f => f.properties.to_point === endNode);
+                if (endSegment) {
+                    const coords = endSegment.geometry.coordinates;
+                    const latlng = [coords[coords.length - 1][1], coords[coords.length - 1][0]];
+                    toAddressLatLng = [lat, lng];
+                    // toAddressLatLng = latlng;
+                    /*toMarker = L.marker(toAddressLatLng, {
+                        icon: createScaledIcon(toIconUrl, map.getZoom())
+                    }).addTo(map);*/
                     console.log('Placed TO marker at', latlng);
-                } else {
-                    startNode = findNearestNode(latlng[0], latlng[1], "from"); // store graph node for start
-                    if (fromMarker)
-                        map.removeLayer(fromMarker);
+                }
+            }
+
+            // Log start/end and edge availability
+            console.log("Start node:", startNode);
+            console.log("Edges from start node:", graph[startNode]);
+            console.log("End node:", endNode);
+            console.log("Edges from end node:", graph[endNode]);
+
+            // Re-render markers if they weren't replaced already
+            if (!fromMarker && fromAddressLatLng) {
+                fromMarker = L.marker(fromAddressLatLng, {
+                    icon: createScaledIcon(fromIconUrl, map.getZoom())
+                }).addTo(map);
+            }
+            if (!toMarker && toAddressLatLng && destType === "address") {
+                toMarker = L.marker(toAddressLatLng, {
+                    icon: createScaledIcon(toIconUrl, map.getZoom())
+                }).addTo(map);
+            }
+
+            // Fallback in case marker not available but we have node
+            if (!fromMarker && startNode) {
+                const startSegment = geojsonData.features.find(f => f.properties.from_point === startNode);
+                if (startSegment) {
+                    const coords = startSegment.geometry.coordinates;
+                    const latlng = [coords[0][1], coords[0][0]];
                     fromAddressLatLng = latlng;
                     fromMarker = L.marker(fromAddressLatLng, {
                         icon: createScaledIcon(fromIconUrl, map.getZoom())
                     }).addTo(map);
-                    console.log('Placed FROM marker at', latlng);
                 }
-
-                input.value = m.properties.SITEADDR; // update input box with chosen address
-                suggestionBox.innerHTML = ''; // clear suggestions
-            });
-
-            suggestionBox.appendChild(div); // Add suggestion to list
-        });
-    });
-}
-
-// Attach autocomplete logic to input boxes
-setupAutocomplete('address-input', 'suggestions');
-setupAutocomplete('destination-address', 'destination-suggestions', true);
-
-// === Switch input between POI dropdown and address entry ===
-document.querySelectorAll('input[name="dest-type"]').forEach(radio => {
-    radio.addEventListener('change', () => {
-        const isPOI = document.querySelector('input[name="dest-type"]:checked').value === 'poi';
-        document.getElementById('destination-select').style.display = isPOI ? 'block' : 'none';
-        document.getElementById('destination-address').style.display = isPOI ? 'none' : 'block';
-    });
-});
-
-// === Calculate geographic distance between two lat/lng points in km ===
-function getDistanceFromLatLonInKm(lat1, lon1, lat2, lon2) {
-    const R = 6371; // Earth's radius in kilometers
-    const dLat = deg2rad(lat2 - lat1);
-    const dLon = deg2rad(lon2 - lon1);
-    const a =
-        Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-        Math.cos(deg2rad(lat1)) * Math.cos(deg2rad(lat2)) *
-        Math.sin(dLon / 2) * Math.sin(dLon / 2);
-    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-    return R * c;
-}
-
-// === Convert degrees to radians ===
-function deg2rad(deg) {
-    return deg * (Math.PI / 180);
-}
-
-// === Find the nearest canal node within ~150 ft of a click or address ===
-// Uses GeometryUtil to compute the perpendicular distance to canal segments
-function findNearestNode(lat, lng, mode) {
-    const clickLatLng = L.latLng(lat, lng);
-    let closestFeature = null;
-    let minDistFeet = 150;
-
-    geojsonData.features.forEach(feature => {
-        const coords = feature.geometry.coordinates;
-        for (let i = 0; i < coords.length - 1; i++) {
-            const p1 = L.latLng(coords[i][1], coords[i][0]);
-            const p2 = L.latLng(coords[i + 1][1], coords[i + 1][0]);
-
-            // Get shortest distance from point to canal segment line
-            const dist = L.GeometryUtil.distanceSegment(map, clickLatLng, p1, p2);
-            const distFeet = dist * 3.28084;
-
-            // If this segment is closer, store it
-            if (distFeet < minDistFeet) {
-                minDistFeet = distFeet;
-                closestFeature = feature;
             }
-        }
-    });
-
-    if (!closestFeature)
-        return null;
-
-    // Use the from_point node for both from/to logic here
-    return closestFeature.properties.from_point;
-}
-
-// === Allow user to click on the map to select FROM and TO nodes ===
-// First click sets startNode, second click sets endNode and auto-triggers routing
-map.on('click', (e) => {
-    const latlng = e.latlng; // coordinates of click
-
-    if (!startNode) {
-        const node = findNearestNode(latlng.lat, latlng.lng, 'from');
-        if (node) {
-            startNode = node;
-        }
-    } else {
-        const node = findNearestNode(latlng.lat, latlng.lng, 'to');
-        if (node) {
-            endNode = node;
-            document.getElementById('route-button').click(); // auto-trigger routing
-        }
-    }
-});
-
-// === Dijkstra's Algorithm ===
-// Calculates shortest travel time from start to end using graph data
-function dijkstra(start, end, userSpeed) {
-    const visited = new Set(); // tracks visited nodes
-    const distances = {}; // total travel time to each node
-    const prev = {}; // tracks path from start → end
-
-    // Set all distances to infinity initially
-    Object.keys(graph).forEach(n => {
-        distances[n] = Infinity;
-    });
-    distances[start] = 0;
-
-    const pq = new Map(); // simple priority queue
-    pq.set(start, 0);
-
-    while (pq.size) {
-        // Get node with smallest distance in queue
-        const curr = [...pq.entries()].sort((a, b) => a[1] - b[1])[0][0];
-        pq.delete(curr);
-
-        if (curr === end)
-            break;
-        if (visited.has(curr))
-            continue;
-        visited.add(curr);
-
-        for (const edge of graph[curr]) {
-            const { to, segment_id } = edge;
-            if (visited.has(to))
-                continue;
-
-            const segment = segmentMap[segment_id];
-            if (!segment) {
-                console.warn("Missing segment in segmentMap:", segment_id);
-                continue;
+            if (!toMarker && endNode && destType === "address") {
+                const endSegment = geojsonData.features.find(f => f.properties.to_point === endNode);
+                if (endSegment) {
+                    const coords = endSegment.geometry.coordinates;
+                    const latlng = [coords[coords.length - 1][1], coords[coords.length - 1][0]];
+                    toAddressLatLng = latlng;
+                    toMarker = L.marker(toAddressLatLng, {
+                        icon: createScaledIcon(toIconUrl, map.getZoom())
+                    }).addTo(map);
+                }
             }
+            console.log("Checking routing prerequisites:");
+            console.log("Start node:", startNode);
+            console.log("End node:", endNode);
+            console.log("From marker:", fromMarker);
+            console.log("To marker:", toMarker);
+            console.log("Selected type:", destType);
 
-            const { coords, feature } = segment;
-            if (!coords || coords.length < 2) {
-                console.warn("Bad or missing coords for:", segment_id);
-                continue;
+            // Prevent route calculation if either point is missing
+            // Prevent route calculation if either point is missing
+            if (!startNode && !endNode) {
+                alert('Please select both a start location and destination.');
+                return;
             }
-
-            const segSpeed = feature.properties.speed_mph; // allowed speed on this segment
-            const distance = calculateDistance(coords);
-
-            const effSpeed = Math.min(userSpeed, segSpeed || userSpeed); // respect segment limits
-            const time = distance / effSpeed; // time = distance ÷ speed
-
-            // If this route to "to" node is faster, update it
-            if (distances[curr] + time < distances[to]) {
-                distances[to] = distances[curr] + time;
-                prev[to] = {
-                    from: curr,
-                    segment_id
-                };
-                pq.set(to, distances[to]);
+            if (!startNode) {
+                alert('Please select a start location.');
+                return;
             }
-        }
-    }
-
-    // === Reconstruct shortest path ===
-    const path = [],
-    segIds = [];
-    let node = end;
-    let totalDistance = 0;
-
-    while (prev[node]) {
-        const { from, segment_id } = prev[node];
-        path.unshift(from);
-        segIds.unshift(segment_id);
-        totalDistance += segmentMap[segment_id].distance;
-        node = from;
-    }
-    path.push(end);
-
-    // === Determine minimum bridge clearance on this route ===
-    const minClearValues = segIds
-        .map(id => segmentMap[id].feature.properties.min_cleara)
-        .filter(val => val !== undefined && val !== null);
-
-    const finalMinClear = minClearValues.length > 0
-         ? Math.min(...minClearValues)
-         : "No Bridges";
-
-    return {
-        path, // ordered list of node IDs in the route
-        segIds, // segment IDs traversed
-        totalTime: distances[end],
-        totalDistance,
-        minClear: finalMinClear
-    };
-}
-
-// === Define color based on speed for polyline display ===
-function getSpeedColor(speed) {
-    if (speed >= 25)
-        return 'green';
-    return 'red';
-}
-
-// === Main route button logic ===
-document.getElementById('route-button').addEventListener('click', () => {
-    // Prevent routing if canal data hasn't loaded yet
-    if (!canalDataReady) {
-        alert("Canal data is still loading. Please wait a moment and try again.");
-        return;
-    }
-
-    bridgeMarkers.forEach(marker => map.removeLayer(marker));
-    bridgeMarkers = [];
-
-    // Clear previous route markers
-    if (fromMarker) {
-        map.removeLayer(fromMarker);
-        fromMarker = null;
-    }
-    if (toMarker) {
-        map.removeLayer(toMarker);
-        toMarker = null;
-    }
-
-    const speed = parseInt(document.getElementById('speed-select').value); // User-selected speed
-    const destType = document.querySelector('input[name="dest-type"]:checked').value; // POI or Address
-
-    if (destType === 'poi') {
-        const poi = document.getElementById('destination-select').value;
-
-        if (poi === 'openWater') {
-            // Handle open water destination: pick fastest matching endpoint
-            const candidates = Object.keys(graph).filter(p => p.toLowerCase().includes("openwater"));
-
-            if (!candidates.length) {
-                alert("No Open Water destinations found.");
+            if (!endNode) {
+                alert('Please select a destination.');
                 return;
             }
 
-            let bestNode = null;
-            let bestTime = Infinity;
 
-            for (const candidate of candidates) {
-                const result = dijkstra(startNode, candidate, speed);
-                if (result.path.length && result.totalTime < bestTime) {
-                    bestTime = result.totalTime;
-                    bestNode = candidate;
-                }
-            }
-
-            if (!bestNode) {
-                alert("No reachable Open Water destination found.");
+            const result = dijkstra(startNode, endNode, speed);
+            if (!result.path.length) {
+                alert('No route found.');
                 return;
             }
+            if (destType === 'address') {
+                // === Replace old start segment with artificial_start ===
+                const oldStartId = result.segIds[0];
+                const oldStart = segmentMap[oldStartId];
 
-            endNode = bestNode;
-
-            // Try placing a marker visually on the last coordinate of the matching segment
-            const endSegment = geojsonData.features.find(f => f.properties.to_point === endNode);
-            if (endSegment) {
-                const coords = endSegment.geometry.coordinates;
-                const latlng = [coords[coords.length - 1][1], coords[coords.length - 1][0]];
-                toAddressLatLng = latlng;
-                toMarker = L.marker(toAddressLatLng, {
-                    icon: createScaledIcon(toIconUrl, map.getZoom())
-                }).addTo(map);
-                console.log("Placed TO marker for Open Water at", latlng);
-            }
-        } else {
-            // Handle static POI destinations
-            const poiNodeMap = {
-                cellini_citrus: 'cellini_citrus',
-                tarponMarina: 'tarponMarina'
-            };
-            endNode = poiNodeMap[poi];
-
-            const endSegment = geojsonData.features.find(f => f.properties.to_point === endNode);
-            if (endSegment) {
-                const coords = endSegment.geometry.coordinates;
-                const latlng = [coords[coords.length - 1][1], coords[coords.length - 1][0]];
-                if (toMarker)
-                    map.removeLayer(toMarker);
-                toAddressLatLng = latlng;
-                toMarker = L.marker(toAddressLatLng, {
-                    icon: createScaledIcon(toIconUrl, map.getZoom())
-                }).addTo(map);
-                console.log('Placed TO marker at', latlng);
-            }
-        }
-    }
-
-    // Log start/end and edge availability
-    console.log("Start node:", startNode);
-    console.log("Edges from start node:", graph[startNode]);
-    console.log("End node:", endNode);
-    console.log("Edges from end node:", graph[endNode]);
-
-    // Re-render markers if they weren't replaced already
-    if (!fromMarker && fromAddressLatLng) {
-        fromMarker = L.marker(fromAddressLatLng, {
-            icon: createScaledIcon(fromIconUrl, map.getZoom())
-        }).addTo(map);
-    }
-    if (!toMarker && toAddressLatLng && destType === "address") {
-        toMarker = L.marker(toAddressLatLng, {
-            icon: createScaledIcon(toIconUrl, map.getZoom())
-        }).addTo(map);
-    }
-
-    // Fallback in case marker not available but we have node
-    if (!fromMarker && startNode) {
-        const startSegment = geojsonData.features.find(f => f.properties.from_point === startNode);
-        if (startSegment) {
-            const coords = startSegment.geometry.coordinates;
-            const latlng = [coords[0][1], coords[0][0]];
-            fromAddressLatLng = latlng;
-            fromMarker = L.marker(fromAddressLatLng, {
-                icon: createScaledIcon(fromIconUrl, map.getZoom())
-            }).addTo(map);
-        }
-    }
-    if (!toMarker && endNode && destType === "address") {
-        const endSegment = geojsonData.features.find(f => f.properties.to_point === endNode);
-        if (endSegment) {
-            const coords = endSegment.geometry.coordinates;
-            const latlng = [coords[coords.length - 1][1], coords[coords.length - 1][0]];
-            toAddressLatLng = latlng;
-            toMarker = L.marker(toAddressLatLng, {
-                icon: createScaledIcon(toIconUrl, map.getZoom())
-            }).addTo(map);
-        }
-    }
-
-    // Prevent route calculation if either point is missing
-    if (!startNode || !endNode) {
-        alert('Please select both a start and end location.');
-        return;
-    }
-
-    const result = dijkstra(startNode, endNode, speed);
-    if (!result.path.length) {
-        alert('No route found.');
-        return;
-    }
-    if (destType === 'address') {
-        // === Replace old start segment with artificial_start ===
-        const oldStartId = result.segIds[0];
-        const oldStart = segmentMap[oldStartId];
-        const oldStartCoords = oldStart.coords;
-
-        const startInterp = L.GeometryUtil.closest(map, oldStartCoords, L.latLng(fromAddressLatLng));
-
-        // Find where to splice in the interpolated point
-        let insertIndexStart = oldStartCoords.findIndex((pt, i) => {
-            if (i === oldStartCoords.length - 1)
-                return false;
-            const seg = [oldStartCoords[i], oldStartCoords[i + 1]];
-            const dist = L.GeometryUtil.distanceSegment(map, L.latLng(startInterp), ...seg);
-            return dist < .9; // tolerance threshold
-        });
-
-        if (insertIndexStart === -1)
-            insertIndexStart = 0;
-        const trimmedStartCoords = [startInterp, ...oldStartCoords.slice(insertIndexStart + 1)];
-
-        segmentMap['artificial_start'] = {
-            coords: trimmedStartCoords,
-            feature: {
-                properties: {
-                    ...oldStart.feature.properties
+                if (!oldStart) {
+                    console.error("❌ Missing segment in segmentMap for ID:", oldStartId);
+                    return; // prevent crash
                 }
-            }
-        };
 
-        result.segIds[0] = 'artificial_start';
+                const oldStartCoords = oldStart.coords;
 
-        // === Replace old end segment with artificial_end ===
-        const oldEndId = result.segIds[result.segIds.length - 1];
-        const oldEnd = segmentMap[oldEndId];
-        const oldEndCoords = oldEnd.coords;
+                const startInterp = L.GeometryUtil.closest(map, oldStartCoords, L.latLng(fromAddressLatLng));
 
-        // Convert to LatLngs for GeometryUtil
-        const latLngs = oldEndCoords.map(c => L.latLng(c));
-        const endInterp = L.GeometryUtil.closest(map, latLngs, L.latLng(toAddressLatLng));
-
-        let trimmedEndCoords = [];
-        let found = false;
-
-        for (let i = 0; i < latLngs.length - 1; i++) {
-            const p1 = latLngs[i];
-            const p2 = latLngs[i + 1];
-            trimmedEndCoords.push([p1.lat, p1.lng]);
-
-            const dist = L.GeometryUtil.distanceSegment(map, endInterp, p1, p2);
-            console.log(`🔍 Segment ${i}: Distance from endInterp to [${p1.lat.toFixed(6)}, ${p2.lat.toFixed(6)}] = ${dist}`);
-
-            if (dist < 0.9 && !found) {
-                console.log(`✅ Match found at segment ${i}, distance = ${dist}`);
-                trimmedEndCoords.push([endInterp.lat, endInterp.lng]);
-                found = true;
-                break;
-            }
-        }
-
-        if (!found) {
-            // fallback: use full original coords
-            trimmedEndCoords = oldEndCoords;
-            console.warn("End interpolation segment not found — using original segment.");
-        }
-
-        segmentMap['artificial_end'] = {
-            coords: trimmedEndCoords,
-            feature: {
-                properties: {
-                    ...oldEnd.feature.properties
-                }
-            }
-        };
-
-        console.log("Final number of segments in route:", result.segIds.length);
-        console.log("Final segment IDs:", result.segIds);
-
-        result.segIds[result.segIds.length - 1] = 'artificial_end';
-    }
-    if (destType === 'poi') {
-        // === Replace old start segment with artificial_start ===
-        const oldStartId = result.segIds[0];
-        const oldStart = segmentMap[oldStartId];
-        const oldStartCoords = oldStart.coords;
-
-        const startInterp = L.GeometryUtil.closest(map, oldStartCoords, L.latLng(fromAddressLatLng));
-
-        // Find where to splice in the interpolated point
-        let insertIndexStart = oldStartCoords.findIndex((pt, i) => {
-            if (i === oldStartCoords.length - 1)
-                return false;
-            const seg = [oldStartCoords[i], oldStartCoords[i + 1]];
-            const dist = L.GeometryUtil.distanceSegment(map, L.latLng(startInterp), ...seg);
-            return dist < .9; // tolerance threshold
-        });
-
-        if (insertIndexStart === -1)
-            insertIndexStart = 0;
-        const trimmedStartCoords = [startInterp, ...oldStartCoords.slice(insertIndexStart + 1)];
-
-        segmentMap['artificial_start'] = {
-            coords: trimmedStartCoords,
-            feature: {
-                properties: {
-                    ...oldStart.feature.properties
-                }
-            }
-        };
-
-        result.segIds[0] = 'artificial_start';
-
-    }
-
-    // Remove previous route polylines if any
-    if (Array.isArray(routeLine)) {
-        routeLine.forEach(line => map.removeLayer(line));
-    } else if (routeLine) {
-        map.removeLayer(routeLine);
-    }
-    routeLine = [];
-
-    let allCoords = [];
-
-    for (let i = 0; i < result.segIds.length; i++) {
-        const segmentId = result.segIds[i];
-        const segment = segmentMap[segmentId];
-        if (i === result.segIds.length - 1) {
-            console.log("Last segment ID:", segmentId);
-            console.log("Last segment coordinates:", segment.coords);
-        }
-
-        if (!segment)
-            continue;
-
-        let coords = segment.coords;
-
-        const from = segment.feature.properties.from_point;
-        const to = segment.feature.properties.to_point;
-        const expectedStart = result.path[i];
-        const expectedEnd = result.path[i + 1];
-
-        // Reverse if traveling backward on segment
-        if (from === expectedEnd && to === expectedStart) {
-            coords = [...coords].reverse();
-        }
-
-        const speed = segment.feature.properties.speed_mph || 0;
-        const color = getSpeedColor(speed);
-
-        const poly = L.polyline(coords, {
-            color,
-            weight: 4,
-            opacity: 0.9
-        }).addTo(map);
-
-        routeLine.push(poly);
-
-        // === Add bridge icon if this segment includes a clearance value ===
-        const minClear = segment.feature.properties.min_cleara;
-        if (minClear !== null && minClear !== undefined) {
-            const midIndex = Math.floor(coords.length / 2); // Pick midpoint of segment
-            const bridgeLatLng = coords[midIndex];
-
-            // Convert clearance to feet and inches
-            const feet = Math.floor(minClear);
-            const inches = Math.round((minClear - feet) * 12);
-
-            // Create and place bridge icon
-            const marker = L.marker(bridgeLatLng, {
-                icon: L.icon({
-                    iconUrl: 'https://res.cloudinary.com/da0bnopjg/image/upload/v1751921623/bridge_2341064_slhkds.png',
-                    iconSize: [24, 24],
-                    iconAnchor: [12, 12]
-                })
-            }).addTo(map)
-                .bindTooltip(`Bridge Clearance: ${feet}ft ${inches}in.`, {
-                    permanent: false,
-                    direction: "top",
-                    offset: [0, -10]
+                // Find where to splice in the interpolated point
+                let insertIndexStart = oldStartCoords.findIndex((pt, i) => {
+                    if (i === oldStartCoords.length - 1)
+                        return false;
+                    const seg = [oldStartCoords[i], oldStartCoords[i + 1]];
+                    const dist = L.GeometryUtil.distanceSegment(map, L.latLng(startInterp), ...seg);
+                    return dist < .9; // tolerance threshold
                 });
 
-            bridgeMarkers.push(marker); // Track marker so it can be removed on next route
+                if (insertIndexStart === -1)
+                    insertIndexStart = 0;
+                const trimmedStartCoords = [startInterp, ...oldStartCoords.slice(insertIndexStart + 1)];
+
+                segmentMap['artificial_start'] = {
+                    coords: trimmedStartCoords,
+                    feature: {
+                        properties: {
+                            ...oldStart.feature.properties
+                        }
+                    }
+                };
+
+                result.segIds[0] = 'artificial_start';
+
+                // === Replace old end segment with artificial_end ===
+                const oldEndId = result.segIds[result.segIds.length - 1];
+                const oldEnd = segmentMap[oldEndId];
+                const oldEndCoords = oldEnd.coords;
+
+                // Convert to LatLngs for GeometryUtil
+                const latLngs = oldEndCoords.map(c => L.latLng(c));
+                const endInterp = L.GeometryUtil.closest(map, latLngs, L.latLng(toAddressLatLng));
+
+                let trimmedEndCoords = [];
+                let found = false;
+
+                for (let i = 0; i < latLngs.length - 1; i++) {
+                    const p1 = latLngs[i];
+                    const p2 = latLngs[i + 1];
+                    trimmedEndCoords.push([p1.lat, p1.lng]);
+
+                    const dist = L.GeometryUtil.distanceSegment(map, endInterp, p1, p2);
+                    console.log(`🔍 Segment ${i}: Distance from endInterp to [${p1.lat.toFixed(6)}, ${p2.lat.toFixed(6)}] = ${dist}`);
+
+                    if (dist < 0.9 && !found) {
+                        console.log(`✅ Match found at segment ${i}, distance = ${dist}`);
+                        trimmedEndCoords.push([endInterp.lat, endInterp.lng]);
+                        found = true;
+                        break;
+                    }
+                }
+
+                if (!found) {
+                    // fallback: use full original coords
+                    trimmedEndCoords = oldEndCoords;
+                    console.warn("End interpolation segment not found — using original segment.");
+                }
+
+                segmentMap['artificial_end'] = {
+                    coords: trimmedEndCoords,
+                    feature: {
+                        properties: {
+                            ...oldEnd.feature.properties
+                        }
+                    }
+                };
+
+                console.log("Final number of segments in route:", result.segIds.length);
+                console.log("Final segment IDs:", result.segIds);
+
+                result.segIds[result.segIds.length - 1] = 'artificial_end';
+            }
+            if (destType === 'poi') {
+                // === Replace old start segment with artificial_start ===
+                const oldStartId = result.segIds[0];
+                const oldStart = segmentMap[oldStartId];
+
+                if (!oldStart) {
+                    console.error("❌ Missing segment in segmentMap for ID:", oldStartId);
+                    return; // prevent crash
+                }
+
+                const oldStartCoords = oldStart.coords;
+
+
+                const startInterp = L.GeometryUtil.closest(map, oldStartCoords, L.latLng(fromAddressLatLng));
+
+                // Find where to splice in the interpolated point
+                let insertIndexStart = oldStartCoords.findIndex((pt, i) => {
+                    if (i === oldStartCoords.length - 1)
+                        return false;
+                    const seg = [oldStartCoords[i], oldStartCoords[i + 1]];
+                    const dist = L.GeometryUtil.distanceSegment(map, L.latLng(startInterp), ...seg);
+                    return dist < .9; // tolerance threshold
+                });
+
+                if (insertIndexStart === -1)
+                    insertIndexStart = 0;
+                const trimmedStartCoords = [startInterp, ...oldStartCoords.slice(insertIndexStart + 1)];
+
+                segmentMap['artificial_start'] = {
+                    coords: trimmedStartCoords,
+                    feature: {
+                        properties: {
+                            ...oldStart.feature.properties
+                        }
+                    }
+                };
+
+                result.segIds[0] = 'artificial_start';
+
+            }
+
+            // Remove previous route polylines if any
+            clearRouteLine();
+
+
+            let allCoords = [];
+
+            for (let i = 0; i < result.segIds.length; i++) {
+                const segmentId = result.segIds[i];
+                const segment = segmentMap[segmentId];
+                if (i === result.segIds.length - 1) {
+                    console.log("Last segment ID:", segmentId);
+                    console.log("Last segment coordinates:", segment.coords);
+                }
+
+                if (!segment)
+                    continue;
+
+                let coords = segment.coords;
+
+                const from = segment.feature.properties.from_point;
+                const to = segment.feature.properties.to_point;
+                const expectedStart = result.path[i];
+                const expectedEnd = result.path[i + 1];
+
+                // Reverse if traveling backward on segment
+                if (from === expectedEnd && to === expectedStart) {
+                    coords = [...coords].reverse();
+                }
+
+                const speed = segment.feature.properties.speed_mph || 0;
+                const color = getSpeedColor(speed);
+
+                const poly = L.polyline(coords, {
+                    color,
+                    weight: 4,
+                    opacity: 0.9
+                }).addTo(map);
+
+                routeLine.push(poly);
+
+                // === Add bridge icon if this segment includes a clearance value ===
+                const minClear = segment.feature.properties.min_cleara;
+
+                if (minClear !== null && minClear !== undefined) {
+                    const coords = segment.feature.geometry.coordinates;
+                    console.log("🔍 Raw segment coordinates:", coords);
+
+                    if (coords.length >= 2) {
+                        // Destructure assuming GeoJSON format: [lng, lat]
+                        const [lng1, lat1] = coords[0];
+                        const [lng2, lat2] = coords[1];
+
+                        // Calculate midpoint (average of lats & lngs)
+                        const midLat = (lat1 + lat2) / 2;
+                        const midLng = (lng1 + lng2) / 2;
+
+                        const bridgeLatLng = [midLat, midLng]; // Leaflet expects [lat, lng]
+                        console.log("📍 Calculated bridge midpoint (Leaflet format):", bridgeLatLng);
+
+                        // Convert clearance to feet and inches
+                        const feet = Math.floor(minClear);
+                        const inches = Math.round((minClear - feet) * 12);
+
+                        // Create and place bridge icon
+                        const marker = L.marker(bridgeLatLng, {
+                            icon: L.icon({
+                                iconUrl: 'https://res.cloudinary.com/da0bnopjg/image/upload/v1751921623/bridge_2341064_slhkds.png',
+                                iconSize: [24, 24],
+                                iconAnchor: [12, 12]
+                            })
+                        }).addTo(map).bindTooltip(`Bridge Clearance: ${feet}ft ${inches}in.`, {
+                            permanent: false,
+                            direction: "top",
+                            offset: [0, -10]
+                        });
+
+                        bridgeMarkers.push(marker); // Track marker so it can be removed on next route
+                    } else {
+                        console.warn("⚠️ Not enough coordinates to calculate midpoint:", coords);
+                    }
+                }
+
+                allCoords.push(...coords);
+            }
+
+            // Zoom map to fit route
+            if (allCoords.length >= 2) {
+                map.fitBounds(L.latLngBounds(allCoords));
+            } else {
+                alert("Unable to draw route. Try selecting a different start or end location.");
+            }
+
+            // Format and display route info
+            const totalDistanceText = `${result.totalDistance.toFixed(1)} mi`;
+            const totalTimeHours = result.totalTime;
+            let hours = Math.floor(totalTimeHours);
+            let minutes = Math.round((totalTimeHours - hours) * 60);
+
+            if (minutes === 60) {
+                hours += 1;
+                minutes = 0;
+            }
+            const timeDisplay = hours > 0 ? `${hours}h ${minutes}m` : `${minutes} min`;
+
+            let minClearText;
+            if (typeof result.minClear === "string") {
+                minClearText = result.minClear;
+            } else {
+                const clearance = result.minClear || 0;
+                const feet = Math.floor(clearance);
+                const inches = Math.round((clearance - feet) * 12);
+                minClearText = `${feet} ft ${inches} in`;
+            }
+
+            document.getElementById('distance-box').innerHTML = `Distance: ${totalDistanceText}`;
+            document.getElementById('time-box').innerHTML = `Time: ${timeDisplay}`;
+            document.getElementById('clearance-box').innerHTML = `Min Clearance: ${minClearText}`;
+
+            // Scroll to results
+            document.getElementById('scroll-target').scrollIntoView({
+                behavior: 'smooth'
+            });
+        });
+
+        // === Icon image URLs for start and end markers ===
+        const fromIconUrl = 'https://res.cloudinary.com/da0bnopjg/image/upload/v1751993412/start_placeholder_hihvwp.png';
+        const toIconUrl = 'https://res.cloudinary.com/da0bnopjg/image/upload/v1754244577/end_placeholder_red_nev541.png';
+
+        // === Creates a marker icon scaled to current zoom level ===
+        function createScaledIcon(url, zoom, anchor = [0.5, 1]) {
+            const size = Math.max(18, Math.min(zoom * 3, 48)); // size adjusts based on zoom level
+            return L.icon({
+                iconUrl: url,
+                iconSize: [size, size],
+                iconAnchor: [size * anchor[0], size * anchor[1]]
+            });
         }
-        allCoords.push(...coords);
-    }
 
-    // Zoom map to fit route
-    if (allCoords.length >= 2) {
-        map.fitBounds(L.latLngBounds(allCoords));
-    } else {
-        alert("Unable to draw route. Try selecting a different start or end location.");
-    }
+        // 🧠 Function to handle all zoom-based marker updates
+        function updateMarkersOnZoom() {
+            const zoom = map.getZoom();
+            console.log("Current zoom level:", zoom);
 
-    // Format and display route info
-    const totalDistanceText = `${result.totalDistance.toFixed(1)} mi`;
-    const totalTimeHours = result.totalTime;
-    const hours = Math.floor(totalTimeHours);
-    const minutes = Math.round((totalTimeHours - hours) * 60);
-    const timeDisplay = hours > 0 ? `${hours}h ${minutes}m` : `${minutes} min`;
+            // FROM marker icon resize
+            if (fromMarker && fromAddressLatLng) {
+                fromMarker.setIcon(createScaledIcon(fromIconUrl, zoom, [0.5, 1]));
+            }
 
-    let minClearText;
-    if (typeof result.minClear === "string") {
-        minClearText = result.minClear;
-    } else {
-        const clearance = result.minClear || 0;
-        const feet = Math.floor(clearance);
-        const inches = Math.round((clearance - feet) * 12);
-        minClearText = `${feet} ft ${inches} in`;
-    }
+            // TO marker icon resize
+            if (toMarker && toAddressLatLng) {
+                toMarker.setIcon(createScaledIcon(toIconUrl, zoom, [0.5, 0.9]));
+            }
 
-    document.getElementById('distance-box').innerHTML = `Distance: ${totalDistanceText}`;
-    document.getElementById('time-box').innerHTML = `Time: ${timeDisplay}`;
-    document.getElementById('clearance-box').innerHTML = `Min Clearance: ${minClearText}`;
+            // Update each marker in navaidLayerGroup
+            navaidLayerGroup.eachLayer(marker => {
+                const props = marker.feature.properties;
+                const type = props.navaid_type?.toLowerCase();
+                const rawColor = props.COLOUR;
+                const marker_num = props.marker_num ?? null;
 
-    // Scroll to results
-    document.getElementById('scroll-target').scrollIntoView({
-        behavior: 'smooth'
-    });
-});
+                // Hide markers below zoom level 11
+                if (zoom < 11) {
+                    marker.setOpacity(0);
+                    return;
+                }
 
-// === Icon image URLs for start and end markers ===
-const fromIconUrl = 'https://res.cloudinary.com/da0bnopjg/image/upload/v1751993412/start_placeholder_hihvwp.png';
-const toIconUrl = 'https://res.cloudinary.com/da0bnopjg/image/upload/v1751993427/end_placeholder_b5qzy9.png';
+                marker.setOpacity(1);
 
-// === Creates a marker icon scaled to current zoom level ===
-function createScaledIcon(url, zoom, anchor = [0.5, 1]) {
-    const size = Math.max(18, Math.min(zoom * 3, 48)); // size adjusts based on zoom level
-    return L.icon({
-        iconUrl: url,
-        iconSize: [size, size],
-        iconAnchor: [size * anchor[0], size * anchor[1]]
-    });
-}
-/*
-// === Redraws the markers with new icon sizes whenever zoom changes ===
-map.on('zoomend', () => {
-    const zoom = map.getZoom();
-    if (fromMarker && fromAddressLatLng) {
-        map.removeLayer(fromMarker);
-        fromMarker = L.marker(fromAddressLatLng, {
-            icon: createScaledIcon(fromIconUrl, zoom, [0.5, 1])
-        }).addTo(map);
-    }
-    if (toMarker && toAddressLatLng) {
-        map.removeLayer(toMarker);
-        toMarker = L.marker(toAddressLatLng, {
-            icon: createScaledIcon(toIconUrl, zoom, [0.5, 0.9])
-        }).addTo(map);
-    }
-*/
+                const colorValues = rawColor
+                    ? rawColor.split(',').map(c => Number(c.trim()))
+                    : [];
 
-// 🧠 Function to handle all zoom-based marker updates
-function updateMarkersOnZoom() {
-  const zoom = map.getZoom();
-  console.log("Current zoom level:", zoom);
+                let svg;
 
-  // FROM marker icon resize
-  if (fromMarker && fromAddressLatLng) {
-    fromMarker.setIcon(createScaledIcon(fromIconUrl, zoom, [0.5, 1]));
-  }
+                // ⛵ DAYBEACONS
+                if (type === "daybeacon") {
+                    if (colorValues.length === 1 && colorValues[0] === 3) {
+                        svg = createRedDayBeaconSVG(marker_num);
+                    } else if (colorValues.length === 1 && colorValues[0] === 4) {
+                        svg = createGreenDayBeaconSVG(marker_num);
+                    } else if (colorValues.length === 1 && colorValues[0] === 11) {
+                        svg = createHazardDayBeaconSVG();
+                    } else if (colorValues.join(',') === '4,3,4') {
+                        svg = createGreenRedGreenDayBeaconSVG();
+                    } else if (colorValues.join(',') === '3,4,3') {
+                        svg = createRedGreenRedDayBeaconSVG();
+                    } else if (colorValues.join(',') === '1,1,3') {
+                        svg = createSafeOctagonDayBeaconSVG();
+                    } else {
+                        marker.setOpacity(0);
+                        return;
+                    }
 
-  // TO marker icon resize
-  if (toMarker && toAddressLatLng) {
-    toMarker.setIcon(createScaledIcon(toIconUrl, zoom, [0.5, 0.9]));
-  }
+                    // 🛟 BUOYS
+                } else if (type === "buoy") {
+                    if (colorValues.length === 1 && colorValues[0] === 3) {
+                        svg = createRedBuoySVG(marker_num);
+                    } else if (colorValues.length === 1 && colorValues[0] === 4) {
+                        svg = createGreenBuoySVG(marker_num);
+                    } else if (colorValues.join(',') === '4,3,4') {
+                        svg = createGreenRedGreenBuoySVG(marker_num);
+                    } else {
+                        marker.setOpacity(0);
+                        return;
+                    }
 
-  // Update each marker in navaidLayerGroup
-  navaidLayerGroup.eachLayer(marker => {
-    const props = marker.feature.properties;
-    const type = props.navaid_type?.toLowerCase();
-    const rawColor = props.COLOUR;
-    const marker_num = props.marker_num ?? null;
+                    // 💡 LIGHTS
+                } else if (type === "light") {
+                    if (colorValues.length === 1) {
+                        switch (colorValues[0]) {
+                            case 1: svg = createWhiteLightSVG(); break;
+                            case 3: svg = createRedLightSVG(); break;
+                            case 4: svg = createGreenLightSVG(); break;
+                            case 6: svg = createYellowLightSVG(); break;
+                            default: marker.setOpacity(0); return;
+                        }
+                    } else {
+                        marker.setOpacity(0);
+                        return;
+                    }
 
-    // Hide markers below zoom level 11
-    if (zoom < 11) {
-      marker.setOpacity(0);
-      return;
-    }
+                    // ⚠️ DANGERS
+                } else if (type === "danger") {
+                    if (colorValues.length === 1) {
+                        switch (colorValues[0]) {
+                            case 95: svg = createExposedWreckDangerSVG(); break;
+                            case 96: svg = createSubmergedWreckDangerSVG(); break;
+                            case 97: svg = createRocksDangerSVG(); break;
+                            case 98: svg = createCautionDangerSVG(); break;
+                            case 99: svg = createObstructionDangerSVG(); break;
+                            default: marker.setOpacity(0); return;
+                        }
+                    } else {
+                        marker.setOpacity(0);
+                        return;
+                    }
 
-    marker.setOpacity(1);
+                    // 🧭 DEFAULT
+                } else {
+                    svg = createDefaultNavaidSVG();
+                }
 
-    const colorValues = rawColor
-      ? rawColor.split(',').map(c => Number(c.trim()))
-      : [];
+                const isLight = type === "light";
+                const baseSize = getNavaidIconSize(zoom);
 
-    let svg;
+                const iconSize = isLight
+                    ? [baseSize[0] * 2, baseSize[1] * 2]
+                    : baseSize;
 
-    // ⛵ DAYBEACONS
-    if (type === "daybeacon") {
-      if (colorValues.length === 1 && colorValues[0] === 3) {
-        svg = createRedDayBeaconSVG(marker_num);
-      } else if (colorValues.length === 1 && colorValues[0] === 4) {
-        svg = createGreenDayBeaconSVG(marker_num);
-      } else if (colorValues.length === 1 && colorValues[0] === 11) {
-        svg = createHazardDayBeaconSVG();
-      } else if (colorValues.join(',') === '4,3,4') {
-        svg = createGreenRedGreenDayBeaconSVG();
-      } else if (colorValues.join(',') === '3,4,3') {
-        svg = createRedGreenRedDayBeaconSVG();
-      } else if (colorValues.join(',') === '1,1,3') {
-        svg = createSafeOctagonDayBeaconSVG();
-      } else {
-        marker.setOpacity(0);
-        return;
-      }
+                const iconAnchor = isLight
+                    ? [iconSize[0] / 2, iconSize[1] / 2]
+                    : [iconSize[0] / 2, iconSize[1]];
 
-    // 🛟 BUOYS
-    } else if (type === "buoy") {
-      if (colorValues.length === 1 && colorValues[0] === 3) {
-        svg = createRedBuoySVG(marker_num);
-      } else if (colorValues.length === 1 && colorValues[0] === 4) {
-        svg = createGreenBuoySVG(marker_num);
-      } else if (colorValues.join(',') === '4,3,4') {
-        svg = createGreenRedGreenBuoySVG(marker_num);
-      } else {
-        marker.setOpacity(0);
-        return;
-      }
+                const icon = L.icon({
+                    iconUrl: svg,
+                    iconSize,
+                    iconAnchor
+                });
 
-    // 💡 LIGHTS
-    } else if (type === "light") {
-      if (colorValues.length === 1) {
-        switch (colorValues[0]) {
-          case 1: svg = createWhiteLightSVG(); break;
-          case 3: svg = createRedLightSVG(); break;
-          case 4: svg = createGreenLightSVG(); break;
-          case 6: svg = createYellowLightSVG(); break;
-          default: marker.setOpacity(0); return;
+                marker.setIcon(icon);
+            });
         }
-      } else {
-        marker.setOpacity(0);
-        return;
-      }
 
-    // ⚠️ DANGERS
-    } else if (type === "danger") {
-      if (colorValues.length === 1) {
-        switch (colorValues[0]) {
-          case 95: svg = createExposedWreckDangerSVG(); break;
-          case 96: svg = createSubmergedWreckDangerSVG(); break;
-          case 97: svg = createRocksDangerSVG(); break;
-          case 98: svg = createCautionDangerSVG(); break;
-          case 99: svg = createObstructionDangerSVG(); break;
-          default: marker.setOpacity(0); return;
-        }
-      } else {
-        marker.setOpacity(0);
-        return;
-      }
+        // 🗺️ Initialize Navaids First
+        addNavaidsToMap();
 
-    // 🧭 DEFAULT
-    } else {
-      svg = createDefaultNavaidSVG();
-    }
-
-    const isLight = type === "light";
-    const baseSize = getNavaidIconSize(zoom);
-
-    const iconSize = isLight
-      ? [baseSize[0] * 2, baseSize[1] * 2]
-      : baseSize;
-
-    const iconAnchor = isLight
-      ? [iconSize[0] / 2, iconSize[1] / 2]
-      : [iconSize[0] / 2, iconSize[1]];
-
-    const icon = L.icon({
-      iconUrl: svg,
-      iconSize,
-      iconAnchor
-    });
-
-    marker.setIcon(icon);
-  });
-}
-let contourLayer;
-// 🗺️ Initialize Navaids First
-addNavaidsToMap();
-addSoundingsToMap();
+        // ⏳ Debounced zoom handler
+        let zoomTimeout;
+        map.on('zoomend', () => {
+            clearTimeout(zoomTimeout);
+            zoomTimeout = setTimeout(() => {
+                updateMarkersOnZoom();
 
 
-// ➕ Load Depth Contours but don't add to map yet
-fetch("https://res.cloudinary.com/da0bnopjg/raw/upload/v1752707975/Contours2_evue3m.geojson")
-  .then(res => res.json())
-  .then(data => {
-    contourLayer = L.geoJSON(data, {
-      style: {
-        color: '#ffffff',
-        weight: 1,
-        opacity: 0.6
-      }
-    });
+            }, 250);
+        });
 
-    // Initially add only if zoom >= 13
-    if (map.getZoom() >= 13) {
-      contourLayer.addTo(map);
-    }
-  });
-
-// ➕ Load Recommended Track but don't add to map yet
-fetch("https://res.cloudinary.com/da0bnopjg/raw/upload/v1752707978/Recommended_Track_uf2si8.geojson")
-  .then(res => res.json())
-  .then(data => {
-    recommendedTrack = L.geoJSON(data, {
-      style: {
-        color: '#ffffff',
-        dashArray: '4,4',
-        weight: 1,
-        opacity: 0.6
-      }
-    });
-
-    // Initially add only if zoom >= 13
-    if (map.getZoom() >= 13) {
-      recommendedTrack.addTo(map);
-    }
-  });
-
-function addSoundingsToMap() {
-  fetch('https://res.cloudinary.com/da0bnopjg/raw/upload/v1752703734/Sounding_Points_spyevr.geojson')
-    .then(res => res.json())
-    .then(data => {
-      // Save for use later on zoom/pan
-      map._allSoundingFeatures = data.features;
-
-      updateSoundingsVisibleInView();
-      map.on('moveend zoomend', updateSoundingsVisibleInView);
-    });
-}
-
-function updateSoundingsVisibleInView() {
-  if (map.getZoom() < 14) {
-    soundingLayer.clearLayers();
-    return;
-  }
-
-  const bounds = map.getBounds();
-  const features = map._allSoundingFeatures;
-
-  soundingLayer.clearLayers();
-
-  features.forEach(feature => {
-    const [lng, lat, depth] = feature.geometry.coordinates;
-    if (!bounds.contains([lat, lng])) return;
-    const depthFeet = Math.round(depth * 3.28084);
-    const marker = L.marker([lat, lng], {
-      icon: L.divIcon({
-        className: 'sounding-label',
-        html: `<div class="sounding-text">${depthFeet}</div>`,
-        iconSize: [30, 12],
-        iconAnchor: [15, 6]
-      }),
-      interactive: false
-    });
-
-    soundingLayer.addLayer(marker);
-  });
-}
-
-
-
-
-// ⏳ Debounced zoom handler
-let zoomTimeout;
-map.on('zoomend', () => {
-  clearTimeout(zoomTimeout);
-  zoomTimeout = setTimeout(() => {
-    updateMarkersOnZoom();
-
-    // ✅ Show/hide contour lines based on zoom
-    if (contourLayer) {
-      if (map.getZoom() >= 13) {
-        if (!map.hasLayer(contourLayer)) {
-          map.addLayer(contourLayer);
-        }
-      } else {
-        if (map.hasLayer(contourLayer)) {
-          map.removeLayer(contourLayer);
-        }
-      }
-    }
-    // ✅ Show/hide recommended track lines based on zoom
-    if (recommendedTrack) {
-      if (map.getZoom() >= 13) {
-        if (!map.hasLayer(recommendedTrack)) {
-          map.addLayer(recommendedTrack);
-        }
-      } else {
-        if (map.hasLayer(recommendedTrack)) {
-          map.removeLayer(recommendedTrack);
-        }
-      }
-    }
-  }, 250);
-});
-
-</script>
+    </script>
 </body>
+
 </html>
