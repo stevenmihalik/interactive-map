@@ -315,7 +315,7 @@
                 </div>
             </div>
 
-            <div class="middle-row">
+            <div class="middle-row" id="mobile-scroll-target">
                 <div class="speed-group">
                     <label for="speed-select" class="speed-label">Max Speed:</label>
                     <select id="speed-select">
@@ -2422,7 +2422,14 @@
             document.getElementById('clearance-box').innerHTML = `Min Clearance<br>${minClearText}`;
 
             // Scroll to results
-            document.getElementById('scroll-target').scrollIntoView({
+            /*document.getElementById('scroll-target').scrollIntoView({
+                behavior: 'smooth'
+            });*/
+
+            const isMobile = window.innerWidth <= 768;
+            const scrollTargetId = isMobile ? 'mobile-scroll-target' : 'scroll-target';
+
+            document.getElementById(scrollTargetId)?.scrollIntoView({
                 behavior: 'smooth'
             });
         });
