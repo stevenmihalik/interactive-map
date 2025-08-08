@@ -557,7 +557,7 @@
 
 
         // === URLs to GeoJSON resources (stored in Cloudinary) ===
-        const CANAL_GEOJSON_URL = 'https://res.cloudinary.com/da0bnopjg/raw/upload/v1754311320/canals8_e8ogch.geojson';
+        const CANAL_GEOJSON_URL = 'https://res.cloudinary.com/da0bnopjg/raw/upload/v1754618039/canals9_prkjhi.geojson';
         const ADDRESS_GEOJSON_URL = 'https://res.cloudinary.com/da0bnopjg/raw/upload/v1751043675/Gulf_Access_Points_Master_vdfpde.geojson';
         const NAVAID_GEOJSON_URL = 'https://res.cloudinary.com/da0bnopjg/raw/upload/v1752634446/Markers6_ytzjc0.geojson';
         let navaidLayerGroup = L.layerGroup().addTo(map);
@@ -1122,6 +1122,7 @@
 
                 let timeLabel = '';
                 let totalTime = Infinity;
+                let gasIcon = '';
 
                 if (fromNodeId && toNodeId && fromNodeId !== toNodeId) {
                     try {
@@ -1133,14 +1134,14 @@
                         const minutes = totalMinutes % 60;
 
                         if (hours > 0) {
-                            timeLabel = ` - ⏱ ${hours}h ${minutes}m`;
+                            timeLabel = ` -\u00A0⏱\u00A0${hours}h\u00A0${minutes}m`;
                         } else {
-                            timeLabel = ` - ⏱ ${minutes} min`;
+                            timeLabel = ` -\u00A0⏱\u00A0${minutes}\u00A0min`;
                         }
-                        // ⛽ Append gas pump if service includes Gas
+
                         const services = feature.properties.services?.toLowerCase() || '';
                         if (category === 'marina' && services.includes('gas')) {
-                            timeLabel += ' ⛽';
+                            gasIcon = '⛽ ';
                         }
                     } catch (err) {
                         console.warn(`⚠️ Failed to calculate time to "${poiName}"`, err);
@@ -1150,14 +1151,14 @@
 
                 const opt = document.createElement('option');
                 opt.value = poiId;
-                opt.textContent = poiName + timeLabel;
+                opt.textContent = gasIcon + poiName + timeLabel;
                 options.push({ element: opt, time: totalTime });
             });
 
-            // Sort options by total time
             options.sort((a, b) => a.time - b.time);
             options.forEach(opt => dropdown.appendChild(opt.element));
         }
+
 
 
 
@@ -1740,7 +1741,7 @@
 
                 console.log(`Loaded ${addressPoints.length} address points.`);
                 console.log("Sample addresses:", addressPoints.slice(0, 5));
-                const POI_GEOJSON_URL = 'https://res.cloudinary.com/da0bnopjg/raw/upload/v1754328282/rest_marina_ramp_grgyiq.geojson'; // ← Replace with actual hosted URL
+                const POI_GEOJSON_URL = 'https://res.cloudinary.com/da0bnopjg/raw/upload/v1754611792/rest_marina_ramp_beach4_quh5ty.geojson'; // ← Replace with actual hosted URL
 
                 fetch(POI_GEOJSON_URL)
                     .then(res => res.json())
